@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 
 import { NavController, LoadingController, Refresher } from 'ionic-angular';
-import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi } from '../../../api/'
-import { MyApp } from '../../../app/app.component'
-import { ObjectListPage } from '../list/object-list'
-import { ObjectDetailsPage } from '../details/object-details'
+import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi } from '../../../api/';
+import { MyApp } from '../../../app/app.component';
+import { ObjectListPage } from '../list/object-list';
+import { ObjectDetailsPage } from '../details/object-details';
 
 @Component({
   selector: 'page-category-list',
@@ -95,7 +95,8 @@ export class CategoryListPage {
 
   push(category: CategoryResponse) {
     this.navCtrl.push(ObjectListPage, {
-      catid: category.id
+      catid: category.id,
+      category: category
     });
   }
 

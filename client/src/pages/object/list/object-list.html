@@ -3,13 +3,18 @@
     <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-    <ion-title>
+    <ion-title *ngIf="category === null">
       物品一覧
+    </ion-title>
+    <ion-title *ngIf="category !== null">
+      物品一覧 - {{category.name}}
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
   <ion-list>
+    <ion-item>
+    </ion-item>
   </ion-list>
 </ion-content>
