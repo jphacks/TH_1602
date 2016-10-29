@@ -44,6 +44,16 @@ export interface ObjectTagResponse {
     place?: string;
 
     /**
+     * オブジェクトのURI
+     */
+    objectUri?: string;
+
+    /**
+     * Optional(バーコード)のURI
+     */
+    optionalUri?: string;
+
+    /**
      * 説明文
      */
     description?: string;

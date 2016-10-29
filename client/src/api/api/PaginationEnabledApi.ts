@@ -100,6 +100,31 @@ export class PaginationEnabledApi {
     }
 
     /**
+     * Userの一覧を返します
+     * 
+     */
+    public listUsersGet (extraHttpRequestParams?: any ) : Observable<Array<models.UserInfoResponse>> {
+        const path = this.basePath + '/list/users';
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        let requestOptions: RequestOptionsArgs = {
+            method: 'GET',
+            headers: headerParams,
+            search: queryParameters
+        };
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * Categoryの検索を結果を返します
      * 
      * @param name Categoryの名前(部分一致)
