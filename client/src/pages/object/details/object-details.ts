@@ -13,6 +13,7 @@ export class ObjectDetailsPage {
   objId: string;
   objTag: ObjectTagResponse;
   category: CategoryResponse;
+  error: boolean = false;
   constructor(public navCtrl: NavController, private navParams: NavParams) {
     this.catId = navParams.get("catid");
     this.objId = navParams.get("objid");
@@ -22,7 +23,7 @@ export class ObjectDetailsPage {
       this.objectApi.objectTagsIdGet(this.objId).toPromise().then(data => {
         this.objTag = data;
       }).catch(reason => {
-        
+        this.error = true;
       })
     }
   }
