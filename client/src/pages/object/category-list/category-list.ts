@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 
-import { NavController } from 'ionic-angular';
-import { CategoryResponse } from '../../../api/'
+import { NavController, LoadingController } from 'ionic-angular';
+import { CategoryResponse, CategoryApi } from '../../../api/'
+import { MyApp } from '../../app'
 
 @Component({
   selector: 'page-category-list',
@@ -9,8 +10,18 @@ import { CategoryResponse } from '../../../api/'
 })
 export class CategoryListPage {
   categories: Array<CategoryResponse> = null
-  constructor(public navCtrl: NavController) {
-    
+  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
+    let loader = this.loadingCtrl.create({
+      content: "読み込み中..."
+    });
+    this.api.listCategoriesGet().subscribe(data=> {
+      loader.dismiss();
+      this.categories = data;
+    });
+  }
+
+  private get api(): CategoryApi {
+    return MyApp.injector.get(CategoryApi)
   }
 
 }
