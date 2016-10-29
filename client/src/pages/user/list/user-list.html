@@ -17,8 +17,8 @@
   </ion-refresher>
   
   <ion-list *ngIf="users != null">
-    <ion-item *ngFor="let usr of users" (click)="push(usr)">
-			{{usr.name}}
+    <ion-item *ngFor="let user of users" (click)="push(user)">
+			{{user.name}}
     </ion-item>
   </ion-list>
 
