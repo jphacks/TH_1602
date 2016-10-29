@@ -47,7 +47,7 @@ export class PaginationEnabledApi {
      * Categoryの一覧を返します
      * 
      */
-    public listCategoriesGet (extraHttpRequestParams?: any ) : Observable<Array<models.CategoryResponse>> {
+    public listCategoriesGet (extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
         const path = this.basePath + '/list/categories';
 
         let queryParameters = new URLSearchParams();
@@ -103,7 +103,7 @@ export class PaginationEnabledApi {
      * Userの一覧を返します
      * 
      */
-    public listUsersGet (extraHttpRequestParams?: any ) : Observable<Array<models.UserInfoResponse>> {
+    public listUsersGet (extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.UserInfoResponse>> {
         const path = this.basePath + '/list/users';
 
         let queryParameters = new URLSearchParams();
