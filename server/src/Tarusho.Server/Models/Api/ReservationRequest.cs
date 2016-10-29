@@ -24,8 +24,8 @@ namespace Tarusho.Server.Models.Api
         /// 使用者のユーザーId
         /// </summary>
         /// <value>使用者のユーザーId</value>
-        [DataMember(Name = "user", EmitDefaultValue = false)]
-        public List<string> User { get; set; }
+        [DataMember(Name = "users", EmitDefaultValue = false)]
+        public List<string> Users { get; set; }
         /// <summary>
         /// 予約するObjectTagのId
         /// </summary>

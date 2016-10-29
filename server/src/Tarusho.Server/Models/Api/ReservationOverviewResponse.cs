@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Tarusho.Server.Models.Api
 {
-    public class ReservationResponse
+    public class ReservationOverviewResponse
     {
         /// <summary>
         /// ReservationのId
@@ -20,17 +20,6 @@ namespace Tarusho.Server.Models.Api
         /// <value>Reservationのcomment</value>
         [DataMember(Name = "comment", EmitDefaultValue = false)]
         public string Comment { get; set; }
-        /// <summary>
-        /// Gets or Sets Owner
-        /// </summary>
-        [DataMember(Name = "owner", EmitDefaultValue = false)]
-        public IdNamePair<string> Owner { get; set; }
-        /// <summary>
-        /// 使用者のユーザーId, 表示名のリスト
-        /// </summary>
-        /// <value>使用者のユーザーId, 表示名のリスト</value>
-        [DataMember(Name = "users", EmitDefaultValue = false)]
-        public List<IdNamePair<string>> Users { get; set; }
         /// <summary>
         /// Gets or Sets ObjectTag
         /// </summary>
@@ -72,6 +61,14 @@ namespace Tarusho.Server.Models.Api
         /// <value>予約の終了が無期限であるかどうか</value>
         [DataMember(Name = "is_endless", EmitDefaultValue = false)]
         public bool? IsEndless { get; set; }
+
+        /// <summary>
+        /// 現在アクティブなものであるかどうか
+        /// </summary>
+        /// <value>現在アクティブなものであるかどうか</value>
+        [DataMember(Name = "is_active", EmitDefaultValue = false)]
+        public bool IsActive { get; set; }
+
 
     }
 }

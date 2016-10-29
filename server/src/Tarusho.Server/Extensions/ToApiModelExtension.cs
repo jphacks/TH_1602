@@ -25,10 +25,29 @@ namespace Tarusho.Server.Extensions
                 Priority = model.Priority,
                 ObjectTag = new IdNamePair<string>() { Id = model.ObjectTagId, Name = model.ObjectTag.Name },
                 Owner = new IdNamePair<string>() { Id = model.OwnerUser.UserName, Name = model.OwnerUser.DisplayName },
-                User = model.ReservationUsers.Select(c => new IdNamePair<string>() { Id = c.User.UserName, Name = c.User.DisplayName }).ToList()
+                Users = model.ReservationUsers.Select(c => new IdNamePair<string>() { Id = c.User.UserName, Name = c.User.DisplayName }).ToList()
             };
             return temp;
         }
+
+        public static ReservationOverviewResponse ToOverViewApiModel(this Reservation model)
+        {
+            var temp = new ReservationOverviewResponse()
+            {
+                Id = model.Id,
+                Comment = model.Comment,
+                CreatedAt = model.CreatedAt,
+                StartAt = model.StartAt,
+                EndAt = model.EndAt,
+                IsEndless = model.IsEndless,
+                ModifiedAt = model.ModifiedAt,
+                Priority = model.Priority,
+                IsActive = model.IsActiveReservations(),
+                ObjectTag = new IdNamePair<string>() { Id = model.ObjectTagId, Name = model.ObjectTag.Name },
+            };
+            return temp;
+        }
+
 
         public static ObjectTagResponse ToApiModel(this ObjectTag model)
         {
