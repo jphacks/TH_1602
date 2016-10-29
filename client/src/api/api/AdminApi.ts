@@ -178,7 +178,7 @@ export class AdminApi {
      * 
      * @param item 新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)
      */
-    public objectTagsPost (item: ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<ObjectTagResponse> {
+    public objectTagsPost (item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
         const path = this.basePath + '/object_tags/';
 
         let queryParameters = new URLSearchParams();
@@ -209,7 +209,7 @@ export class AdminApi {
      * 
      * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
      */
-    public objectTagsPut (item: ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<ObjectTagResponse> {
+    public objectTagsPut (item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
         const path = this.basePath + '/object_tags/';
 
         let queryParameters = new URLSearchParams();

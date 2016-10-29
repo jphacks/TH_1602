@@ -1,23 +1,23 @@
 <ion-menu [content]="content">
-	<ion-content>
-		<ion-list>
-			<button ion-item (click)="clearPageStack()" menuClose>
+  <ion-content>
+    <ion-list>
+      <button ion-item (click)="clearPageStack()" menuClose>
         マイページ
       </button>
-			<button ion-item (click)="openPage(objectListPage)" menuClose>
+      <button ion-item (click)="openPage(categoryListPage)" menuClose>
         物品一覧
       </button>
-			<button ion-item (click)="openPage(objectRegistrationPage)" menuClose>
+      <button ion-item (click)="openPage(objectRegistrationPage)" menuClose>
         物品登録
       </button>
-			<button ion-item (click)="openPage(userListPage)" menuClose>
+      <button ion-item (click)="openPage(userListPage)" menuClose>
         ユーザー一覧
       </button>
-			<button ion-item (click)="openPage(licensePage)" menuClose>
+      <button ion-item (click)="openPage(licensePage)" menuClose>
         ライセンス
       </button>
-		</ion-list>
-	</ion-content>
+    </ion-list>
+  </ion-content>
 </ion-menu>
 
 <ion-nav id="nav" #content [root]="rootPage"></ion-nav>

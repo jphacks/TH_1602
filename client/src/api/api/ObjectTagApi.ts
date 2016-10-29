@@ -48,7 +48,7 @@ export class ObjectTagApi {
      * 
      * @param categoryId 取得したいObjectTagが含まれるCategoryId
      */
-    public listObjectTagsCategoryIdGet (categoryId: string, extraHttpRequestParams?: any ) : Observable<Array<ObjectTagResponse>> {
+    public listObjectTagsCategoryIdGet (categoryId: string, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/list/object_tags/{category_id}'
             .replace('{' + 'category_id' + '}', String(categoryId));
 
@@ -113,7 +113,7 @@ export class ObjectTagApi {
      * 
      * @param id ObjectTagのId
      */
-    public objectTagsGet (id: string, extraHttpRequestParams?: any ) : Observable<ObjectTagResponse> {
+    public objectTagsGet (id: string, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
         const path = this.basePath + '/object_tags/';
 
         let queryParameters = new URLSearchParams();
@@ -147,7 +147,7 @@ export class ObjectTagApi {
      * 
      * @param item 新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)
      */
-    public objectTagsPost (item: ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<ObjectTagResponse> {
+    public objectTagsPost (item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
         const path = this.basePath + '/object_tags/';
 
         let queryParameters = new URLSearchParams();
@@ -178,7 +178,7 @@ export class ObjectTagApi {
      * 
      * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
      */
-    public objectTagsPut (item: ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<ObjectTagResponse> {
+    public objectTagsPut (item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
         const path = this.basePath + '/object_tags/';
 
         let queryParameters = new URLSearchParams();
@@ -210,7 +210,7 @@ export class ObjectTagApi {
      * @param categoryId ObjectTagのId
      * @param name ObjectTagの名前(部分一致)
      */
-    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<Array<ObjectTagResponse>> {
+    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/search/object_tags';
 
         let queryParameters = new URLSearchParams();
