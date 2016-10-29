@@ -12,7 +12,7 @@ import { ObjectReservationPage } from '../pages/object/reservation/object-reserv
 import { UserDetailsPage } from '../pages/user/details/user-details';
 import { UserListPage } from '../pages/user/list/user-list';
 import { HttpModule } from '@angular/http';
-import { CategoryApi } from '../api'
+import { CategoryApi, AdminApi, DefaultApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api'
 
 @NgModule({
   declarations: [
@@ -58,6 +58,6 @@ import { CategoryApi } from '../api'
     UserDetailsPage,
     UserListPage
   ],
-  providers: [CategoryApi]
+  providers: [CategoryApi, AdminApi, DefaultApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi]
 })
 export class AppModule {}
