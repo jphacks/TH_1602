@@ -28,7 +28,7 @@
       <ion-label color='primary'>画像URL</ion-label>
       <ion-input placeholder="Text Input" [(ngModel)]="register.image_url" name="image_url"></ion-input>
     </ion-item>
-    <button ion-button type='submit' block>物品登録</button>
+    <button ion-button [disabled]="register.item.length == 0" name="item" type="submit" block>物品登録</button>
     </form>
   </ion-list>
 </ion-content>
