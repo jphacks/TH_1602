@@ -80,17 +80,14 @@ export class ObjectTagApi {
      * 
      * @param id 削除を行うObjectTagのid
      */
-    public objectTagsDelete (id: boolean, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/object_tags/';
+    public objectTagsDelete (id: string, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = `${this.basePath}/object_tags/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling objectTagsDelete.');
-        }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
         }
 
         let requestOptions: RequestOptionsArgs = {
@@ -115,16 +112,13 @@ export class ObjectTagApi {
      * @param id ObjectTagのId
      */
     public objectTagsGet (id: string, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
-        const path = this.basePath + '/object_tags/';
+        const path = `${this.basePath}/object_tags/${id}`;
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling objectTagsGet.');
-        }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
         }
 
         let requestOptions: RequestOptionsArgs = {

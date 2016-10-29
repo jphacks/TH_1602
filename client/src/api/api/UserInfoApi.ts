@@ -95,11 +95,48 @@ export class UserInfoApi {
     }
 
     /**
+     * ユーザー画像を更新します
+     * 
+     * @param item 設定したいImageのByte列
+     */
+    public myUpdateProfileImagePut (item: any, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/my/update_profile_image';
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        let formParams = new URLSearchParams();
+
+        // verify required parameter 'item' is not null or undefined
+        if (item === null || item === undefined) {
+            throw new Error('Required parameter item was null or undefined when calling myUpdateProfileImagePut.');
+        }
+        headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
+
+        formParams['item'] = item;
+
+        let requestOptions: RequestOptionsArgs = {
+            method: 'PUT',
+            headers: headerParams,
+            search: queryParameters
+        };
+        requestOptions.body = formParams.toString();
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * ユーザー情報を更新します
      * 
      * @param item 変更したいユーザー情報
      */
-    public myUpdateProfilePut (item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
+    public myUpdateProfilePut (item: models.UserInfoResponse, extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
         const path = this.basePath + '/my/update_profile';
 
         let queryParameters = new URLSearchParams();

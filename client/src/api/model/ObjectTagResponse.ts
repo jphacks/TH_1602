@@ -64,9 +64,19 @@ export interface ObjectTagResponse {
     imageUri?: string;
 
     /**
+     * 画像サムネイルuri
+     */
+    thumbnailImageUri?: string;
+
+    /**
      * 現在利用中の予約Id
      */
     inUseReservationId?: string;
 
-    category?: models.IdNamePair;
+    /**
+     * 将来の予約が可能か
+     */
+    bookingEnabled?: boolean;
+
+    category?: models.IdNumberNamePair;
 }
