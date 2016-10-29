@@ -1,27 +1,97 @@
 import { Component } from '@angular/core';
 
-import { NavController, LoadingController } from 'ionic-angular';
-import { CategoryResponse, CategoryApi } from '../../../api/'
+import { NavController, LoadingController, Refresher } from 'ionic-angular';
+import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi } from '../../../api/'
 import { MyApp } from '../../../app/app.component'
+import { ObjectListPage } from '../list/object-list'
+import { ObjectDetailsPage } from '../details/object-details'
 
 @Component({
   selector: 'page-category-list',
-  templateUrl: 'category-list.html'
+  templateUrl: 'category-list.html',
+  providers: []
 })
 export class CategoryListPage {
+  error: boolean = false;
   categories: Array<CategoryResponse> = null
+  searchCategories: Array<CategoryResponse> = null
+  searchObjects: Array<ObjectTagResponse> = null
+
   constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
     });
-    this.api.listCategoriesGet().subscribe(data=> {
-      loader.dismiss();
+    loader.present();
+    this.categoryApi.listCategoriesGet().toPromise().then(data => {
       this.categories = data.items;
+      this.error = false;
+      loader.dismiss();
+    }).catch(reason => {
+      this.error = true;
+      loader.dismiss();
     });
   }
 
-  private get api(): CategoryApi {
-    return MyApp.injector.get(CategoryApi)
+  doRefresh(refresher: Refresher) {
+    this.categoryApi.listCategoriesGet().toPromise().then(data => {
+      this.categories = data.items;
+      this.error = false;
+      refresher.complete();
+    }).catch(reason => {
+      this.error = true;
+      refresher.complete();
+    });
+
   }
 
+  private get categoryApi(): CategoryApi {
+    return MyApp.injector.get(CategoryApi);
+  }
+
+  private get objectApi(): ObjectTagApi {
+    return MyApp.injector.get(ObjectTagApi);
+  }
+
+  onInput(ev: UIEvent) {
+    let value = (<HTMLInputElement>ev.target).value;
+    this.categoryApi.searchCategoriesGet(value.split(/[ 　\t]/)).toPromise().then(data => {
+      this.searchCategories = data.items;
+      this.error = false;
+    }).catch(reason => {
+      this.searchCategories = null;
+      this.error = true;
+    });
+    this.objectApi.searchObjectTagsGet(null, value.split(/[ 　\t]/)).toPromise().then(data => {
+      this.searchObjects = data.items;
+      this.error = false;
+    }).catch(reason => {
+      this.searchObjects = null;
+      this.error = true;
+    });
+  }
+
+  onClear(ev: UIEvent) {
+    this.searchCategories = null;
+    this.searchObjects = null;
+    this.error = this.categories === null
+  }
+
+  onCancel(ev: UIEvent) {
+    this.searchCategories = null;
+    this.searchObjects = null;
+    this.error = this.categories === null
+  }
+
+  push(category: CategoryResponse) {
+    this.navCtrl.push(ObjectListPage, {
+      catid: category.id
+    });
+  }
+
+  pushObject(object: ObjectTagResponse) {
+    this.navCtrl.push(ObjectDetailsPage, {
+      catid: object.category.id,
+      id: object.id
+    });
+  }
 }
