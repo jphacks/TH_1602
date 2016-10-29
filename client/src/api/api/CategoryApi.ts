@@ -177,7 +177,7 @@ export class CategoryApi {
      * Categoryの一覧を返します
      * 
      */
-    public listCategoriesGet (extraHttpRequestParams?: any ) : Observable<Array<models.CategoryResponse>> {
+    public listCategoriesGet (extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
         const path = this.basePath + '/list/categories';
 
         let queryParameters = new URLSearchParams();
