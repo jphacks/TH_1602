@@ -91,6 +91,8 @@ namespace Tarusho.Server
 
             app.UseIdentity();
 
+            app.UseCors("AllowAll");
+
             // seeder.SeedAdminUserAsync("p@ssw0rd").Wait();
 
             seeder.SeedCategory().Wait();

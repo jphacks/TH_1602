@@ -33,7 +33,7 @@ namespace Tarusho.Server.Controllers.api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var objectTag = await _context.ObjectTags.FirstOrDefaultAsync(m => m.Id == id);
+            var objectTag = await _context.IncludeObjectTagCategory().FirstOrDefaultAsync(m => m.Id == id);
 
             if (objectTag == null)
                 return NotFound();
@@ -52,7 +52,13 @@ namespace Tarusho.Server.Controllers.api
             if (id != request.Id)
                 return BadRequest();
 
-            var objectTag = await _context.ObjectTags.FirstOrDefaultAsync(m => m.Id == id);
+            var objectTag = await _context.IncludeObjectTagCategory().FirstOrDefaultAsync(m => m.Id == id);
+            if (objectTag == null)
+                return NotFound();
+
+            if (!_context.Categories.Any(c => c.Id == request.Category))
+                return BadRequest();
+
             objectTag = request.ToDataModel(objectTag);
             
             _context.Entry(objectTag).State = EntityState.Modified;
@@ -82,6 +88,9 @@ namespace Tarusho.Server.Controllers.api
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            if (!_context.Categories.Any(c => c.Id == request.Category))
+                return BadRequest();
 
             var objectTag = request.ToDataModel();
             _context.ObjectTags.Add(objectTag);

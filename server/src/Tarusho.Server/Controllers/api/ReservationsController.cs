@@ -43,7 +43,7 @@ namespace Tarusho.Server.Controllers.api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var reservation = await _context.Reservations.FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await _context.IncludeReservationContext().FirstOrDefaultAsync(m => m.Id == id);
 
             if (reservation == null)
                 return NotFound();
@@ -61,12 +61,18 @@ namespace Tarusho.Server.Controllers.api
             if (id != item.Id)
                 return BadRequest();
 
-            var reservation = await _context.Reservations.FirstOrDefaultAsync(m => m.Id == id);
+            var reservation = await _context.IncludeReservationContext().FirstOrDefaultAsync(m => m.Id == id);
+            if (reservation == null)
+                return NotFound();
 
             var user = await GetApplicationUser();
             if (user.Id != reservation.OwnerUserId)
                 return Forbid();
 
+            if (!_context.ObjectTags.Any(c => c.Id == item.ObjectTagId))
+                return BadRequest();
+
+            // TODO: 予約可能かどうか、判定
             reservation = item.ToDataModel(user.Id, reservation);
             _context.Entry(reservation).State = EntityState.Modified;
 
@@ -99,7 +105,13 @@ namespace Tarusho.Server.Controllers.api
             }
 
             var user = await GetApplicationUser();
+
+            if (!_context.ObjectTags.Any(c => c.Id == item.ObjectTagId))
+                return BadRequest();
+
             var reservation = item.ToDataModel(user.Id);
+            // TODO: 予約可能かどうか、判定
+            // TODO: 先約にリクエストを送る処理なども検討...？
 
             _context.Reservations.Add(reservation);
             try
@@ -154,13 +166,39 @@ namespace Tarusho.Server.Controllers.api
             return appUser;
         }
 
-        private async Task RemoveReservationUser(List<ReservationUser> items)
+        private async Task RemoveReservationUser(List<string> userIds, string reservationId)
         {
-            
+            foreach (var userId in userIds)
+            {
+                var item =
+                    _context.ReservationUsers.FirstOrDefault(c => c.ReservationId == reservationId && c.UserId == userId);
+                if (item == null)
+                    continue;
+
+                _context.ReservationUsers.Remove(item);
+            }
+            await _context.SaveChangesAsync();
         }
 
-        private async Task RegisterReservationUser(List<string> userIds, Reservation reservation)
+        private async Task RegisterReservationUser(List<string> userNames, Reservation reservation)
         {
+            foreach (var userName in userNames)
+            {
+                var user = _context.Users.FirstOrDefault(c => c.UserName == userName);
+                if (user == null)
+                    continue; // TODO: どうしよう
+
+                var item = new ReservationUser()
+                {
+                    UserId = user.Id,
+                    Reservation = reservation
+                };
+
+                _context.ReservationUsers.Add(item);
+            }
+            await _context.SaveChangesAsync();
+
+            // TODO: Push Notification to attendees
 
         }
 

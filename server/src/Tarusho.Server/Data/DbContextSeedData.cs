@@ -60,9 +60,9 @@ namespace Tarusho.Server.Data
                         Description = $"たるしょ～{i}"
                     };
                     _context.Categories.Add(item);
+                    _context.SaveChanges();
                 }
             }
-            await _context.SaveChangesAsync();
         }
 
         public async Task SeedObjectTag()
@@ -71,15 +71,16 @@ namespace Tarusho.Server.Data
             {
                 if (!_context.ObjectTags.Any(c => c.Name == $"obo{i}"))
                 {
-                    var category = _context.Categories.FirstOrDefault(c => c.Id == 5);
+                    //var category = _context.Categories.FirstOrDefault(c => c.Id == 5);
                     var item = new ObjectTag()
                     {
                         Id = Guid.NewGuid().ToString(),
                         Name = $"obo{i}",
                         Description = $"tarusho{i}",
-                        Category = category,
-                        ObjectUri = "tarusho://oboobo{i}-{i/2}",
-                        Place = "{i}のあたり",
+                        //Category = category,
+                        CategoryId = 5,
+                        ObjectUri = $"tarusho://oboobo{i}-{i/2}",
+                        Place = $"{i}のあたり",
                         IsBookingEnabled = i % 2 == 0
                     };
                     _context.ObjectTags.Add(item);

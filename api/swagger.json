@@ -384,9 +384,9 @@
                         "type": "string"
                     },
                     {
-                        "name": "name",
+                        "name": "keywords",
                         "in": "query",
-                        "description": "ObjectTagの名前(部分一致)",
+                        "description": "ObjectTagのキーワード(部分一致)",
                         "required": false,
                         "type": "array",
                         "items": {
@@ -416,9 +416,9 @@
                 "summary": "Categoryの検索を結果を返します",
                 "parameters": [
                     {
-                        "name": "name",
+                        "name": "keywords",
                         "in": "query",
-                        "description": "Categoryの名前(部分一致)",
+                        "description": "Categoryのキーワード(部分一致)",
                         "required": false,
                         "type": "array",
                         "items": {
@@ -462,7 +462,7 @@
                         "type": "string"
                     },
                     {
-                        "name": "keyword",
+                        "name": "keywords",
                         "in": "query",
                         "description": "Reservationの予約要件(部分一致)",
                         "required": false,
