@@ -10,6 +10,24 @@
 </ion-header>
 
 <ion-content>
-	<ion-list>
-	</ion-list>
+
+  <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  
+  <ion-list *ngIf="users != null">
+    <ion-item *ngFor="let usr of users" (click)="push(usr)">
+			{{usr.name}}
+    </ion-item>
+  </ion-list>
+
+  <ion-card *ngIf="error">
+    <ion-card-header>
+      読み込みエラー
+    </ion-card-header>
+    <ion-card-content>
+      ネットワーク設定を確認の上，スワイプして再読込してください．
+    </ion-card-content>
+  </ion-card>
 </ion-content>
