@@ -6,10 +6,13 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { ObjectDetailsPage } from '../pages/object/details/object-details';
 import { ObjectListPage } from '../pages/object/list/object-list';
+import { CategoryListPage } from '../pages/object/category-list/category-list';
 import { ObjectRegistrationPage } from '../pages/object/registration/object-registration';
 import { ObjectReservationPage } from '../pages/object/reservation/object-reservation';
 import { UserDetailsPage } from '../pages/user/details/user-details';
 import { UserListPage } from '../pages/user/list/user-list';
+import { HttpModule } from '@angular/http';
+import { CategoryApi, AdminApi, DefaultApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api'
 
 @NgModule({
   declarations: [
@@ -19,6 +22,7 @@ import { UserListPage } from '../pages/user/list/user-list';
     LoginPage,
     ObjectDetailsPage,
     ObjectListPage,
+    CategoryListPage,
     ObjectRegistrationPage,
     ObjectReservationPage,
     UserDetailsPage,
@@ -30,14 +34,15 @@ import { UserListPage } from '../pages/user/list/user-list';
         { component: HomePage, name: 'Home', segment: '', defaultHistory: []},
         { component: LoginPage, name: 'Login', segment: 'login' },
         { component: LicensePage, name: 'License', segment: 'license' },
-        { component: ObjectDetailsPage, name: 'ObjectDetails', segment: 'object/:id' },
-        { component: ObjectListPage, name: 'ObjectList', segment: 'object' },
+        { component: ObjectDetailsPage, name: 'ObjectDetails', segment: 'object/:catid/:objid' },
+        { component: ObjectListPage, name: 'ObjectList', segment: 'object/:catid' },
+        { component: CategoryListPage, name: 'CategoryList', segment: 'object' },
         { component: ObjectRegistrationPage, name: 'ObjectRegistration', segment: 'object/registration' },
         { component: ObjectReservationPage, name: 'ObjectReservation', segment: 'object/reservation' },
         { component: UserDetailsPage, name: 'UserDetails', segment: 'user/:id' },
         { component: UserListPage, name: 'UserList', segment: 'user' }
       ]
-    })
+    }), HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -47,11 +52,12 @@ import { UserListPage } from '../pages/user/list/user-list';
     LoginPage,
     ObjectDetailsPage,
     ObjectListPage,
+    CategoryListPage,
     ObjectRegistrationPage,
     ObjectReservationPage,
     UserDetailsPage,
     UserListPage
   ],
-  providers: []
+  providers: [CategoryApi, AdminApi, DefaultApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi]
 })
 export class AppModule {}

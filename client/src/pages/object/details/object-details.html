@@ -1,13 +1,14 @@
 <ion-header>
-	<ion-navbar>
-	<button ion-button menuToggle icon-only>
+  <ion-navbar>
+  <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-		<ion-title>
-			(物品名)
-		</ion-title>
-	</ion-navbar>
+    <ion-title *ngIf="objTag != null">
+      {{objTag.name}}
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
+  
 </ion-content>

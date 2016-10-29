@@ -3,11 +3,11 @@
     <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-    <ion-title *ngIf="category == null">
-      物品一覧
+    <ion-title *ngIf="searchCategories == null && searchObjects == null">
+      物品カテゴリ一覧
     </ion-title>
-    <ion-title *ngIf="category != null">
-      物品一覧 - {{category.name}}
+    <ion-title *ngIf="searchCategories !== null || searchObjects !== null">
+      検索結果
     </ion-title>
   </ion-navbar>
   <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
@@ -19,19 +19,26 @@
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  
-  <ion-list *ngIf="objects !== null && searchObjects == null">
-    <ion-item *ngFor="let obj of objects" (click)="push(obj)">
-      {{obj.name}}
+  <ion-list *ngIf="categories !== null && searchCategories == null && searchObjects == null">
+    <ion-item *ngFor="let category of categories" (click)="push(category)">
+      {{category.name}}
     </ion-item>
   </ion-list>
+  <ion-list *ngIf="searchCategories !== null || searchObjects !== null">
 
-  <ion-list *ngIf="searchObjects != null">
-    <ion-item *ngFor="let obj of searchObjects" (click)="push(obj)">
-      {{obj.name}}
+    <ion-list-header *ngIf="searchCategories !== null">
+      カテゴリ
+    </ion-list-header>
+    <ion-item *ngFor="let category of searchCategories" (click)="push(category)">
+      {{category.name}}
+    </ion-item>
+    <ion-list-header *ngIf="searchObjects !== null">
+      物品
+    </ion-list-header>
+    <ion-item *ngFor="let object of searchObjects" (click)="pushObject(object)">
+      {{object.name}}
     </ion-item>
   </ion-list>
-
   <ion-card *ngIf="error">
     <ion-card-header>
       読み込みエラー
