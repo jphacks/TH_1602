@@ -21,7 +21,7 @@ export class ObjectListPage {
     this.catId = navParams.get("catid");
     this.category = navParams.get("category")
     if (!this.category) {
-      this.categoryApi.categoriesGet(this.catId).toPromise().then((response) => {
+      this.categoryApi.categoriesIdGet(this.catId).toPromise().then((response) => {
         this.category = response;
       }).catch(() => {
       })

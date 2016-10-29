@@ -19,7 +19,7 @@ export class ObjectDetailsPage {
     this.objTag = navParams.get("object_tag");
     this.category = navParams.get("category");
     if(!this.objTag) {
-      this.objectApi.objectTagsGet(this.objId).toPromise().then(data => {
+      this.objectApi.objectTagsIdGet(this.objId).toPromise().then(data => {
         this.objTag = data;
       }).catch(reason => {
         
