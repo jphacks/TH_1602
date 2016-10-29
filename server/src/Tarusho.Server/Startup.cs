@@ -93,7 +93,7 @@ namespace Tarusho.Server
 
             app.UseCors("AllowAll");
 
-            // seeder.SeedAdminUserAsync("p@ssw0rd").Wait();
+            seeder.SeedAdminUserAsync("p@ssw0rd").Wait();
 
             seeder.SeedCategory().Wait();
 
