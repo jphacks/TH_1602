@@ -66,7 +66,11 @@ export class ObjectListPage {
 
   onInput(ev: UIEvent) {
     this.value = (<HTMLInputElement>ev.target).value;
-    this.search(this.value);
+    if (this.value.length === 0) {
+      this.clear();
+    } else {
+      this.search(this.value);
+    }
   }
 
   search(value: string, finish?: () => any) {
@@ -86,12 +90,14 @@ export class ObjectListPage {
   }
 
   onClear(ev: UIEvent) {
-    this.searchObjects = null;
-    this.value = null;
-    this.error = this.objects === null
+    this.clear();
   }
 
   onCancel(ev: UIEvent) {
+    this.clear();
+  }
+
+  clear() {
     this.searchObjects = null;
     this.value = null;
     this.error = this.objects === null
