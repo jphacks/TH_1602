@@ -78,18 +78,18 @@ export class ObjectTagApi {
     /**
      * 指定したidのObjectTagに関する情報・予約を削除します
      * 
-     * @param id 削除を行うObjectTagのid
+     * @param id ObjectTagのId
      */
-    public objectTagsDelete (id: string, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = `${this.basePath}/object_tags/${id}`;
+    public objectTagsIdDelete (id: string, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/object_tags/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling objectTagsDelete.');
+            throw new Error('Required parameter id was null or undefined when calling objectTagsIdDelete.');
         }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'DELETE',
             headers: headerParams,
@@ -111,21 +111,58 @@ export class ObjectTagApi {
      * 
      * @param id ObjectTagのId
      */
-    public objectTagsGet (id: string, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
-        const path = `${this.basePath}/object_tags/${id}`;
+    public objectTagsIdGet (id: string, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
+        const path = this.basePath + '/object_tags/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling objectTagsGet.');
+            throw new Error('Required parameter id was null or undefined when calling objectTagsIdGet.');
         }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'GET',
             headers: headerParams,
             search: queryParameters
         };
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * 指定したidのObjectTagに関する詳細を変更します
+     * 
+     * @param id ObjectTagのId
+     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
+     */
+    public objectTagsIdPut (id: string, item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
+        const path = this.basePath + '/object_tags/{id}'
+            .replace('{' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling objectTagsIdPut.');
+        }
+        // verify required parameter 'item' is not null or undefined
+        if (item === null || item === undefined) {
+            throw new Error('Required parameter item was null or undefined when calling objectTagsIdPut.');
+        }
+        let requestOptions: RequestOptionsArgs = {
+            method: 'PUT',
+            headers: headerParams,
+            search: queryParameters
+        };
+        requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
@@ -153,37 +190,6 @@ export class ObjectTagApi {
         }
         let requestOptions: RequestOptionsArgs = {
             method: 'POST',
-            headers: headerParams,
-            search: queryParameters
-        };
-        requestOptions.body = JSON.stringify(item);
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * 指定したidのObjectTagに関する詳細を変更します
-     * 
-     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
-     */
-    public objectTagsPut (item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
-        const path = this.basePath + '/object_tags/';
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        // verify required parameter 'item' is not null or undefined
-        if (item === null || item === undefined) {
-            throw new Error('Required parameter item was null or undefined when calling objectTagsPut.');
-        }
-        let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
             headers: headerParams,
             search: queryParameters
         };
