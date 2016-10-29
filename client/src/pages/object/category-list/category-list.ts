@@ -8,15 +8,14 @@ import { ObjectDetailsPage } from '../details/object-details';
 
 @Component({
   selector: 'page-category-list',
-  templateUrl: 'category-list.html',
-  providers: []
+  templateUrl: 'category-list.html'
 })
 export class CategoryListPage {
   error: boolean = false;
-  value: string = null
-  categories: Array<CategoryResponse> = null
-  searchCategories: Array<CategoryResponse> = null
-  searchObjects: Array<ObjectTagResponse> = null
+  value: string = null;
+  categories: Array<CategoryResponse> = null;
+  searchCategories: Array<CategoryResponse> = null;
+  searchObjects: Array<ObjectTagResponse> = null;
 
   constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
     let loader = this.loadingCtrl.create({
@@ -34,7 +33,7 @@ export class CategoryListPage {
   }
 
   doRefresh(refresher: Refresher) {
-    if(this.value == null) {
+    if (this.value == null) {
       this.categoryApi.listCategoriesGet().toPromise().then(data => {
         this.categories = data.items;
         this.error = false;
@@ -46,7 +45,6 @@ export class CategoryListPage {
     } else {
       this.search(this.value, () => refresher.complete());
     }
-
   }
 
   private get categoryApi(): CategoryApi {
@@ -63,19 +61,28 @@ export class CategoryListPage {
   }
 
   search(value: string, finish?: () => any) {
+    this.error = false;
+    var endCount = 0;
+    let end = (error: boolean) => {
+      endCount++;
+      this.error = error || this.error
+      if (endCount === 1 && finish) {
+        finish();
+      }
+    }
     this.categoryApi.searchCategoriesGet(value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchCategories = data.items;
-      this.error = false;
+      end(false);
     }).catch(reason => {
       this.searchCategories = null;
-      this.error = true;
+      end(true);
     });
     this.objectApi.searchObjectTagsGet(null, value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchObjects = data.items;
-      this.error = false;
+      end(false);
     }).catch(reason => {
       this.searchObjects = null;
-      this.error = true;
+      end(true);
     });
   }
 

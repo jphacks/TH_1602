@@ -3,18 +3,41 @@
     <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-    <ion-title *ngIf="category === null">
+    <ion-title *ngIf="category == null">
       物品一覧
     </ion-title>
-    <ion-title *ngIf="category !== null">
+    <ion-title *ngIf="category != null">
       物品一覧 - {{category.name}}
     </ion-title>
   </ion-navbar>
+  <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item>
+
+  <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  
+  <ion-list *ngIf="objects !== null && searchObjects == null">
+    <ion-item *ngFor="let obj of objects" (click)="push(obj)">
+      {{obj.name}}
     </ion-item>
   </ion-list>
+
+  <ion-list *ngIf="searchObjects != null">
+    <ion-item *ngFor="let obj of searchObjects" (click)="push(obj)">
+      {{obj.name}}
+    </ion-item>
+  </ion-list>
+
+  <ion-card *ngIf="error">
+    <ion-card-header>
+      読み込みエラー
+    </ion-card-header>
+    <ion-card-content>
+      ネットワーク設定を確認の上，スワイプして再読込してください．
+    </ion-card-content>
+  </ion-card>
 </ion-content>
