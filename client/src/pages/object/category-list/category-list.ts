@@ -110,7 +110,7 @@ export class CategoryListPage {
   pushObject(object: ObjectTagResponse) {
     this.navCtrl.push(ObjectDetailsPage, {
       catid: object.category.id,
-      id: object.id
+      objid: object.id
     });
   }
 }

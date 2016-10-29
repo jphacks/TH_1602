@@ -17,7 +17,7 @@ export class ObjectListPage {
   objects: Array<ObjectTagResponse> = null;
   searchObjects: Array<ObjectTagResponse> = null;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public loadingCtrl: LoadingController) {
+  constructor(public navCtrl: NavController, private navParams: NavParams, public loadingCtrl: LoadingController) {
     this.catId = navParams.get("catid");
     this.category = navParams.get("category")
     if (!this.category) {
@@ -100,7 +100,7 @@ export class ObjectListPage {
   push(obj: ObjectTagResponse) {
     this.navCtrl.push(ObjectDetailsPage, {
       catid: obj.category.id,
-      id: obj.id
+      objid: obj.id
     });
   }
 
