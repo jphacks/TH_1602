@@ -73,7 +73,7 @@ export class PaginationEnabledApi {
      * 
      * @param categoryId 取得したいObjectTagが含まれるCategoryId
      */
-    public listObjectTagsCategoryIdGet (categoryId: string, extraHttpRequestParams?: any ) : Observable<Array<ObjectTagResponse>> {
+    public listObjectTagsCategoryIdGet (categoryId: string, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/list/object_tags/{category_id}'
             .replace('{' + 'category_id' + '}', String(categoryId));
 
@@ -129,7 +129,7 @@ export class PaginationEnabledApi {
      * 
      * @param name Categoryの名前(部分一致)
      */
-    public searchCategoriesGet (name?: Array<string>, extraHttpRequestParams?: any ) : Observable<Array<models.CategoryResponse>> {
+    public searchCategoriesGet (name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
         const path = this.basePath + '/search/categories';
 
         let queryParameters = new URLSearchParams();
@@ -160,7 +160,7 @@ export class PaginationEnabledApi {
      * @param categoryId ObjectTagのId
      * @param name ObjectTagの名前(部分一致)
      */
-    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<Array<ObjectTagResponse>> {
+    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/search/object_tags';
 
         let queryParameters = new URLSearchParams();
@@ -199,7 +199,7 @@ export class PaginationEnabledApi {
      * @param endAt 予約終了時刻。 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
      * @param includesPast 現在予約が終了しているものも検索に含めるかどうか。 defaultばfalseです。 
      */
-    public searchReservationsGet (objectTagId?: string, userName?: string, keyword?: Array<string>, startAt?: Date, endAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<Array<models.ReservationResponse>> {
+    public searchReservationsGet (objectTagId?: string, userName?: string, keyword?: Array<string>, startAt?: Date, endAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ReservationResponse>> {
         const path = this.basePath + '/search/reservations';
 
         let queryParameters = new URLSearchParams();

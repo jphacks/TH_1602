@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 
 import { NavController, LoadingController } from 'ionic-angular';
 import { CategoryResponse, CategoryApi } from '../../../api/'
-import { MyApp } from '../../app'
+import { MyApp } from '../../../app/app.component'
 
 @Component({
   selector: 'page-category-list',

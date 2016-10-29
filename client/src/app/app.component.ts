@@ -15,7 +15,7 @@ import { UserListPage } from '../pages/user/list/user-list';
 })
 export class MyApp {
   rootPage = HomePage;
-  cateogoryListPage = CategoryListPage;
+  categoryListPage = CategoryListPage;
   licensePage = LicensePage;
   objectRegistrationPage = ObjectRegistrationPage;
   userListPage = UserListPage;

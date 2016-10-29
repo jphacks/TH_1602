@@ -11,7 +11,8 @@ import { ObjectRegistrationPage } from '../pages/object/registration/object-regi
 import { ObjectReservationPage } from '../pages/object/reservation/object-reservation';
 import { UserDetailsPage } from '../pages/user/details/user-details';
 import { UserListPage } from '../pages/user/list/user-list';
-import { Http } from '@angular/http';
+import { HttpModule } from '@angular/http';
+import { CategoryApi } from '../api'
 
 @NgModule({
   declarations: [
@@ -41,7 +42,7 @@ import { Http } from '@angular/http';
         { component: UserDetailsPage, name: 'UserDetails', segment: 'user/:id' },
         { component: UserListPage, name: 'UserList', segment: 'user' }
       ]
-    })
+    }), HttpModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -57,6 +58,6 @@ import { Http } from '@angular/http';
     UserDetailsPage,
     UserListPage
   ],
-  providers: [Http]
+  providers: [CategoryApi]
 })
 export class AppModule {}
