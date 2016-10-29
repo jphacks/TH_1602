@@ -13,6 +13,7 @@ import { ObjectDetailsPage } from '../details/object-details'
 })
 export class CategoryListPage {
   error: boolean = false;
+  value: string = null
   categories: Array<CategoryResponse> = null
   searchCategories: Array<CategoryResponse> = null
   searchObjects: Array<ObjectTagResponse> = null
@@ -33,14 +34,18 @@ export class CategoryListPage {
   }
 
   doRefresh(refresher: Refresher) {
-    this.categoryApi.listCategoriesGet().toPromise().then(data => {
-      this.categories = data.items;
-      this.error = false;
-      refresher.complete();
-    }).catch(reason => {
-      this.error = true;
-      refresher.complete();
-    });
+    if(this.value == null) {
+      this.categoryApi.listCategoriesGet().toPromise().then(data => {
+        this.categories = data.items;
+        this.error = false;
+        refresher.complete();
+      }).catch(reason => {
+        this.error = true;
+        refresher.complete();
+      });
+    } else {
+      this.search(this.value, () => refresher.complete());
+    }
 
   }
 
@@ -53,7 +58,11 @@ export class CategoryListPage {
   }
 
   onInput(ev: UIEvent) {
-    let value = (<HTMLInputElement>ev.target).value;
+    this.value = (<HTMLInputElement>ev.target).value;
+    this.search(this.value);
+  }
+
+  search(value: string, finish?: () => any) {
     this.categoryApi.searchCategoriesGet(value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchCategories = data.items;
       this.error = false;
@@ -73,12 +82,14 @@ export class CategoryListPage {
   onClear(ev: UIEvent) {
     this.searchCategories = null;
     this.searchObjects = null;
+    this.value = null;
     this.error = this.categories === null
   }
 
   onCancel(ev: UIEvent) {
     this.searchCategories = null;
     this.searchObjects = null;
+    this.value = null;
     this.error = this.categories === null
   }
 
