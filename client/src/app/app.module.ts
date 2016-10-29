@@ -4,7 +4,7 @@ import { MyApp } from './app.component';
 import { LicensePage } from '../pages/license/license';
 import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
-import { ObjectDetailsPage } from '../pages/object/details/object-details';
+import { ObjectDetailsPage, MyUserItem } from '../pages/object/details/object-details';
 import { ObjectListPage } from '../pages/object/list/object-list';
 import { CategoryListPage } from '../pages/object/category-list/category-list';
 import { ObjectRegistrationPage } from '../pages/object/registration/object-registration';
@@ -13,6 +13,7 @@ import { UserDetailsPage } from '../pages/user/details/user-details';
 import { UserListPage } from '../pages/user/list/user-list';
 import { HttpModule } from '@angular/http';
 import { CategoryApi, AdminApi, DefaultApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api'
+import { MyErrorCard } from '../components'
 
 @NgModule({
   declarations: [
@@ -26,7 +27,9 @@ import { CategoryApi, AdminApi, DefaultApi, MyApi, ObjectTagApi, ReservationApi,
     ObjectRegistrationPage,
     ObjectReservationPage,
     UserDetailsPage,
-    UserListPage
+    UserListPage,
+    MyErrorCard,
+    MyUserItem
   ],
   imports: [
     IonicModule.forRoot(MyApp, {}, {

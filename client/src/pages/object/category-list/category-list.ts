@@ -11,7 +11,8 @@ import { ObjectDetailsPage } from '../details/object-details';
   templateUrl: 'category-list.html'
 })
 export class CategoryListPage {
-  error: boolean = false;
+  networkError: boolean = false;
+  serverError: boolean = false;
   value: string = null;
   categories: Array<CategoryResponse> = null;
   searchCategories: Array<CategoryResponse> = null;
@@ -24,10 +25,12 @@ export class CategoryListPage {
     loader.present();
     this.categoryApi.listCategoriesGet().toPromise().then(data => {
       this.categories = data.items;
-      this.error = false;
+      this.networkError = false;
+      this.serverError = false;
       loader.dismiss();
     }).catch(reason => {
-      this.error = true;
+      this.networkError = reason.status === 0;
+      this.serverError = !this.networkError;
       loader.dismiss();
     });
   }
@@ -36,10 +39,12 @@ export class CategoryListPage {
     if (this.value == null) {
       this.categoryApi.listCategoriesGet().toPromise().then(data => {
         this.categories = data.items;
-        this.error = false;
+        this.networkError = false;
+        this.serverError = false;
         refresher.complete();
       }).catch(reason => {
-        this.error = true;
+        this.networkError = reason.status === 0;
+        this.serverError = !this.networkError;
         refresher.complete();
       });
     } else {
@@ -65,11 +70,13 @@ export class CategoryListPage {
   }
 
   search(value: string, finish?: () => any) {
-    this.error = false;
+    this.networkError = false;
+    this.serverError = false;
     var endCount = 0;
-    let end = (error: boolean) => {
+    let end = (error: boolean, status: number = -1) => {
       endCount++;
-      this.error = error || this.error
+      this.networkError = this.networkError || error && status === 0;
+      this.serverError = this.serverError || error && status !== 0;
       if (endCount === 1 && finish) {
         finish();
       }
@@ -79,14 +86,14 @@ export class CategoryListPage {
       end(false);
     }).catch(reason => {
       this.searchCategories = null;
-      end(true);
+      end(true, reason.status);
     });
     this.objectApi.searchObjectTagsGet(null, value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchObjects = data.items;
       end(false);
     }).catch(reason => {
       this.searchObjects = null;
-      end(true);
+      end(true, reason.status);
     });
   }
 
@@ -102,7 +109,24 @@ export class CategoryListPage {
     this.searchCategories = null;
     this.searchObjects = null;
     this.value = null;
-    this.error = this.categories === null
+    if (this.categories === null) {
+      let loader = this.loadingCtrl.create({
+        content: "読み込み中..."
+      });
+      this.categoryApi.listCategoriesGet().toPromise().then(data => {
+        this.categories = data.items;
+        this.networkError = false;
+        this.serverError = false;
+        loader.dismiss();
+      }).catch(reason => {
+        this.networkError = reason.status === 0;
+        this.serverError = !this.networkError;
+        loader.dismiss();
+      });
+    } else {
+      this.networkError = false;
+      this.serverError = false;
+    }
   }
 
   push(category: CategoryResponse) {

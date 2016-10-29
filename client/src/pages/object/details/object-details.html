@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-  <button ion-button menuToggle icon-only>
+    <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
     <ion-title *ngIf="objTag != null">
@@ -10,5 +10,30 @@
 </ion-header>
 
 <ion-content>
-  
+
+  <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="objTag != null && objTag.imageUri && !imgError">
+    <img class="obj-image" src="{{objTag.imageUri}}" (error)="onImgError($event)"/>
+  </div>
+  <div *ngIf="objTag != null">
+
+    <div class="category" *ngIf="objTag.category != null">
+      {{objTag.category.name}}
+    </div>
+    <div class="description" *ngIf="objTag.description != null">
+      {{objTag.description}}
+    </div>
+    <div class="place" *ngIf="objTag.place != null">
+      場所：{{objTag.place}}
+    </div>
+  </div>
+  <ion-list *ngIf="reservations">
+    <my-user-item *ngFor="let reservation of reservations">
+    </my-user-item>
+  </ion-list>
+
+  <my-error-card [networkError]="networkError" [serverError]="serverError"></my-error-card>
 </ion-content>

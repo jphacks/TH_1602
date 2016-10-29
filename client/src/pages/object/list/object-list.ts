@@ -11,7 +11,8 @@ import { ObjectDetailsPage } from '../details/object-details';
 })
 export class ObjectListPage {
   catId: number = null
-  error: boolean = false;
+  networkError: boolean = false;
+  serverError: boolean = false;
   value: string = null;
   category: CategoryResponse = null;
   objects: Array<ObjectTagResponse> = null;
@@ -33,10 +34,12 @@ export class ObjectListPage {
     this.objectApi.listObjectTagsCategoryIdGet(this.catId.toString()).toPromise()
       .then(data => {
         this.objects = data.items;
-        this.error = false;
+        this.networkError = false;
+        this.serverError = false;
         loader.dismiss();
       }).catch(reason => {
-        this.error = true;
+        this.networkError = reason.status === 0;
+        this.serverError = !this.networkError;
         loader.dismiss();
       })
   }
@@ -50,13 +53,15 @@ export class ObjectListPage {
   }
 
   doRefresh(refresher: Refresher) {
-    if(this.value == null) {
+    if (this.value == null) {
       this.objectApi.listObjectTagsCategoryIdGet(this.catId.toString()).toPromise().then(data => {
         this.objects = data.items;
-        this.error = false;
+        this.networkError = false;
+        this.serverError = false;
         refresher.complete();
       }).catch(reason => {
-        this.error = true;
+        this.networkError = reason.status === 0;
+        this.serverError = !this.networkError;
         refresher.complete();
       });
     } else {
@@ -76,14 +81,16 @@ export class ObjectListPage {
   search(value: string, finish?: () => any) {
     this.objectApi.searchObjectTagsGet(this.catId.toString(), value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchObjects = data.items;
-      this.error = false;
-      if(finish) {
+      this.networkError = false;
+      this.serverError = false;
+      if (finish) {
         finish();
       }
     }).catch(reason => {
       this.searchObjects = null;
-      this.error = true;
-      if(finish) {
+      this.networkError = reason.status === 0;
+      this.serverError = !this.networkError;
+      if (finish) {
         finish();
       }
     });
@@ -100,7 +107,26 @@ export class ObjectListPage {
   clear() {
     this.searchObjects = null;
     this.value = null;
-    this.error = this.objects === null
+    if (this.objects === null) {
+      let loader = this.loadingCtrl.create({
+        content: "読み込み中..."
+      });
+      loader.present();
+      this.objectApi.listObjectTagsCategoryIdGet(this.catId.toString()).toPromise()
+        .then(data => {
+          this.objects = data.items;
+          this.networkError = false;
+          this.serverError = false;
+          loader.dismiss();
+        }).catch(reason => {
+          this.networkError = reason.status === 0;
+          this.serverError = !this.networkError;
+          loader.dismiss();
+        })
+    } else {
+      this.networkError = false;
+      this.serverError = false;
+    }
   }
 
   push(obj: ObjectTagResponse) {
