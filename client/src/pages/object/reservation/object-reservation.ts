@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { ReservationApi  } from '../../../api/';
@@ -48,23 +48,31 @@ export class ObjectReservationPage {
   
   private post() {
     let myRes = this.reservation;
-    for(let anotherRes of this.otherReservations){
-      if(anotherRes.start_at < myRes.end_at && myRes.start_at < anotherRes.end_at){
-        this.showAlert();
-        return;
-      }  
+    if(this.otherReservations != null){
+      for(let anotherRes of this.otherReservations){
+        if(anotherRes.start_at < myRes.end_at && myRes.start_at < anotherRes.end_at){
+          this.showAlert('予定が被ってます', 'あなたが予約指定した期間はすでに別の人の予約が入っているので期間を変えてください');
+          return;
+        }  
+      }
     }
     this.reservationApi.reservationsPost(this.reservation).toPromise().then((response) => {
         this.response = response;
-      }).catch(() => {
-        this.error = true;
+        console.log("送信成功");
+        this.navCtrl.popToRoot();
+      }).catch(reason => { //エラー吐いたときの処理
+        if (reason.status !== 0) {
+          this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
+        }else {
+          this.showAlert('ネットワークエラー', 'インターネットに接続されているか，確認してください');
+        }
       })
   }
 
-  showAlert() {
+  showAlert(title: string, subTitle: string) {
     let alert = this.alertCtrl.create({
-      title: '予定が被ってます!',
-      subTitle: 'あなたが予約指定した期間はすでに別の人の予約が入っています．期間を変えてください．',
+      title: title,
+      subTitle: subTitle,
       buttons: ['OK']
     });
     alert.present();
