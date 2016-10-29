@@ -47,21 +47,18 @@ export class ReservationApi {
     /**
      * 指定したidのReservationを削除します
      * 
-     * @param id 削除を行うReservationのid
+     * @param id ReservationのId
      */
-    public reservationsDelete (id: boolean, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/reservations/';
+    public reservationsIdDelete (id: string, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/reservations/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling reservationsDelete.');
+            throw new Error('Required parameter id was null or undefined when calling reservationsIdDelete.');
         }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
-        }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'DELETE',
             headers: headerParams,
@@ -83,24 +80,58 @@ export class ReservationApi {
      * 
      * @param id ReservationのId
      */
-    public reservationsGet (id: string, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
-        const path = this.basePath + '/reservations/';
+    public reservationsIdGet (id: string, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
+        const path = this.basePath + '/reservations/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling reservationsGet.');
+            throw new Error('Required parameter id was null or undefined when calling reservationsIdGet.');
         }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
-        }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'GET',
             headers: headerParams,
             search: queryParameters
         };
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * 指定したidのReservationに関する詳細を変更します
+     * 
+     * @param id ReservationのId
+     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
+     */
+    public reservationsIdPut (id: string, item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
+        const path = this.basePath + '/reservations/{id}'
+            .replace('{' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling reservationsIdPut.');
+        }
+        // verify required parameter 'item' is not null or undefined
+        if (item === null || item === undefined) {
+            throw new Error('Required parameter item was null or undefined when calling reservationsIdPut.');
+        }
+        let requestOptions: RequestOptionsArgs = {
+            method: 'PUT',
+            headers: headerParams,
+            search: queryParameters
+        };
+        requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
@@ -128,37 +159,6 @@ export class ReservationApi {
         }
         let requestOptions: RequestOptionsArgs = {
             method: 'POST',
-            headers: headerParams,
-            search: queryParameters
-        };
-        requestOptions.body = JSON.stringify(item);
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * 指定したidのReservationに関する詳細を変更します
-     * 
-     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
-     */
-    public reservationsPut (item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
-        const path = this.basePath + '/reservations/';
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        // verify required parameter 'item' is not null or undefined
-        if (item === null || item === undefined) {
-            throw new Error('Required parameter item was null or undefined when calling reservationsPut.');
-        }
-        let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
             headers: headerParams,
             search: queryParameters
         };

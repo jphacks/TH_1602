@@ -29,11 +29,6 @@ export interface UserInfoResponse {
     
 
     /**
-     * user id
-     */
-    id?: string;
-
-    /**
      * user name
      */
     userName?: string;
@@ -47,4 +42,9 @@ export interface UserInfoResponse {
      * プロフィールimage uri
      */
     profileImageUri?: string;
+
+    /**
+     * プロフィールimageサムネイルuri
+     */
+    profileThumbnailImageUri?: string;
 }

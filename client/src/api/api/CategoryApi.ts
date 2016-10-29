@@ -47,21 +47,18 @@ export class CategoryApi {
     /**
      * 指定したidのCategory、および含まれる予約・ObjectTagを削除します
      * 
-     * @param id 削除を行うCategoryのid
+     * @param id CategoryのId
      */
-    public categoriesDelete (id: boolean, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/categories/';
+    public categoriesIdDelete (id: number, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/categories/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling categoriesDelete.');
+            throw new Error('Required parameter id was null or undefined when calling categoriesIdDelete.');
         }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
-        }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'DELETE',
             headers: headerParams,
@@ -83,19 +80,16 @@ export class CategoryApi {
      * 
      * @param id CategoryのId
      */
-    public categoriesGet (id: number, extraHttpRequestParams?: any ) : Observable<models.CategoryRequest> {
-        const path = this.basePath + '/categories/';
+    public categoriesIdGet (id: number, extraHttpRequestParams?: any ) : Observable<models.CategoryRequest> {
+        const path = this.basePath + '/categories/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling categoriesGet.');
+            throw new Error('Required parameter id was null or undefined when calling categoriesIdGet.');
         }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
-        }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'GET',
             headers: headerParams,
@@ -113,21 +107,27 @@ export class CategoryApi {
     }
 
     /**
-     * Categoryの新規登録を行います
+     * 指定したidのCategoryに関する詳細を変更します
      * 
-     * @param item 新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)
+     * @param id CategoryのId
+     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
      */
-    public categoriesPost (item: models.CategoryRequest, extraHttpRequestParams?: any ) : Observable<models.CategoryResponse> {
-        const path = this.basePath + '/categories/';
+    public categoriesIdPut (id: number, item: models.CategoryResponse, extraHttpRequestParams?: any ) : Observable<models.CategoryResponse> {
+        const path = this.basePath + '/categories/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling categoriesIdPut.');
+        }
         // verify required parameter 'item' is not null or undefined
         if (item === null || item === undefined) {
-            throw new Error('Required parameter item was null or undefined when calling categoriesPost.');
+            throw new Error('Required parameter item was null or undefined when calling categoriesIdPut.');
         }
         let requestOptions: RequestOptionsArgs = {
-            method: 'POST',
+            method: 'PUT',
             headers: headerParams,
             search: queryParameters
         };
@@ -144,21 +144,21 @@ export class CategoryApi {
     }
 
     /**
-     * 指定したidのCategoryに関する詳細を変更します
+     * Categoryの新規登録を行います
      * 
-     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
+     * @param item 新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)
      */
-    public categoriesPut (item: models.CategoryResponse, extraHttpRequestParams?: any ) : Observable<models.CategoryResponse> {
-        const path = this.basePath + '/categories/';
+    public categoriesPost (item: models.CategoryRequest, extraHttpRequestParams?: any ) : Observable<models.CategoryResponse> {
+        const path = this.basePath + '/categories';
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'item' is not null or undefined
         if (item === null || item === undefined) {
-            throw new Error('Required parameter item was null or undefined when calling categoriesPut.');
+            throw new Error('Required parameter item was null or undefined when calling categoriesPost.');
         }
         let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
+            method: 'POST',
             headers: headerParams,
             search: queryParameters
         };
