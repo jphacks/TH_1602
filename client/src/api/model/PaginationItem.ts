@@ -25,7 +25,7 @@
 'use strict';
 import * as models from './models';
 
-export interface PaginationItem {
+export interface PaginationItem<T> {
     
 
     /**
@@ -46,5 +46,5 @@ export interface PaginationItem {
     /**
      * ここに返り値のリストが挿入されます
      */
-    items?: Array<string>;
+    items?: Array<T>;
 }

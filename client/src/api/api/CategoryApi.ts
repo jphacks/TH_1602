@@ -203,7 +203,7 @@ export class CategoryApi {
      * 
      * @param name Categoryの名前(部分一致)
      */
-    public searchCategoriesGet (name?: Array<string>, extraHttpRequestParams?: any ) : Observable<Array<models.CategoryResponse>> {
+    public searchCategoriesGet (name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
         const path = this.basePath + '/search/categories';
 
         let queryParameters = new URLSearchParams();

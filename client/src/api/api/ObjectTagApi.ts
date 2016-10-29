@@ -48,7 +48,7 @@ export class ObjectTagApi {
      * 
      * @param categoryId 取得したいObjectTagが含まれるCategoryId
      */
-    public listObjectTagsCategoryIdGet (categoryId: string, extraHttpRequestParams?: any ) : Observable<Array<ObjectTagResponse>> {
+    public listObjectTagsCategoryIdGet (categoryId: string, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/list/object_tags/{category_id}'
             .replace('{' + 'category_id' + '}', String(categoryId));
 
@@ -210,7 +210,7 @@ export class ObjectTagApi {
      * @param categoryId ObjectTagのId
      * @param name ObjectTagの名前(部分一致)
      */
-    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<Array<ObjectTagResponse>> {
+    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/search/object_tags';
 
         let queryParameters = new URLSearchParams();
