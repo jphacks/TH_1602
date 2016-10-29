@@ -26,6 +26,7 @@ import {Http, Headers, RequestOptionsArgs, Response, URLSearchParams} from '@ang
 import {Injectable, Optional} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import * as models from '../model/models';
+import {ApiConfig} from '../config'
 import 'rxjs/Rx';
 
 /* tslint:disable:no-unused-variable member-ordering */
@@ -34,7 +35,7 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class DefaultApi {
-    protected basePath = 'https://tarusho.vbcpp.net';
+    protected basePath = ApiConfig.basePath;
     public defaultHeaders : Headers = new Headers();
 
     constructor(protected http: Http, @Optional() basePath: string) {
