@@ -9,10 +9,22 @@ import { MyApp } from '../../../app/app.component';
   templateUrl: 'user-details.html'
 })
 export class UserDetailsPage {
-
-  constructor(public navCtrl: NavController) {
-
+  userName: string;
+  userInfo: UserInfoResponse;
+  objTag: ObjectTagResponse;
+  error: boolean = false;
+  constructor(public navCtrl: NavController, private navParams: NavParams) {
+    this.userName = navParams.get("username");
+    this.userInfo = navParams.get("userinfo");
+    if(!this.userInfo) {
+      this.userApi.userInfoGet(this.userName).toPromise().then(data => {
+        this.userInfo = data;
+      }).catch(reason => {
+        this.error = true;
+      })
+    }
   }
+  
   private get userApi(): UserInfoApi {
     return MyApp.injector.get(UserInfoApi);
   }
