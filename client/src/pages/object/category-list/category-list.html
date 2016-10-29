@@ -19,7 +19,7 @@
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <ion-list *ngIf="categories !== null && searchCategories == null && searchObjects == null">
+  <ion-list *ngIf="categories !== null && searchCategories == null && searchObjects == null && !error">
     <ion-item *ngFor="let category of categories" (click)="push(category)">
       {{category.name}}
     </ion-item>
