@@ -16,7 +16,7 @@ export class CategoryListPage {
     });
     this.api.listCategoriesGet().subscribe(data=> {
       loader.dismiss();
-      this.categories = data;
+      this.categories = data.items;
     });
   }
 
