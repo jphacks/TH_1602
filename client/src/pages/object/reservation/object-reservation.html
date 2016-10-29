@@ -10,21 +10,26 @@
 </ion-header>
 
 <ion-content>
-  <form  (ngSubmit)="post()" novalidate>
+    <ion-list *ngIf="otherReservations != null">
+    <ion-item *ngFor="let res of otherReservations">
+      {{res.user}}: {{res.start_at}}~{{res.end_at}}
+    </ion-item>
+  </ion-list>
 
+  <form  (ngSubmit)="post()" novalidate>
     <ion-item>
       <ion-label>開始時刻</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD hh:mm" [(ngModel)]="item.start_at" name="start_at"></ion-datetime>
+      <ion-datetime displayFormat="YYYY-MM-DD hh:mm" [(ngModel)]="reservation.start_at" name="start_at"></ion-datetime>
     </ion-item>
 
     <ion-item>
       <ion-label>終了時刻</ion-label>
-      <ion-datetime displayFormat="YYYY-MM-DD hh:mm" [(ngModel)]="item.end_at" name="end_at"></ion-datetime>
+      <ion-datetime displayFormat="YYYY-MM-DD hh:mm" [(ngModel)]="reservation.end_at" name="end_at"></ion-datetime>
     </ion-item>
 
     <ion-item>
       <ion-label fixed>コメント</ion-label>
-      <ion-input type="text" [(ngModel)]="item.comment" name="comment" ></ion-input>
+      <ion-input type="text" [(ngModel)]="reservation.comment" name="comment" ></ion-input>
     </ion-item>
 
     <button ion-button type="submit">予約する</button>

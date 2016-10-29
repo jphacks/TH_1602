@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { ReservationApi  } from '../../../api/';
 import { MyApp } from '../../../app/app.component'
 
@@ -10,8 +10,7 @@ import { MyApp } from '../../../app/app.component'
   templateUrl: 'object-reservation.html'
 })
 export class ObjectReservationPage {
-  public item = {
-    id: "", 
+  public reservation = {
     comment: "", 
     user: [],
     object_tag_id: "",
@@ -19,15 +18,17 @@ export class ObjectReservationPage {
     start_at: "",
     end_at: "",
     is_endless: false
-  } ;
-  error: boolean = false;
+  };
+  public otherReservations = [];
+  private error = false;
+  private response;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
-    this.item.id = navParams.get('id');
-    this.item.user.push(navParams.get('user'));
-    this.item.object_tag_id = navParams.get('object_tag_id');
-    this.item.start_at = this.formatTime("start");
-    this.item.end_at = this.formatTime("end"); 
+  constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
+    this.reservation.user.push(navParams.get('user'));
+    this.reservation.object_tag_id = navParams.get('object_tag_id');
+    this.reservation.start_at = this.formatTime("start");
+    this.reservation.end_at = this.formatTime("end"); 
+    this.otherReservations = navParams.get('reservations');
   }
   private  formatTime(startOrEnd: string) {
     let now = new Date();
@@ -46,14 +47,28 @@ export class ObjectReservationPage {
   }
   
   private post() {
-    console.log("click");
-    this.reservationApi.reservationsPost(this.item).toPromise().then((response) => {
-        null;
+    let myRes = this.reservation;
+    for(let anotherRes of this.otherReservations){
+      if(anotherRes.start_at < myRes.end_at && myRes.start_at < anotherRes.end_at){
+        this.showAlert();
+        return;
+      }  
+    }
+    this.reservationApi.reservationsPost(this.reservation).toPromise().then((response) => {
+        this.response = response;
       }).catch(() => {
         this.error = true;
       })
   }
 
+  showAlert() {
+    let alert = this.alertCtrl.create({
+      title: '予定が被ってます!',
+      subTitle: 'あなたが予約指定した期間はすでに別の人の予約が入っています．期間を変えてください．',
+      buttons: ['OK']
+    });
+    alert.present();
+  }
   private get reservationApi(): ReservationApi {
     return MyApp.injector.get(ReservationApi)
   }
