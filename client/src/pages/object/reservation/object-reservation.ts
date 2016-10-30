@@ -18,7 +18,7 @@ export class ObjectReservationPage {
   private response;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
-    this.reservation.user.push(navParams.get('user'));
+    this.reservation.users.push(navParams.get('user'));
     this.reservation.objectTagId = navParams.get('object_tag_id');
     this.start = this.formatTime("start");
     this.end = this.formatTime("end");
