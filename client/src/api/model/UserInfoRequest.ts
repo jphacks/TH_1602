@@ -25,60 +25,11 @@
 'use strict';
 import * as models from './models';
 
-export interface ReservationResponse {
+export interface UserInfoRequest {
     
 
     /**
-     * ReservationのId
+     * 表示名
      */
-    id?: string;
-
-    /**
-     * Reservationのcomment
-     */
-    comment?: string;
-
-    owner?: models.IdNamePair;
-
-    /**
-     * 使用者のユーザーId, 表示名のリスト
-     */
-    users?: Array<models.IdNamePair>;
-
-    objectTag?: models.IdNamePair;
-
-    /**
-     * 予約を行った日時
-     */
-    createdAt?: Date;
-
-    /**
-     * 最終更新日
-     */
-    modifiedAt?: Date;
-
-    /**
-     * 優先度(列挙型にする予定)
-     */
-    priority?: number;
-
-    /**
-     * 予約の開始日時
-     */
-    startAt?: Date;
-
-    /**
-     * 予約の終了日時
-     */
-    endAt?: Date;
-
-    /**
-     * 予約の終了が無期限であるかどうか
-     */
-    isEndless?: boolean;
-
-    /**
-     * 現在利用中なものであるかどうか
-     */
-    isActive?: boolean;
+    displayName?: string;
 }

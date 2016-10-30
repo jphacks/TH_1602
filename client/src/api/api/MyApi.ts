@@ -45,6 +45,31 @@ export class MyApi {
     }
 
     /**
+     * 現在ログイン中の利用者の詳細情報を取得します
+     * 
+     */
+    public myProfileGet (extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
+        const path = this.basePath + '/my/profile';
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        let requestOptions: RequestOptionsArgs = {
+            method: 'GET',
+            headers: headerParams,
+            search: queryParameters
+        };
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * 現在の利用,予約,予約待ち状況を取得します
      * 
      */
@@ -111,7 +136,7 @@ export class MyApi {
      * 
      * @param item 変更したいユーザー情報
      */
-    public myUpdateProfilePut (item: models.UserInfoResponse, extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
+    public myUpdateProfilePut (item: models.UserInfoRequest, extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
         const path = this.basePath + '/my/update_profile';
 
         let queryParameters = new URLSearchParams();

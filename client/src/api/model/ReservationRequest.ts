@@ -41,7 +41,7 @@ export interface ReservationRequest {
     /**
      * 使用者のユーザーId
      */
-    user?: Array<string>;
+    users?: Array<string>;
 
     /**
      * 予約するObjectTagのId

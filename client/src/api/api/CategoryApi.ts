@@ -202,15 +202,15 @@ export class CategoryApi {
     /**
      * Categoryの検索を結果を返します
      * 
-     * @param name Categoryの名前(部分一致)
+     * @param keywords Categoryのキーワード(部分一致)
      */
-    public searchCategoriesGet (name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
+    public searchCategoriesGet (keywords?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
         const path = this.basePath + '/search/categories';
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
-        if (name !== undefined) {
-            queryParameters.set('name', String(name));
+        if (keywords !== undefined) {
+            queryParameters.set('keywords', String(keywords));
         }
 
         let requestOptions: RequestOptionsArgs = {
