@@ -38,7 +38,6 @@ export class ObjectDetailsPage {
         this.objTag = data;
         this.getReservations(finish);
         this.imgError = false;
-
         this.serverError = false;
         this.networkError = false;
       }).catch(reason => {
@@ -61,7 +60,7 @@ export class ObjectDetailsPage {
             return a.createdAt.valueOf() - b.createdAt.valueOf()
           }
         });
-        if (this.reservations[0].isActive) {
+        if (this.reservations[0] && this.reservations[0].isActive) {
           this.currentReservation = this.reservations.shift();
         }
 
