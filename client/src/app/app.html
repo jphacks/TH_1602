@@ -2,10 +2,10 @@
   <ion-content>
     <ion-item no-lines>
       <ion-avatar item-left>
-        <img src="http://pictogram-free.com/material/001.png" alt="profile_image">
+        <img src="{{profile.profileThumbnailImageUri}}" alt="profile_image">
       </ion-avatar>
-      <p>user_name</p>
-      <p>display_name</p>
+      <p>{{profile.userName}}</p>
+      <p>{{profile.displayName}}</p>
     </ion-item>
     <ion-list>
       <button ion-item (click)="clearPageStack()" menuClose>

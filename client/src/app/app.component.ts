@@ -9,6 +9,7 @@ import { CategoryListPage } from '../pages/object/category-list/category-list';
 import { ObjectRegistrationPage } from '../pages/object/registration/object-registration';
 import { UserListPage } from '../pages/user/list/user-list';
 
+import { MyApi, UserInfoResponse } from '../api/'
 
 @Component({
   templateUrl: 'app.html'
@@ -21,6 +22,7 @@ export class MyApp {
   userListPage = UserListPage;
   static injector: Injector = null;
   @ViewChild('content') nav: NavController;
+  profile: UserInfoResponse = null;
 
   constructor(injector: Injector, platform: Platform) {
     MyApp.injector = injector
@@ -30,6 +32,11 @@ export class MyApp {
       StatusBar.styleDefault();
       Splashscreen.hide();
     });
+    this.profile = this.myApi.myProfileGet();
+  }
+  
+  private get myApi(): MyApi {
+    return MyApp.injector.get(MyApi);
   }
 
   openPage(page) {
