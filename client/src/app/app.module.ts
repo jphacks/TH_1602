@@ -14,6 +14,7 @@ import { UserListPage } from '../pages/user/list/user-list';
 import { HttpModule } from '@angular/http';
 import { CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api'
 import { MyErrorCard } from '../components'
+import { QrCodeButtonComponent } from '../components/qrcode-button/component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { MyErrorCard } from '../components'
     UserDetailsPage,
     UserListPage,
     MyErrorCard,
-    MyUserItem
+    MyUserItem,
+    QrCodeButtonComponent
   ],
   imports: [
     IonicModule.forRoot(MyApp, {}, {
@@ -43,7 +45,8 @@ import { MyErrorCard } from '../components'
         { component: ObjectRegistrationPage, name: 'ObjectRegistration', segment: 'object/registration' },
         { component: ObjectReservationPage, name: 'ObjectReservation', segment: 'object/reservation' },
         { component: UserDetailsPage, name: 'UserDetails', segment: 'user/:id' },
-        { component: UserListPage, name: 'UserList', segment: 'user' }
+        { component: UserListPage, name: 'UserList', segment: 'user' },
+        { component: QrCodeButtonComponent, name: 'QrCode', segment: 'qrcode' },
       ]
     }), HttpModule
   ],
@@ -59,7 +62,8 @@ import { MyErrorCard } from '../components'
     ObjectRegistrationPage,
     ObjectReservationPage,
     UserDetailsPage,
-    UserListPage
+    UserListPage,
+    QrCodeButtonComponent,
   ],
   providers: [CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi]
 })
