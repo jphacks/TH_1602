@@ -25,46 +25,53 @@
 'use strict';
 import * as models from './models';
 
-export interface ObjectTagRequest {
+export interface ReservationOverviewResponse {
     
 
     /**
-     * ObjectTagのId
+     * ReservationのId
      */
     id?: string;
 
     /**
-     * 表示名
+     * Reservationのcomment
      */
-    name?: string;
+    comment?: string;
+
+    objectTag?: models.IdNamePair;
 
     /**
-     * 場所
+     * 予約を行った日時
      */
-    place?: string;
+    createdAt?: Date;
 
     /**
-     * オブジェクトのURI
+     * 最終更新日
      */
-    objectUri?: string;
+    modifiedAt?: Date;
 
     /**
-     * Optional(バーコード)のURI
+     * 優先度(列挙型にする予定)
      */
-    optionalUri?: string;
+    priority?: number;
 
     /**
-     * 説明文
+     * 予約の開始日時
      */
-    description?: string;
+    startAt?: Date;
 
     /**
-     * カテゴリId
+     * 予約の終了日時
      */
-    category?: number;
+    endAt?: Date;
 
     /**
-     * 将来の予約が可能か
+     * 予約の終了が無期限であるかどうか
      */
-    bookingEnabled?: boolean;
+    isEndless?: boolean;
+
+    /**
+     * 現在利用中なものであるかどうか
+     */
+    isActive?: boolean;
 }

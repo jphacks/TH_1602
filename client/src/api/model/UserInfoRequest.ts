@@ -25,46 +25,11 @@
 'use strict';
 import * as models from './models';
 
-export interface ObjectTagRequest {
+export interface UserInfoRequest {
     
-
-    /**
-     * ObjectTagのId
-     */
-    id?: string;
 
     /**
      * 表示名
      */
-    name?: string;
-
-    /**
-     * 場所
-     */
-    place?: string;
-
-    /**
-     * オブジェクトのURI
-     */
-    objectUri?: string;
-
-    /**
-     * Optional(バーコード)のURI
-     */
-    optionalUri?: string;
-
-    /**
-     * 説明文
-     */
-    description?: string;
-
-    /**
-     * カテゴリId
-     */
-    category?: number;
-
-    /**
-     * 将来の予約が可能か
-     */
-    bookingEnabled?: boolean;
+    displayName?: string;
 }

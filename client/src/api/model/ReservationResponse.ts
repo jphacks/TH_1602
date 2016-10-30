@@ -43,7 +43,7 @@ export interface ReservationResponse {
     /**
      * 使用者のユーザーId, 表示名のリスト
      */
-    user?: Array<models.IdNamePair>;
+    users?: Array<models.IdNamePair>;
 
     objectTag?: models.IdNamePair;
 
@@ -76,4 +76,9 @@ export interface ReservationResponse {
      * 予約の終了が無期限であるかどうか
      */
     isEndless?: boolean;
+
+    /**
+     * 現在利用中なものであるかどうか
+     */
+    isActive?: boolean;
 }

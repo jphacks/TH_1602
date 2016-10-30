@@ -1,6 +1,6 @@
 export * from './AdminApi';
 export * from './CategoryApi';
-export * from './DefaultApi';
+export * from './ImageApi';
 export * from './MyApi';
 export * from './ObjectTagApi';
 export * from './PaginationEnabledApi';

@@ -38,30 +38,24 @@ export class AdminApi {
     protected basePath = ApiConfig.basePath;
     public defaultHeaders : Headers = new Headers();
 
-    constructor(protected http: Http, @Optional() basePath: string) {
-        if (basePath) {
-            this.basePath = basePath;
-        }
+    constructor(protected http: Http) {
     }
 
     /**
      * 指定したidのCategory、および含まれる予約・ObjectTagを削除します
      * 
-     * @param id 削除を行うCategoryのid
+     * @param id CategoryのId
      */
-    public categoriesDelete (id: boolean, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/categories/';
+    public categoriesIdDelete (id: number, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/categories/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling categoriesDelete.');
+            throw new Error('Required parameter id was null or undefined when calling categoriesIdDelete.');
         }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
-        }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'DELETE',
             headers: headerParams,
@@ -79,12 +73,49 @@ export class AdminApi {
     }
 
     /**
+     * 指定したidのCategoryに関する詳細を変更します
+     * 
+     * @param id CategoryのId
+     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
+     */
+    public categoriesIdPut (id: number, item: models.CategoryResponse, extraHttpRequestParams?: any ) : Observable<models.CategoryResponse> {
+        const path = this.basePath + '/categories/{id}'
+            .replace('{' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling categoriesIdPut.');
+        }
+        // verify required parameter 'item' is not null or undefined
+        if (item === null || item === undefined) {
+            throw new Error('Required parameter item was null or undefined when calling categoriesIdPut.');
+        }
+        let requestOptions: RequestOptionsArgs = {
+            method: 'PUT',
+            headers: headerParams,
+            search: queryParameters
+        };
+        requestOptions.body = JSON.stringify(item);
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * Categoryの新規登録を行います
      * 
      * @param item 新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)
      */
     public categoriesPost (item: models.CategoryRequest, extraHttpRequestParams?: any ) : Observable<models.CategoryResponse> {
-        const path = this.basePath + '/categories/';
+        const path = this.basePath + '/categories';
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
@@ -110,25 +141,37 @@ export class AdminApi {
     }
 
     /**
-     * 指定したidのCategoryに関する詳細を変更します
+     * ObjectTagの画像をセットします
      * 
-     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
+     * @param id 設定したいObjectTagのId
+     * @param item 設定したいImageのByte列
      */
-    public categoriesPut (item: models.CategoryResponse, extraHttpRequestParams?: any ) : Observable<models.CategoryResponse> {
-        const path = this.basePath + '/categories/';
+    public imagesObjectTagsIdPut (id: string, item: any, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/images/object_tags/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
+        let formParams = new URLSearchParams();
+
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling imagesObjectTagsIdPut.');
+        }
         // verify required parameter 'item' is not null or undefined
         if (item === null || item === undefined) {
-            throw new Error('Required parameter item was null or undefined when calling categoriesPut.');
+            throw new Error('Required parameter item was null or undefined when calling imagesObjectTagsIdPut.');
         }
+        headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
+
+        formParams['item'] = item;
+
         let requestOptions: RequestOptionsArgs = {
             method: 'PUT',
             headers: headerParams,
             search: queryParameters
         };
-        requestOptions.body = JSON.stringify(item);
+        requestOptions.body = formParams.toString();
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
@@ -143,26 +186,60 @@ export class AdminApi {
     /**
      * 指定したidのObjectTagに関する情報・予約を削除します
      * 
-     * @param id 削除を行うObjectTagのid
+     * @param id ObjectTagのId
      */
-    public objectTagsDelete (id: boolean, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/object_tags/';
+    public objectTagsIdDelete (id: string, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/object_tags/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling objectTagsDelete.');
+            throw new Error('Required parameter id was null or undefined when calling objectTagsIdDelete.');
         }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
-        }
-
         let requestOptions: RequestOptionsArgs = {
             method: 'DELETE',
             headers: headerParams,
             search: queryParameters
         };
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * 指定したidのObjectTagに関する詳細を変更します
+     * 
+     * @param id ObjectTagのId
+     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
+     */
+    public objectTagsIdPut (id: string, item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
+        const path = this.basePath + '/object_tags/{id}'
+            .replace('{' + 'id' + '}', String(id));
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling objectTagsIdPut.');
+        }
+        // verify required parameter 'item' is not null or undefined
+        if (item === null || item === undefined) {
+            throw new Error('Required parameter item was null or undefined when calling objectTagsIdPut.');
+        }
+        let requestOptions: RequestOptionsArgs = {
+            method: 'PUT',
+            headers: headerParams,
+            search: queryParameters
+        };
+        requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
@@ -206,25 +283,25 @@ export class AdminApi {
     }
 
     /**
-     * 指定したidのObjectTagに関する詳細を変更します
+     * 指定したidのReservationを削除します
      * 
-     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
+     * @param id ReservationのId
      */
-    public objectTagsPut (item: models.ObjectTagRequest, extraHttpRequestParams?: any ) : Observable<models.ObjectTagResponse> {
-        const path = this.basePath + '/object_tags/';
+    public reservationsIdDelete (id: string, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/reservations/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
-        // verify required parameter 'item' is not null or undefined
-        if (item === null || item === undefined) {
-            throw new Error('Required parameter item was null or undefined when calling objectTagsPut.');
+        // verify required parameter 'id' is not null or undefined
+        if (id === null || id === undefined) {
+            throw new Error('Required parameter id was null or undefined when calling reservationsIdDelete.');
         }
         let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
+            method: 'DELETE',
             headers: headerParams,
             search: queryParameters
         };
-        requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
@@ -237,28 +314,31 @@ export class AdminApi {
     }
 
     /**
-     * 指定したidのReservationを削除します
+     * 指定したidのReservationに関する詳細を変更します
      * 
-     * @param id 削除を行うReservationのid
+     * @param id ReservationのId
+     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
      */
-    public reservationsDelete (id: boolean, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/reservations/';
+    public reservationsIdPut (id: string, item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
+        const path = this.basePath + '/reservations/{id}'
+            .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling reservationsDelete.');
+            throw new Error('Required parameter id was null or undefined when calling reservationsIdPut.');
         }
-        if (id !== undefined) {
-            queryParameters.set('id', String(id));
+        // verify required parameter 'item' is not null or undefined
+        if (item === null || item === undefined) {
+            throw new Error('Required parameter item was null or undefined when calling reservationsIdPut.');
         }
-
         let requestOptions: RequestOptionsArgs = {
-            method: 'DELETE',
+            method: 'PUT',
             headers: headerParams,
             search: queryParameters
         };
+        requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
@@ -286,37 +366,6 @@ export class AdminApi {
         }
         let requestOptions: RequestOptionsArgs = {
             method: 'POST',
-            headers: headerParams,
-            search: queryParameters
-        };
-        requestOptions.body = JSON.stringify(item);
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
-     * 指定したidのReservationに関する詳細を変更します
-     * 
-     * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
-     */
-    public reservationsPut (item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
-        const path = this.basePath + '/reservations/';
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        // verify required parameter 'item' is not null or undefined
-        if (item === null || item === undefined) {
-            throw new Error('Required parameter item was null or undefined when calling reservationsPut.');
-        }
-        let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
             headers: headerParams,
             search: queryParameters
         };

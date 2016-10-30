@@ -38,10 +38,7 @@ export class UserInfoApi {
     protected basePath = ApiConfig.basePath;
     public defaultHeaders : Headers = new Headers();
 
-    constructor(protected http: Http, @Optional() basePath: string) {
-        if (basePath) {
-            this.basePath = basePath;
-        }
+    constructor(protected http: Http) {
     }
 
     /**
@@ -50,6 +47,31 @@ export class UserInfoApi {
      */
     public listUsersGet (extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.UserInfoResponse>> {
         const path = this.basePath + '/list/users';
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        let requestOptions: RequestOptionsArgs = {
+            method: 'GET',
+            headers: headerParams,
+            search: queryParameters
+        };
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * 現在ログイン中の利用者の詳細情報を取得します
+     * 
+     */
+    public myProfileGet (extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
+        const path = this.basePath + '/my/profile';
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
@@ -95,11 +117,48 @@ export class UserInfoApi {
     }
 
     /**
+     * ユーザー画像を更新します
+     * 
+     * @param item 設定したいImageのByte列
+     */
+    public myUpdateProfileImagePut (item: any, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/my/update_profile_image';
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        let formParams = new URLSearchParams();
+
+        // verify required parameter 'item' is not null or undefined
+        if (item === null || item === undefined) {
+            throw new Error('Required parameter item was null or undefined when calling myUpdateProfileImagePut.');
+        }
+        headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
+
+        formParams['item'] = item;
+
+        let requestOptions: RequestOptionsArgs = {
+            method: 'PUT',
+            headers: headerParams,
+            search: queryParameters
+        };
+        requestOptions.body = formParams.toString();
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * ユーザー情報を更新します
      * 
      * @param item 変更したいユーザー情報
      */
-    public myUpdateProfilePut (item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
+    public myUpdateProfilePut (item: models.UserInfoRequest, extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
         const path = this.basePath + '/my/update_profile';
 
         let queryParameters = new URLSearchParams();
@@ -114,6 +173,37 @@ export class UserInfoApi {
             search: queryParameters
         };
         requestOptions.body = JSON.stringify(item);
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
+     * ユーザーに関する情報を取得します
+     * 
+     * @param userName 取得したいユーザー名
+     */
+    public usersUserNameGet (userName: string, extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
+        const path = this.basePath + '/users/{user_name}'
+            .replace('{' + 'user_name' + '}', String(userName));
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        // verify required parameter 'userName' is not null or undefined
+        if (userName === null || userName === undefined) {
+            throw new Error('Required parameter userName was null or undefined when calling usersUserNameGet.');
+        }
+        let requestOptions: RequestOptionsArgs = {
+            method: 'GET',
+            headers: headerParams,
+            search: queryParameters
+        };
 
         return this.http.request(path, requestOptions)
             .map((response: Response) => {

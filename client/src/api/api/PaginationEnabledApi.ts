@@ -38,10 +38,7 @@ export class PaginationEnabledApi {
     protected basePath = ApiConfig.basePath;
     public defaultHeaders : Headers = new Headers();
 
-    constructor(protected http: Http, @Optional() basePath: string) {
-        if (basePath) {
-            this.basePath = basePath;
-        }
+    constructor(protected http: Http) {
     }
 
     /**
@@ -128,15 +125,15 @@ export class PaginationEnabledApi {
     /**
      * Categoryの検索を結果を返します
      * 
-     * @param name Categoryの名前(部分一致)
+     * @param keywords Categoryのキーワード(部分一致)
      */
-    public searchCategoriesGet (name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
+    public searchCategoriesGet (keywords?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.CategoryResponse>> {
         const path = this.basePath + '/search/categories';
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
-        if (name !== undefined) {
-            queryParameters.set('name', String(name));
+        if (keywords !== undefined) {
+            queryParameters.set('keywords', String(keywords));
         }
 
         let requestOptions: RequestOptionsArgs = {
@@ -159,9 +156,9 @@ export class PaginationEnabledApi {
      * ObjectTagの検索を結果を返します
      * 
      * @param categoryId ObjectTagのId
-     * @param name ObjectTagの名前(部分一致)
+     * @param keywords ObjectTagのキーワード(部分一致)
      */
-    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
+    public searchObjectTagsGet (categoryId?: string, keywords?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/search/object_tags';
 
         let queryParameters = new URLSearchParams();
@@ -170,8 +167,8 @@ export class PaginationEnabledApi {
             queryParameters.set('category_id', String(categoryId));
         }
 
-        if (name !== undefined) {
-            queryParameters.set('name', String(name));
+        if (keywords !== undefined) {
+            queryParameters.set('keywords', String(keywords));
         }
 
         let requestOptions: RequestOptionsArgs = {
@@ -195,12 +192,12 @@ export class PaginationEnabledApi {
      * 
      * @param objectTagId 予約対象となるObjectTag
      * @param userName 予約ユーザーに含まれるuserのuser name
-     * @param keyword Reservationの予約要件(部分一致)
-     * @param startAt 予約開始時刻
-     * @param endAt 予約終了時刻。 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
+     * @param keywords Reservationの予約要件(部分一致)
+     * @param sinceAt 指定時間以降に重なるものを検索 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
+     * @param toAt 指定時間以前に重なるものを検索 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
      * @param includesPast 現在予約が終了しているものも検索に含めるかどうか。 defaultばfalseです。 
      */
-    public searchReservationsGet (objectTagId?: string, userName?: string, keyword?: Array<string>, startAt?: Date, endAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ReservationResponse>> {
+    public searchReservationsGet (objectTagId?: string, userName?: string, keywords?: Array<string>, sinceAt?: Date, toAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ReservationResponse>> {
         const path = this.basePath + '/search/reservations';
 
         let queryParameters = new URLSearchParams();
@@ -213,16 +210,16 @@ export class PaginationEnabledApi {
             queryParameters.set('user_name', String(userName));
         }
 
-        if (keyword !== undefined) {
-            queryParameters.set('keyword', String(keyword));
+        if (keywords !== undefined) {
+            queryParameters.set('keywords', String(keywords));
         }
 
-        if (startAt !== undefined) {
-            queryParameters.set('start_at', String(startAt));
+        if (sinceAt !== undefined) {
+            queryParameters.set('since_at', String(sinceAt));
         }
 
-        if (endAt !== undefined) {
-            queryParameters.set('end_at', String(endAt));
+        if (toAt !== undefined) {
+            queryParameters.set('to_at', String(toAt));
         }
 
         if (includesPast !== undefined) {
