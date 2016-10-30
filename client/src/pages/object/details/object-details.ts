@@ -57,7 +57,7 @@ export class ObjectDetailsPage {
             return a.createdAt.valueOf() - b.createdAt.valueOf()
           }
         });
-        if(this.objTag.bookingEnabled && this.reservations[0].startAt.valueOf() < new Date().valueOf() || !this.objTag.bookingEnabled && this.reservations[0].createdAt.valueOf() < new Date().valueOf() ) {
+        if(this.reservations[0].isActive) {
           this.currentReservation = this.reservations.shift();
         }
         finish && finish();
