@@ -1,13 +1,37 @@
 <ion-header>
-	<ion-navbar>
-		<button ion-button menuToggle icon-only>
+  <ion-navbar>
+    <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-		<ion-title>
-			予約
-		</ion-title>
-	</ion-navbar>
+    <ion-title>
+      予約
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
+    <ion-list *ngIf="otherReservations != null">
+    <ion-item *ngFor="let res of otherReservations">
+      {{res.users}}: {{res.startAt}}~{{res.endAt}}
+    </ion-item>
+  </ion-list>
+
+  <form (ngSubmit)="post()" novalidate>
+    <ion-item>
+      <ion-label>開始時刻</ion-label>
+      <ion-datetime displayFormat="YYYY-MM-DD hh:mm" [(ngModel)]="start" name="start_at"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label>終了時刻</ion-label>
+      <ion-datetime displayFormat="YYYY-MM-DD hh:mm" [(ngModel)]="end" name="end_at"></ion-datetime>
+    </ion-item>
+
+    <ion-item>
+      <ion-label fixed>コメント</ion-label>
+      <ion-input type="text" [(ngModel)]="reservation.comment" name="comment" ></ion-input>
+    </ion-item>
+
+    <button ion-button type="submit">予約する</button>
+  </form>
 </ion-content>

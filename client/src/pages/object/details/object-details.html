@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar>
-  <button ion-button menuToggle icon-only>
+    <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
     <ion-title *ngIf="objTag != null">
@@ -10,5 +10,48 @@
 </ion-header>
 
 <ion-content>
-  
+
+  <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="objTag != null && objTag.imageUri && !imgError">
+    <img class="obj-image" src="{{objTag.imageUri}}" (error)="onImgError($event)" />
+  </div>
+  <div *ngIf="objTag != null">
+
+    <div class="category" *ngIf="objTag.category != null">
+      {{objTag.category.name}}
+    </div>
+    <div class="description" *ngIf="objTag.description != null">
+      {{objTag.description}}
+    </div>
+    <div class="place" *ngIf="objTag.place != null">
+      場所：{{objTag.place}}
+    </div>
+  </div>
+  <ion-list *ngIf="reservations">
+    <ion-list-header *ngIf="currentReservation">
+      現在使用中
+    </ion-list-header>
+    <my-user-item *ngIf="currentReservation" [reservation]="currentReservation"></my-user-item>
+
+    <ion-list-header *ngIf="reservations && reservations.length">
+      予約中
+    </ion-list-header>
+    <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation"></my-user-item>
+  </ion-list>
+
+  <ion-fab bottom right *ngIf="objTag && reservations">
+    <button ion-fab>
+      <ion-icon name="arrow-up" *ngIf="!currentReservation && objTag.bookingEnabled"></ion-icon>
+      <ion-icon name="checkmark" *ngIf="!currentReservation && !objTag.bookingEnabled" (click)="checkIn()"></ion-icon>
+      <ion-icon name="calendar" *ngIf="currentReservation" (click)="reservate()"></ion-icon>
+    </button>
+    <ion-fab-list side="top" *ngIf="!currentReservation && objTag.bookingEnabled">
+      <button ion-fab><ion-icon name="checkmark" (click)="checkInTime()"></ion-icon></button>
+      <button ion-fab><ion-icon name="calendar" (click)="reservate()"></ion-icon></button>
+    </ion-fab-list>
+  </ion-fab>
+  <my-error-card [networkError]="networkError" [serverError]="serverError"></my-error-card>
 </ion-content>

@@ -1,3 +1,38 @@
-page-contact {
+page-object-details {
+    .category, .description, .place {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 
+    .category, .place {
+        color: gray;
+        font-size: 16px;
+    }
+
+    .category {
+        margin-top: 5px;
+    }
+
+    .description {
+        color: black;
+        font-size: 28px;
+    }
+
+    img.obj-image {
+        width: 100%;
+        max-height: 200px;
+        position: relative;
+        overflow: hidden;
+    }
+}
+
+my-user-item {
+    div.users {
+      font-size: 20px;
+      font-weight: 700;
+      color: black;
+    }
+    div.time {
+      color: gray;
+    }
 }

@@ -1,0 +1,1 @@
+export {MyErrorCard} from './error-card/error-card/';

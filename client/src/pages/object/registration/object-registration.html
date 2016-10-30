@@ -1,13 +1,30 @@
 <ion-header>
-	<ion-navbar>
-		<button ion-button menuToggle icon-only>
+  <ion-navbar>
+    <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-		<ion-title>
-			物品登録
-		</ion-title>
-	</ion-navbar>
+    <ion-title>
+      物品登録
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <form (ngSubmit)='post()'>
+    <ion-item>
+      <ion-label color='primary' >物品名</ion-label>
+      <ion-input placeholder="Text Input" [(ngModel)]="register.name" name="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color='primary'>場所</ion-label>
+      <ion-input placeholder="Text Input" [(ngModel)]="register.place" name="place"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label color='primary'>説明</ion-label>
+      <ion-input placeholder="Text Input" [(ngModel)]="register.description" name="description"></ion-input>
+    </ion-item>
+    <button ion-button [disabled]="register.name.length == 0" type="submit" block>物品登録</button>
+    </form>
+  </ion-list>
 </ion-content>

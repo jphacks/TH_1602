@@ -3,11 +3,15 @@
     <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-    <ion-title *ngIf="category == null">
+    <ion-title *ngIf="category == null && searchObjects == null">
       物品一覧
     </ion-title>
-    <ion-title *ngIf="category != null">
+    <ion-title *ngIf="category != null && searchObjects == null">
       物品一覧 - {{category.name}}
+    </ion-title>
+
+    <ion-title *ngIf="searchObjects != null">
+      検索結果
     </ion-title>
   </ion-navbar>
   <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
@@ -20,7 +24,7 @@
     </ion-refresher-content>
   </ion-refresher>
   
-  <ion-list *ngIf="objects !== null && searchObjects == null">
+  <ion-list *ngIf="objects != null && searchObjects == null && !serverError && !networkError">
     <ion-item *ngFor="let obj of objects" (click)="push(obj)">
       {{obj.name}}
     </ion-item>
@@ -32,12 +36,5 @@
     </ion-item>
   </ion-list>
 
-  <ion-card *ngIf="error">
-    <ion-card-header>
-      読み込みエラー
-    </ion-card-header>
-    <ion-card-content>
-      ネットワーク設定を確認の上，スワイプして再読込してください．
-    </ion-card-content>
-  </ion-card>
+  <my-error-card [networkError]="networkError" [serverError]="serverError"></my-error-card>
 </ion-content>
