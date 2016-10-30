@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Tarusho.Server.Data;
+using Tarusho.Server.Middlewares;
 using Tarusho.Server.Models;
 using Tarusho.Server.Services;
 
@@ -23,7 +25,7 @@ namespace Tarusho.Server
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("appsettings.tokens.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("tokens.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())
@@ -56,7 +58,7 @@ namespace Tarusho.Server
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
-            
+
             services.AddMvc();
             services.AddCors(options => options.AddPolicy("AllowAll", p => p.AllowAnyOrigin()));
 
@@ -95,19 +97,29 @@ namespace Tarusho.Server
 
             app.UseCors("AllowAll");
 
-            seeder.SeedAdminUserAsync("p@ssw0rd").Wait();
+            //seeder.SeedAdminUserAsync("p@ssw0rd").Wait();
+
+            //seeder.SeedUserAsync().Wait();
 
             seeder.SeedCategory().Wait();
 
             seeder.SeedObjectTag().Wait();
 
+            app.UseTwitterAuthentication(new TwitterOptions()
+            {
+                ConsumerKey = Configuration.GetValue<string>("AppTokens:TwitterConsumerKey"),
+                ConsumerSecret = Configuration.GetValue<string>("AppTokens:TwitterConsumerSecret")
+            });
+
+            app.UseMiddleware<AccessTokenMiddleware>();
+
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-            });
+        {
+            routes.MapRoute(
+                name: "default",
+                template: "{controller=Home}/{action=Index}/{id?}");
+        });
         }
     }
 }

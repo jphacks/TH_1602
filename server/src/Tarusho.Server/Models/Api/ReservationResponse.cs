@@ -73,5 +73,12 @@ namespace Tarusho.Server.Models.Api
         [DataMember(Name = "is_endless", EmitDefaultValue = false)]
         public bool? IsEndless { get; set; }
 
+        /// <summary>
+        /// 現在アクティブなものであるかどうか
+        /// </summary>
+        /// <value>現在アクティブなものであるかどうか</value>
+        [DataMember(Name = "is_active", EmitDefaultValue = false)]
+        public bool IsActive { get; set; }
+
     }
 }

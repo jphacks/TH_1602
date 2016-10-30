@@ -68,11 +68,8 @@ namespace Tarusho.Server.Data
                 .HasOne(c => c.Category)
                 .WithMany(c => c.ObjectTags)
                 .HasForeignKey(c => c.CategoryId);
-            builder.Entity<ObjectTag>()
-                .HasOne(c => c.InUseReservation)
-                .WithMany()
-                .HasForeignKey(c => c.InUseReservationId);
-            builder.Entity<ObjectTag>()
+            builder.Entity<
+                ObjectTag>()
                 .HasIndex(c => c.ObjectUri);
             builder.Entity<ObjectTag>()
                 .HasIndex(c => c.OptionalUri);

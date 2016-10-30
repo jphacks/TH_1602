@@ -21,6 +21,7 @@ namespace Tarusho.Server.Extensions
                 StartAt = model.StartAt,
                 EndAt = model.EndAt,
                 IsEndless = model.IsEndless,
+                IsActive = model.IsActiveReservations(),
                 ModifiedAt = model.ModifiedAt,
                 Priority = model.Priority,
                 ObjectTag = new IdNamePair<string>() { Id = model.ObjectTagId, Name = model.ObjectTag.Name },
@@ -55,10 +56,9 @@ namespace Tarusho.Server.Extensions
             {
                 Id = model.Id,
                 Name = model.Name,
-                Category = new IdNamePair<long>() {Id = model.CategoryId, Name = model.Category.Name},
+                Category = new IdNamePair<long>() { Id = model.CategoryId, Name = model.Category.Name },
                 ObjectUri = model.ObjectUri,
                 OptionalUri = model.OptionalUri,
-                InUseReservationId = model.InUseReservationId,
                 BookingEnabled = model.IsBookingEnabled,
                 Description = model.Description,
                 ImageUri = model.GetImageUri(),
@@ -90,5 +90,16 @@ namespace Tarusho.Server.Extensions
             return temp;
         }
 
+        public static Tuple<IdNamePair<string>, ReservationResponse> ToApiModel(this ReservationUser model)
+        {
+            var temp = new Tuple<IdNamePair<string>, ReservationResponse>(
+                new IdNamePair<string>()
+                {
+                    Id =  model.UserId,
+                    Name = model.User.UserName
+                },
+                model.Reservation.ToApiModel());
+            return temp;
+        }
     }
 }

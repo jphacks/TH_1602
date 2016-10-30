@@ -129,6 +129,8 @@ namespace Tarusho.Server.Migrations
 
                     b.Property<int>("AccessFailedCount");
 
+                    b.Property<string>("AccessToken");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
@@ -207,8 +209,6 @@ namespace Tarusho.Server.Migrations
 
                     b.Property<string>("ImageUri");
 
-                    b.Property<string>("InUseReservationId");
-
                     b.Property<bool>("IsBookingEnabled");
 
                     b.Property<string>("Name");
@@ -224,8 +224,6 @@ namespace Tarusho.Server.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("InUseReservationId");
 
                     b.HasIndex("ObjectUri");
 
@@ -285,7 +283,7 @@ namespace Tarusho.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ReservationUser");
+                    b.ToTable("ReservationUsers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>
@@ -331,10 +329,6 @@ namespace Tarusho.Server.Migrations
                         .WithMany("ObjectTags")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Tarusho.Server.Models.Data.Reservation", "InUseReservation")
-                        .WithMany()
-                        .HasForeignKey("InUseReservationId");
                 });
 
             modelBuilder.Entity("Tarusho.Server.Models.Data.Reservation", b =>

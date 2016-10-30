@@ -16,8 +16,6 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/search")]
-    [EnableCors("AllowAll")]
-    [Authorize]
     public class SearchController : Controller
     {
         private readonly ApplicationDbContext _context;

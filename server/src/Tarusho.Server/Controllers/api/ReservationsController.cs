@@ -13,20 +13,23 @@ using Tarusho.Server.Extensions;
 using Tarusho.Server.Models;
 using Tarusho.Server.Models.Api;
 using Tarusho.Server.Models.Data;
+using Tarusho.Server.Services;
 
 namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/reservation")]
-    [Authorize()]
-    [EnableCors("AllowAll")]
     public class ReservationsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ReservationsController(ApplicationDbContext context)
+        private readonly ReservationService _reservationService;
+
+
+        public ReservationsController(ApplicationDbContext context,ReservationService service)
         {
             _context = context;
+            _reservationService = service;
         }
 
         // GET: api/Reservations
@@ -78,7 +81,17 @@ namespace Tarusho.Server.Controllers.api
 
             try
             {
+                var userIds = _context.ReservationUsers.Select(c => c.UserId).ToList();
+                await RemoveReservationUser(userIds, reservation.Id);
+
                 await _context.SaveChangesAsync();
+                _reservationService.OnEditReservation(reservation);
+
+                await RegisterReservationUser(item.Users, reservation);
+
+                await _context.SaveChangesAsync();
+
+
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -117,6 +130,11 @@ namespace Tarusho.Server.Controllers.api
             try
             {
                 await _context.SaveChangesAsync();
+
+                _reservationService.OnAddReservation(reservation);
+
+                await RegisterReservationUser(item.Users, reservation);
+                await _context.SaveChangesAsync();
             }
             catch (DbUpdateException)
             {
@@ -151,6 +169,8 @@ namespace Tarusho.Server.Controllers.api
             _context.Reservations.Remove(reservation);
             await _context.SaveChangesAsync();
 
+            _reservationService.OnRemoveReservation(reservation);
+
             return Ok();
         }
 
@@ -175,6 +195,7 @@ namespace Tarusho.Server.Controllers.api
                 if (item == null)
                     continue;
 
+                _reservationService.OnRemoveReservationUser(item);
                 _context.ReservationUsers.Remove(item);
             }
             await _context.SaveChangesAsync();
@@ -186,7 +207,7 @@ namespace Tarusho.Server.Controllers.api
             {
                 var user = _context.Users.FirstOrDefault(c => c.UserName == userName);
                 if (user == null)
-                    continue; // TODO: ‚Ç‚¤‚µ‚æ‚¤
+                    continue;
 
                 var item = new ReservationUser()
                 {
@@ -195,11 +216,9 @@ namespace Tarusho.Server.Controllers.api
                 };
 
                 _context.ReservationUsers.Add(item);
+                _reservationService.OnAddReservationUser(item);
             }
             await _context.SaveChangesAsync();
-
-            // TODO: Push Notification to attendees
-
         }
 
     }

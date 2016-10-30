@@ -51,12 +51,6 @@ namespace Tarusho.Server.Models.Api
         [DataMember(Name = "image_uri", EmitDefaultValue = false)]
         public string ImageUri { get; set; }
         /// <summary>
-        /// 現在利用中の予約Id
-        /// </summary>
-        /// <value>現在利用中の予約Id</value>
-        [DataMember(Name = "in_use_reservation_id", EmitDefaultValue = false)]
-        public string InUseReservationId { get; set; }
-        /// <summary>
         /// Gets or Sets Category
         /// </summary>
         [DataMember(Name = "category", EmitDefaultValue = false)]

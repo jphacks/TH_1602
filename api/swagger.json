@@ -741,6 +741,19 @@
                     }
                 }
             }
+        },
+        "/login": {
+            "post": {
+                "summary": "ログインを行います",
+                "tags": [
+                    "Login"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ログインに成功した場合。このときのSet-Cookieを保持し、以降のリクエストに付与する。\n"
+                    }
+                }
+            }
         }
     },
     "definitions": {

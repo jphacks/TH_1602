@@ -2,23 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tarusho.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Tarusho.Server.Extensions;
+using Tarusho.Server.Services;
 
 namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/return")]
+    [Authorize()]
     public class ReturnController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ReturnController(ApplicationDbContext context)
+        private readonly ReservationService _reservationService;
+
+
+        public ReturnController(ApplicationDbContext context, ReservationService service)
         {
             _context = context;
+            _reservationService = service;
         }
 
         // GET: api/return/{reservation_id}
@@ -40,7 +47,7 @@ namespace Tarusho.Server.Controllers.api
 
             await _context.SaveChangesAsync();
 
-            // TODO: èIóπÇµÇΩÇÊNotification
+            _reservationService.OnReturnReservation(reservation);
 
             return Ok();
         }

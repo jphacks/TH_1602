@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Tarusho.Server.Data;
@@ -11,6 +12,7 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/images")]
+    [Authorize]
     public class ImagesController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -16,7 +16,6 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/object_tags")]
-    [EnableCors("AllowAll")]
     public class ObjectTagsController : Controller
     {
         private readonly ApplicationDbContext _context;

@@ -20,6 +20,14 @@ namespace Tarusho.Server.Models
 
         public ICollection<Reservation> OwnReservations { get; set; }
 
+        public string AccessToken { get; set; }
 
+        public ApplicationUser() : base()
+        {
+            var pass = Guid.NewGuid().ToString();
+            var pass2 = Guid.NewGuid().ToString();
+            var temp = pass.Replace("-", string.Empty) + pass2.Replace("-", string.Empty);
+            this.AccessToken = temp;
+        }
     }
 }

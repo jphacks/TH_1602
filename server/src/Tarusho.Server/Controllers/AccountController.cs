@@ -44,9 +44,10 @@ namespace Tarusho.Server.Controllers
         // GET: /Account/Login
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login(string returnUrl = null)
+        public IActionResult Login(string returnUrl = null, bool isClientLogin = false)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["IsClientLogin"] = isClientLogin;
             return View();
         }
 
@@ -55,9 +56,11 @@ namespace Tarusho.Server.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Login(LoginViewModel model, bool isClientLogin = false, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["IsClientLogin"] = isClientLogin;
+
             if (!ModelState.IsValid) return View(model);
 
             // This doesn't count login failures towards account lockout
@@ -69,7 +72,7 @@ namespace Tarusho.Server.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectOrCallback(returnUrl, isClientLogin, user.UserName, user.AccessToken);
                 }
                 if (result.IsLockedOut)
                 {
@@ -87,9 +90,10 @@ namespace Tarusho.Server.Controllers
         // GET: /Account/Register
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Register(string returnUrl = null)
+        public IActionResult Register(string returnUrl = null, bool isClientLogin = false)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["IsClientLogin"] = isClientLogin;
             return View();
         }
 
@@ -98,9 +102,10 @@ namespace Tarusho.Server.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string returnUrl = null)
+        public async Task<IActionResult> Register(RegisterViewModel model, bool isClientLogin = false, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["IsClientLogin"] = isClientLogin;
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.UserName, Email = model.Email };
@@ -115,7 +120,7 @@ namespace Tarusho.Server.Controllers
                     //    $"Please confirm your account by clicking this link: <a href='{callbackUrl}'>link</a>");
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectOrCallback(returnUrl, isClientLogin, user.UserName, user.AccessToken);
                 }
                 AddErrors(result);
             }
@@ -140,10 +145,10 @@ namespace Tarusho.Server.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public IActionResult ExternalLogin(string provider, string returnUrl = null)
+        public IActionResult ExternalLogin(string provider, bool isClientLogin = false, string returnUrl = null)
         {
             // Request a redirect to the external login provider.
-            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl, isClientLogin = isClientLogin });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return Challenge(properties, provider);
         }
@@ -152,7 +157,7 @@ namespace Tarusho.Server.Controllers
         // GET: /Account/ExternalLoginCallback
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, bool isClientLogin = false, string remoteError = null)
         {
             if (remoteError != null)
             {
@@ -170,7 +175,8 @@ namespace Tarusho.Server.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
-                return RedirectToLocal(returnUrl);
+                var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+                return RedirectOrCallback(returnUrl, isClientLogin,user.UserName, user.AccessToken);
             }
             if (result.IsLockedOut)
             {
@@ -180,6 +186,7 @@ namespace Tarusho.Server.Controllers
             {
                 // If the user does not have an account, then ask the user to create an account.
                 ViewData["ReturnUrl"] = returnUrl;
+                ViewData["IsClientLogin"] = isClientLogin;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var name = info.Principal.FindFirstValue(ClaimTypes.Name);
                 return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = name });
@@ -191,7 +198,7 @@ namespace Tarusho.Server.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model, string returnUrl = null)
+        public async Task<IActionResult> ExternalLoginConfirmation(ExternalLoginConfirmationViewModel model,bool isClientLogin = false, string returnUrl = null)
         {
             if (ModelState.IsValid)
             {
@@ -210,13 +217,15 @@ namespace Tarusho.Server.Controllers
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
-                        return RedirectToLocal(returnUrl);
+                        return RedirectOrCallback(returnUrl, isClientLogin, user.UserName, user.AccessToken);
                     }
                 }
                 AddErrors(result);
             }
 
             ViewData["ReturnUrl"] = returnUrl;
+            ViewData["IsClientLogin"] = isClientLogin;
+
             return View(model);
         }
 
@@ -316,6 +325,19 @@ namespace Tarusho.Server.Controllers
         {
             var user = await _userManager.FindByNameAsync(userName);
             return Json(user == null);
+        }
+
+        private IActionResult RedirectOrCallback(string returnUrl, bool isClientLogin, string userName, string accessToken)
+        {
+            if (isClientLogin)
+            {
+                return Redirect($"monogement://callback?user_name={userName}&code={accessToken}");
+            }
+            else
+            {
+                return RedirectToLocal(returnUrl);
+            }
+
         }
 
         #region Helpers

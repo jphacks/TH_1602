@@ -52,15 +52,6 @@ namespace Tarusho.Server.Models.Data
 
         public string ThumbnailImageUri { get; set; }
 
-
-        /// <summary>
-        /// 現在利用中の予約Id
-        /// </summary>
-        /// <value>現在利用中の予約Id</value>
-        public string InUseReservationId { get; set; }
-
-        public Reservation InUseReservation { get; set; }
-
         public ICollection<Reservation> Reservations { get; set; }
 
         /// <summary>

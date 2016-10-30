@@ -16,7 +16,6 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/categories")]
-    [EnableCors("AllowAll")]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

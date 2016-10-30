@@ -48,6 +48,32 @@ namespace Tarusho.Server.Data
             await _context.SaveChangesAsync();
         }
 
+
+        public async Task SeedUserAsync()
+        {
+            var userStore = new UserStore<ApplicationUser>(_context);
+            var hasher = new PasswordHasher<ApplicationUser>();
+
+            for (int i = 0; i < 20; i++)
+            {
+                if (!_context.Users.Any(c => c.UserName == $"User{i}"))
+                {
+                    var user = new ApplicationUser()
+                    {
+                        UserName = $"User{i}",
+                        NormalizedUserName = $"User{i}",
+                        DisplayName = $"おぼユーザー{i}"
+                    };
+                    var hashed = hasher.HashPassword(user, $"userPass{i}");
+                    user.PasswordHash = hashed;
+                    await userStore.CreateAsync(user);
+                    await userStore.AddToRoleAsync(user, "admin");
+                }
+            }
+            await _context.SaveChangesAsync();
+        }
+
+
         public async Task SeedCategory()
         {
             for (var i = 1; i < 20; i++)

@@ -5,7 +5,7 @@
 
 <h2>@ViewData["Title"]</h2>
 
-<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+<form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" asp-route-isClientLogin="@ViewData["IsClientLogin"]" method="post" class="form-horizontal">
     <h4>ユーザーを登録</h4>
     <hr />
     <div asp-validation-summary="All" class="text-danger"></div>

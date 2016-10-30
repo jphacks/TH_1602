@@ -43,6 +43,7 @@ namespace Tarusho.Server.Migrations
                 {
                     Id = table.Column<string>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
+                    AccessToken = table.Column<string>(nullable: true),
                     ConcurrencyStamp = table.Column<string>(nullable: true),
                     DisplayName = table.Column<string>(nullable: true),
                     Email = table.Column<string>(maxLength: 256, nullable: true),
@@ -166,6 +167,32 @@ namespace Tarusho.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ObjectTags",
+                columns: table => new
+                {
+                    Id = table.Column<string>(nullable: false),
+                    CategoryId = table.Column<int>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
+                    ImageUri = table.Column<string>(nullable: true),
+                    IsBookingEnabled = table.Column<bool>(nullable: false),
+                    Name = table.Column<string>(nullable: true),
+                    ObjectUri = table.Column<string>(nullable: true),
+                    OptionalUri = table.Column<string>(nullable: true),
+                    Place = table.Column<string>(nullable: true),
+                    ThumbnailImageUri = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ObjectTags", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ObjectTags_Categories_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reservations",
                 columns: table => new
                 {
@@ -184,6 +211,12 @@ namespace Tarusho.Server.Migrations
                 {
                     table.PrimaryKey("PK_Reservations", x => x.Id);
                     table.ForeignKey(
+                        name: "FK_Reservations_ObjectTags_ObjectTagId",
+                        column: x => x.ObjectTagId,
+                        principalTable: "ObjectTags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Reservations_AspNetUsers_OwnerUserId",
                         column: x => x.OwnerUserId,
                         principalTable: "AspNetUsers",
@@ -192,40 +225,7 @@ namespace Tarusho.Server.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ObjectTags",
-                columns: table => new
-                {
-                    Id = table.Column<string>(nullable: false),
-                    CategoryId = table.Column<int>(nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    ImageUri = table.Column<string>(nullable: true),
-                    InUseReservationId = table.Column<string>(nullable: true),
-                    IsBookingEnabled = table.Column<bool>(nullable: false),
-                    Name = table.Column<string>(nullable: true),
-                    ObjectUri = table.Column<string>(nullable: true),
-                    OptionalUri = table.Column<string>(nullable: true),
-                    Place = table.Column<string>(nullable: true),
-                    ThumbnailImageUri = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ObjectTags", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_ObjectTags_Categories_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ObjectTags_Reservations_InUseReservationId",
-                        column: x => x.InUseReservationId,
-                        principalTable: "Reservations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "ReservationUser",
+                name: "ReservationUsers",
                 columns: table => new
                 {
                     ReservationId = table.Column<string>(nullable: false),
@@ -233,15 +233,15 @@ namespace Tarusho.Server.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ReservationUser", x => new { x.ReservationId, x.UserId });
+                    table.PrimaryKey("PK_ReservationUsers", x => new { x.ReservationId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_ReservationUser_Reservations_ReservationId",
+                        name: "FK_ReservationUsers_Reservations_ReservationId",
                         column: x => x.ReservationId,
                         principalTable: "Reservations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ReservationUser_AspNetUsers_UserId",
+                        name: "FK_ReservationUsers_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -301,11 +301,6 @@ namespace Tarusho.Server.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ObjectTags_InUseReservationId",
-                table: "ObjectTags",
-                column: "InUseReservationId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_ObjectTags_ObjectUri",
                 table: "ObjectTags",
                 column: "ObjectUri");
@@ -346,38 +341,18 @@ namespace Tarusho.Server.Migrations
                 column: "StartAt");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReservationUser_ReservationId",
-                table: "ReservationUser",
+                name: "IX_ReservationUsers_ReservationId",
+                table: "ReservationUsers",
                 column: "ReservationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ReservationUser_UserId",
-                table: "ReservationUser",
+                name: "IX_ReservationUsers_UserId",
+                table: "ReservationUsers",
                 column: "UserId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Reservations_ObjectTags_ObjectTagId",
-                table: "Reservations",
-                column: "ObjectTagId",
-                principalTable: "ObjectTags",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Restrict);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Reservations_AspNetUsers_OwnerUserId",
-                table: "Reservations");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ObjectTags_Categories_CategoryId",
-                table: "ObjectTags");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_ObjectTags_Reservations_InUseReservationId",
-                table: "ObjectTags");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -394,22 +369,22 @@ namespace Tarusho.Server.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "ReservationUser");
+                name: "ReservationUsers");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
-
-            migrationBuilder.DropTable(
-                name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Reservations");
 
             migrationBuilder.DropTable(
                 name: "ObjectTags");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
         }
     }
 }
