@@ -19,10 +19,18 @@
     <ion-list-header>
       利用
     </ion-list-header>
+    <ion-item *ngFor="let u of usings">
+      {{u.objectTag.name}} {{u.startAt}} ~ {{u.endAt}}
+    </ion-item>
+
   </ion-list>
   <ion-list>
     <ion-list-header>
       予約
     </ion-list-header>
+    <ion-item *ngFor="let r of resevations">
+      {{r.objectTag.name}} {{r.startAt}} ~ {{r.endAt}}
+    </ion-item>
+
   </ion-list>
 </ion-content>
