@@ -8,7 +8,7 @@ import { LoginPage } from '../pages/login/login';
 import { CategoryListPage } from '../pages/object/category-list/category-list';
 import { ObjectRegistrationPage } from '../pages/object/registration/object-registration';
 import { UserListPage } from '../pages/user/list/user-list';
-
+import { QrCodeButtonComponent } from '../components/qrcode-button/component';
 
 @Component({
   templateUrl: 'app.html'
@@ -19,6 +19,7 @@ export class MyApp {
   licensePage = LicensePage;
   objectRegistrationPage = ObjectRegistrationPage;
   userListPage = UserListPage;
+  qrCode = QrCodeButtonComponent;
   static injector: Injector = null;
   @ViewChild('content') nav: NavController;
 
