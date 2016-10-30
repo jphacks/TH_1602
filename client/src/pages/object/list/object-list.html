@@ -24,7 +24,7 @@
     </ion-refresher-content>
   </ion-refresher>
   
-  <ion-list *ngIf="objects != null && searchObjects == null && !error">
+  <ion-list *ngIf="objects != null && searchObjects == null && !serverError && !networkError">
     <ion-item *ngFor="let obj of objects" (click)="push(obj)">
       {{obj.name}}
     </ion-item>
