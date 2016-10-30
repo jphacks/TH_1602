@@ -175,16 +175,47 @@ export class ReservationApi {
     }
 
     /**
+     * 利用中のReservationについて利用完了したことを通知します
+     * 
+     * @param reservationId ReservationのId
+     */
+    public returnReservationIdPost (reservationId: string, extraHttpRequestParams?: any ) : Observable<{}> {
+        const path = this.basePath + '/return/{reservation_id}'
+            .replace('{' + 'reservation_id' + '}', String(reservationId));
+
+        let queryParameters = new URLSearchParams();
+        let headerParams = this.defaultHeaders;
+        // verify required parameter 'reservationId' is not null or undefined
+        if (reservationId === null || reservationId === undefined) {
+            throw new Error('Required parameter reservationId was null or undefined when calling returnReservationIdPost.');
+        }
+        let requestOptions: RequestOptionsArgs = {
+            method: 'POST',
+            headers: headerParams,
+            search: queryParameters
+        };
+
+        return this.http.request(path, requestOptions)
+            .map((response: Response) => {
+                if (response.status === 204) {
+                    return undefined;
+                } else {
+                    return response.json();
+                }
+            });
+    }
+
+    /**
      * Reservationの検索を結果を返します
      * 
      * @param objectTagId 予約対象となるObjectTag
      * @param userName 予約ユーザーに含まれるuserのuser name
-     * @param keyword Reservationの予約要件(部分一致)
-     * @param startAt 予約開始時刻
-     * @param endAt 予約終了時刻。 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
+     * @param keywords Reservationの予約要件(部分一致)
+     * @param sinceAt 指定時間以降に重なるものを検索 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
+     * @param toAt 指定時間以前に重なるものを検索 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
      * @param includesPast 現在予約が終了しているものも検索に含めるかどうか。 defaultばfalseです。 
      */
-    public searchReservationsGet (objectTagId?: string, userName?: string, keyword?: Array<string>, startAt?: Date, endAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ReservationResponse>> {
+    public searchReservationsGet (objectTagId?: string, userName?: string, keywords?: Array<string>, sinceAt?: Date, toAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ReservationResponse>> {
         const path = this.basePath + '/search/reservations';
 
         let queryParameters = new URLSearchParams();
@@ -197,16 +228,16 @@ export class ReservationApi {
             queryParameters.set('user_name', String(userName));
         }
 
-        if (keyword !== undefined) {
-            queryParameters.set('keyword', String(keyword));
+        if (keywords !== undefined) {
+            queryParameters.set('keywords', String(keywords));
         }
 
-        if (startAt !== undefined) {
-            queryParameters.set('start_at', String(startAt));
+        if (sinceAt !== undefined) {
+            queryParameters.set('since_at', String(sinceAt));
         }
 
-        if (endAt !== undefined) {
-            queryParameters.set('end_at', String(endAt));
+        if (toAt !== undefined) {
+            queryParameters.set('to_at', String(toAt));
         }
 
         if (includesPast !== undefined) {

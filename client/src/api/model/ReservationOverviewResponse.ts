@@ -25,7 +25,7 @@
 'use strict';
 import * as models from './models';
 
-export interface ReservationResponse {
+export interface ReservationOverviewResponse {
     
 
     /**
@@ -37,13 +37,6 @@ export interface ReservationResponse {
      * Reservationのcomment
      */
     comment?: string;
-
-    owner?: models.IdNamePair;
-
-    /**
-     * 使用者のユーザーId, 表示名のリスト
-     */
-    users?: Array<models.IdNamePair>;
 
     objectTag?: models.IdNamePair;
 
