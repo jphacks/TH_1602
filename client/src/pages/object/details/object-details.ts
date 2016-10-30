@@ -38,6 +38,9 @@ export class ObjectDetailsPage {
         this.objTag = data;
         this.getReservations(finish);
         this.imgError = false;
+
+        this.serverError = false;
+        this.networkError = false;
       }).catch(reason => {
         this.serverError = reason.status !== 0;
         this.networkError = reason.status === 0;
@@ -61,6 +64,9 @@ export class ObjectDetailsPage {
         if (this.reservations[0].isActive) {
           this.currentReservation = this.reservations.shift();
         }
+
+        this.serverError = false;
+        this.networkError = false;
         finish && finish();
       }).catch(reason => {
         this.serverError = reason.status !== 0;
