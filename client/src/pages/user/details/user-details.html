@@ -1,15 +1,36 @@
 <ion-header>
-	<ion-navbar>
-		<button ion-button menuToggle icon-only>
+  <ion-navbar>
+    <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-		<ion-title>
-			(ユーザー名)
-		</ion-title>
-	</ion-navbar>
+    <ion-title>
+      {{userInfo.userName}}
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
-	<ion-list>
-	</ion-list>
+  <ion-item>
+    <img src="{{userInfo.profileImageUri}}">
+    <p>{{userInfo.userName}}</p>
+    <p>{{userInfo.displayName}}</p>
+  </ion-item>
+  <ion-list>
+    <ion-list-header>
+      利用
+    </ion-list-header>
+    <ion-item *ngFor="let u of usings" (click)="push(u)">
+      {{u.objectTag.name}} {{u.startAt}} ~ {{u.endAt}}
+    </ion-item>
+
+  </ion-list>
+  <ion-list>
+    <ion-list-header>
+      予約
+    </ion-list-header>
+    <ion-item *ngFor="let r of resevations" (click)="push(r)">
+      {{r.objectTag.name}} {{r.startAt}} ~ {{r.endAt}}
+    </ion-item>
+
+  </ion-list>
 </ion-content>
