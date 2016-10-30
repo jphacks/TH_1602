@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-Tarusho.Server-b6264bde-fbd4-4e64-87eb-e117e6465f0c",
 
   "dependencies": {
@@ -47,6 +47,8 @@
     "Microsoft.AspNetCore.Cors": "1.0.0",
     "Microsoft.EntityFrameworkCore.Sqlite": "1.0.0",
     "Microsoft.EntityFrameworkCore": "1.0.0",
+    "Microsoft.AspNetCore.Authentication.JwtBearer": "1.1.0-preview1-final",
+    "Microsoft.AspNetCore.Authentication.Twitter": "1.1.0-preview1-final",
   },
 
   "tools": {
