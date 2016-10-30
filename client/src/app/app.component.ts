@@ -1,6 +1,6 @@
 import { Component, ViewChild, Injector } from '@angular/core';
 import { Platform, NavController } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar, Splashscreen, BarcodeScanner } from 'ionic-native';
 
 import { HomePage } from '../pages/home/home';
 import { LicensePage } from '../pages/license/license';
@@ -39,5 +39,13 @@ export class MyApp {
 
   clearPageStack() {
     this.nav.popToRoot()
+  }
+
+  runQrCode() {
+    BarcodeScanner.scan().then(result => {
+        console.log(result)
+      }, error => {
+          console.log(error)
+      });
   }
 }

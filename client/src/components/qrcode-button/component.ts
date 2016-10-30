@@ -9,6 +9,7 @@ declare var navigator: any;
     selector: 'my-qrcode-button',
 })
 export class QrCodeButtonComponent {
+    isQrCodeScannerEnabled: false;
 
     constructor(private nav: NavController) {
         // do nothing

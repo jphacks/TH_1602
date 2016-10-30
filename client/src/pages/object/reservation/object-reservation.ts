@@ -41,7 +41,7 @@ export class ObjectReservationPage {
     }
   }
   
-  private post() {
+  post() {
     let myRes = this.reservation;
     myRes.startAt = new Date(this.start);
     myRes.endAt = new Date(this.end);

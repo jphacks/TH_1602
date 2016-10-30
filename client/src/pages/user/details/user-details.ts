@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 import { UserInfoResponse, UserInfoApi, ObjectTagResponse, ObjectTagApi, ReservationResponse, ReservationApi } from '../../../api/';
 import { MyApp } from '../../../app/app.component';
-import { ObjectDetailsPage } from '../../details/object-details';
+import { ObjectDetailsPage } from '../../object/details/object-details';
 
 @Component({
   selector: 'page-user-details',
