@@ -28,7 +28,7 @@
     <ion-list-header>
       予約
     </ion-list-header>
-    <ion-item *ngFor="let r of resevations" (click)="push(r)">
+    <ion-item *ngFor="let r of reservations" (click)="push(r)">
       {{r.objectTag.name}} {{r.startAt}} ~ {{r.endAt}}
     </ion-item>
 

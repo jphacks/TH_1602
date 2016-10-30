@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular';
-import { ObjectTagApi } from '../../../api/api/ObjectTagApi';
+import { ObjectTagApi, ObjectTagRequest } from '../../../api';
 import { MyApp } from '../../../app/app.component';
 
 @Component({
@@ -11,11 +11,11 @@ import { MyApp } from '../../../app/app.component';
 
 export class ObjectRegistrationPage {
 
-  register = {item: ''}
+  register: ObjectTagRequest = {name: ''}
   error = false
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams) {
-    console.log(this.register.item.length)
+    console.log(this.register.name.length)
   }
 
   private get api(): ObjectTagApi {
@@ -23,7 +23,7 @@ export class ObjectRegistrationPage {
   }
 
   public post () {
-    if (this.register.item) {
+    if (this.register.name) {
       console.log('post')
       var response = this.api.objectTagsPost(this.register).toPromise().then((response) => {
         this.navCtrl.pop //うまく言ったときの処理

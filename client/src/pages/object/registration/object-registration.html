@@ -14,7 +14,7 @@
     <form (ngSubmit)='post()'>
     <ion-item>
       <ion-label color='primary' >物品名</ion-label>
-      <ion-input placeholder="Text Input" [(ngModel)]="register.item" name="item"></ion-input>
+      <ion-input placeholder="Text Input" [(ngModel)]="register.name" name="name"></ion-input>
     </ion-item>
     <ion-item>
       <ion-label color='primary'>場所</ion-label>
@@ -24,11 +24,7 @@
       <ion-label color='primary'>説明</ion-label>
       <ion-input placeholder="Text Input" [(ngModel)]="register.description" name="description"></ion-input>
     </ion-item>
-    <ion-item>
-      <ion-label color='primary'>画像URL</ion-label>
-      <ion-input placeholder="Text Input" [(ngModel)]="register.image_url" name="image_url"></ion-input>
-    </ion-item>
-    <button ion-button [disabled]="register.item.length == 0" name="item" type="submit" block>物品登録</button>
+    <button ion-button [disabled]="register.name.length == 0" type="submit" block>物品登録</button>
     </form>
   </ion-list>
 </ion-content>
