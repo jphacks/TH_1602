@@ -36,4 +36,13 @@
   <plugin name="cordova-plugin-splashscreen" spec="~4.0.0"/>
   <plugin name="cordova-plugin-statusbar" spec="~2.2.0"/>
   <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
+  <plugin name="LaunchMyApp" value="nl.xservices.plugins.LaunchMyApp"/>
+  <gap:plugin name="cordova-plugin-customurlscheme" source="npm">
+    <param name="URL_SCHEME" value="monogement" />
+  </gap:plugin>
+  <feature name="Custom URL scheme">
+    <param name="id" value="cordova-plugin-customurlscheme" />
+    <param name="url" value="https://github.com/EddyVerbruggen/Custom-URL-scheme.git" />
+    <variable name="URL_SCHEME" value="monogement" /><!-- change as appropriate -->
+  </feature>
 </widget>
