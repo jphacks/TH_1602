@@ -1,3 +1,3 @@
 export class ApiConfig {
-    static basePath = "http://torihack.azurewebsites.net/api";
+    static basePath = "http://tori2.azurewebsites.net/api";
 }
