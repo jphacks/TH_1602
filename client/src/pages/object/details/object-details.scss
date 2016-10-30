@@ -25,3 +25,14 @@ page-object-details {
         overflow: hidden;
     }
 }
+
+my-user-item {
+    div.users {
+      font-size: 20px;
+      font-weight: 700;
+      color: black;
+    }
+    div.time {
+      color: gray;
+    }
+}

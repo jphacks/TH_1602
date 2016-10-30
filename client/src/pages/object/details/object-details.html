@@ -16,7 +16,7 @@
     </ion-refresher-content>
   </ion-refresher>
   <div *ngIf="objTag != null && objTag.imageUri && !imgError">
-    <img class="obj-image" src="{{objTag.imageUri}}" (error)="onImgError($event)"/>
+    <img class="obj-image" src="{{objTag.imageUri}}" (error)="onImgError($event)" />
   </div>
   <div *ngIf="objTag != null">
 
@@ -31,9 +31,27 @@
     </div>
   </div>
   <ion-list *ngIf="reservations">
-    <my-user-item *ngFor="let reservation of reservations">
-    </my-user-item>
+    <ion-list-header *ngIf="currentReservation">
+      現在使用中
+    </ion-list-header>
+    <my-user-item *ngIf="currentReservation" [reservation]="currentReservation"></my-user-item>
+
+    <ion-list-header *ngIf="reservations && reservations.length">
+      予約中
+    </ion-list-header>
+    <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation"></my-user-item>
   </ion-list>
 
+  <ion-fab bottom right *ngIf="objTag && reservations">
+    <button ion-fab>
+      <ion-icon name="arrow-up" *ngIf="!currentReservation && objTag.bookingEnabled"></ion-icon>
+      <ion-icon name="checkmark" *ngIf="!currentReservation && !objTag.bookingEnabled"></ion-icon>
+      <ion-icon name="calendar" *ngIf="currentReservation"></ion-icon>
+      </button>
+    <ion-fab-list side="top" *ngIf="!currentReservation && objTag.bookingEnabled">
+      <ion-icon name="checkmark"></ion-icon>
+      <ion-icon name="calendar"></ion-icon>
+    </ion-fab-list>
+  </ion-fab>
   <my-error-card [networkError]="networkError" [serverError]="serverError"></my-error-card>
 </ion-content>

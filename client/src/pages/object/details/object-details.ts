@@ -15,6 +15,7 @@ export class ObjectDetailsPage {
   objTag: ObjectTagResponse;
   category: CategoryResponse;
   reservations: Array<ReservationResponse>;
+  currentReservation: ReservationResponse = null;
   serverError = false;
   networkError = false;
   imgError = false;
@@ -49,7 +50,16 @@ export class ObjectDetailsPage {
   getReservations(finish?: () => any) {
     this.reservationApi.searchReservationsGet(this.objTag.id).toPromise()
       .then(data => {
-        this.reservations = data.items;
+        this.reservations = data.items.sort((a, b) => {
+          if(this.objTag.bookingEnabled) {
+            return a.startAt.valueOf() - b.startAt.valueOf()
+          } else {
+            return a.createdAt.valueOf() - b.createdAt.valueOf()
+          }
+        });
+        if(this.objTag.bookingEnabled && this.reservations[0].startAt.valueOf() < new Date().valueOf() || !this.objTag.bookingEnabled && this.reservations[0].createdAt.valueOf() < new Date().valueOf() ) {
+          this.currentReservation = this.reservations.shift();
+        }
         finish && finish();
       }).catch(reason => {
         this.serverError = reason.status !== 0;
@@ -83,25 +93,15 @@ export class ObjectDetailsPage {
   selector: 'my-user-item',
   template:
   `<ion-item>
-    <div class="owner">{{_reservation.owner.name}}</div>
+    <div class="users">{{_reservationusers[0].name}}</div>
     <div class="time" *ngIf="_reservation.startAt"><span> {{_reservation.startAt | date: 'yyyy/MM/dd hh:mm'}} </span>&nbsp;~&nbsp;<span *ngIf="_reservation.endAt"> {{_reservation.endAt | date: 'yyyy/MM/dd hh:mm'}} </span></div>
-  </ion-item>`,
-  styles: [`
-    div.owner {
-      font-size: 20px;
-      font-weight: 700;
-      color: black;
-    }
-    div.time {
-      color: gray;
-    }
-`]
+  </ion-item>`
 })
 export class MyUserItem {
   _reservation: ReservationResponse = null
 
   @Input()
-  set reservations(reservation: ReservationResponse) {
+  set reservation(reservation: ReservationResponse) {
     this._reservation = reservation;
   }
 }
