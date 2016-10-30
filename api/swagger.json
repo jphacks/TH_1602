@@ -1,0 +1,1128 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Tarusho.Server",
+        "description": "Tarusho server API reference",
+        "version": "1.0.0"
+    },
+    "host": "localhost:21774",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "produces": [
+        "application/json; charset=utf-8"
+    ],
+    "tags": [
+        {
+            "name": "ObjectTag",
+            "description": "ObjectTagに関する操作を行います"
+        },
+        {
+            "name": "Reservation",
+            "description": "Reservationに関する操作を行います"
+        },
+        {
+            "name": "Category",
+            "description": "Categoryに関する操作を行います"
+        },
+        {
+            "name": "UserInfo",
+            "description": "User情報に関する操作を行います"
+        },
+        {
+            "name": "PaginationEnabled",
+            "description": "ページング操作を行うことが許可されます。 このタグが付いているエンドポイントには`count`, `page`クエリを付与することが許可されます。 またレスポンスの内容は `PaginationItem` の`items`フィールドに返り値の型のarrayが挿入されます。"
+        },
+        {
+            "name": "Admin",
+            "description": "チームの管理者権限があるユーザーのみオペレーションが許可されます"
+        },
+        {
+            "name": "Image",
+            "description": "画像に関する操作を行います。"
+        },
+        {
+            "name": "My",
+            "description": "認証中のユーザーが自身に関する情報を取得・編集する場合のみ許可されます。"
+        }
+    ],
+    "paths": {
+        "/object_tags/{id}": {
+            "get": {
+                "summary": "指定したidのObjectTagに関する詳細を返します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ObjectTagのId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "ObjectTag"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "指定したidのObjectTagに関する詳細",
+                        "schema": {
+                            "$ref": "#/definitions/ObjectTagResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "指定したidのObjectTagに関する詳細を変更します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ObjectTagのId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "変更を行う詳細情報(idの値に格納された要素を変更)",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ObjectTagRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "ObjectTag",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "変更したObjectTagのオブジェクト",
+                        "schema": {
+                            "$ref": "#/definitions/ObjectTagResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "指定したidのObjectTagに関する情報・予約を削除します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ObjectTagのId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "ObjectTag",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "削除が完了した場合"
+                    }
+                }
+            }
+        },
+        "/object_tags/": {
+            "post": {
+                "summary": "ObjectTagの新規登録を行います",
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ObjectTagRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "ObjectTag",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "作成したObjectTagのオブジェクト",
+                        "schema": {
+                            "$ref": "#/definitions/ObjectTagResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/reservations/{id}": {
+            "get": {
+                "summary": "指定したidの予約に関する詳細を返します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ReservationのId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Reservation"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "指定したidのReservationに関する詳細",
+                        "schema": {
+                            "$ref": "#/definitions/ReservationResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "指定したidのReservationに関する詳細を変更します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ReservationのId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "変更を行う詳細情報(idの値に格納された要素を変更)",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ReservationRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Reservation",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "変更したReservationのオブジェクト",
+                        "schema": {
+                            "$ref": "#/definitions/ReservationResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "指定したidのReservationを削除します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ReservationのId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Reservation",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "削除が完了した場合"
+                    }
+                }
+            }
+        },
+        "/reservations/": {
+            "post": {
+                "summary": "Reservationの新規登録を行います",
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ReservationRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Reservation",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "作成したReservationのオブジェクト",
+                        "schema": {
+                            "$ref": "#/definitions/ReservationResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/return/{reservation_id}": {
+            "post": {
+                "summary": "利用中のReservationについて利用完了したことを通知します",
+                "parameters": [
+                    {
+                        "name": "reservation_id",
+                        "in": "path",
+                        "description": "ReservationのId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Reservation"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "完了した場合"
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "get": {
+                "summary": "指定したidのカテゴリに関する詳細を返します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "CategoryのId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "tags": [
+                    "Category"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "指定したidのCategoryに関する詳細",
+                        "schema": {
+                            "$ref": "#/definitions/CategoryRequest"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "指定したidのCategoryに関する詳細を変更します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "CategoryのId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "変更を行う詳細情報(idの値に格納された要素を変更)",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CategoryResponse"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Category",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "変更したCategoryのオブジェクト",
+                        "schema": {
+                            "$ref": "#/definitions/CategoryResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "指定したidのCategory、および含まれる予約・ObjectTagを削除します",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "CategoryのId",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "tags": [
+                    "Category",
+                    "Admin"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "削除が完了した場合"
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "post": {
+                "summary": "Categoryの新規登録を行います",
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CategoryRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Category",
+                    "Admin"
+                ],
+                "responses": {
+                    "201": {
+                        "description": "作成したCategoryのオブジェクト",
+                        "schema": {
+                            "$ref": "#/definitions/CategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/search/object_tags": {
+            "get": {
+                "summary": "ObjectTagの検索を結果を返します",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "ObjectTagのId",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "keywords",
+                        "in": "query",
+                        "description": "ObjectTagのキーワード(部分一致)",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "tags": [
+                    "ObjectTag",
+                    "PaginationEnabled"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "検索結果のObjectTagのリスト",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ObjectTagResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/search/categories": {
+            "get": {
+                "summary": "Categoryの検索を結果を返します",
+                "parameters": [
+                    {
+                        "name": "keywords",
+                        "in": "query",
+                        "description": "Categoryのキーワード(部分一致)",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "tags": [
+                    "Category",
+                    "PaginationEnabled"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "検索結果のCategoryのリスト",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CategoryResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/search/reservations": {
+            "get": {
+                "summary": "Reservationの検索を結果を返します",
+                "parameters": [
+                    {
+                        "name": "object_tag_id",
+                        "in": "query",
+                        "description": "予約対象となるObjectTag",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "user_name",
+                        "in": "query",
+                        "description": "予約ユーザーに含まれるuserのuser name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "keywords",
+                        "in": "query",
+                        "description": "Reservationの予約要件(部分一致)",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "since_at",
+                        "in": "query",
+                        "description": "指定時間以降に重なるものを検索\n現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。\n",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "to_at",
+                        "in": "query",
+                        "description": "指定時間以前に重なるものを検索\n現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。\n",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "includes_past",
+                        "in": "query",
+                        "description": "現在予約が終了しているものも検索に含めるかどうか。\ndefaultばfalseです。\n",
+                        "required": false,
+                        "type": "boolean",
+                        "default": false
+                    }
+                ],
+                "tags": [
+                    "Reservation",
+                    "PaginationEnabled"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "検索結果のReservationのリスト",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReservationResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/list/categories": {
+            "get": {
+                "summary": "Categoryの一覧を返します",
+                "tags": [
+                    "Category",
+                    "PaginationEnabled"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoryの一覧",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/CategoryResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/list/object_tags/{category_id}": {
+            "get": {
+                "summary": "Categoryに含まれるObjectTagの一覧を返します",
+                "parameters": [
+                    {
+                        "name": "category_id",
+                        "in": "path",
+                        "description": "取得したいObjectTagが含まれるCategoryId",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "ObjectTag",
+                    "PaginationEnabled"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "検索結果のObjectTagのリスト",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ObjectTagResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/list/users": {
+            "get": {
+                "summary": "Userの一覧を返します",
+                "tags": [
+                    "UserInfo",
+                    "PaginationEnabled"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "UserInfoのリスト",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/UserInfoResponse"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{user_name}": {
+            "get": {
+                "summary": "ユーザーに関する情報を取得します",
+                "parameters": [
+                    {
+                        "name": "user_name",
+                        "in": "path",
+                        "description": "取得したいユーザー名",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "UserInfo"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ユーザー情報の詳細",
+                        "schema": {
+                            "$ref": "#/definitions/UserInfoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/images/object_tags/{id}": {
+            "put": {
+                "summary": "ObjectTagの画像をセットします",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "設定したいObjectTagのId",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "item",
+                        "in": "formData",
+                        "description": "設定したいImageのByte列",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "tags": [
+                    "Admin",
+                    "Image"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "変更が完了"
+                    }
+                }
+            }
+        },
+        "/my/update_profile": {
+            "put": {
+                "summary": "ユーザー情報を更新します",
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "body",
+                        "description": "変更したいユーザー情報",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/UserInfoRequest"
+                        }
+                    }
+                ],
+                "tags": [
+                    "UserInfo",
+                    "My"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "変更後のユーザー情報",
+                        "schema": {
+                            "$ref": "#/definitions/UserInfoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/my/update_profile_image": {
+            "put": {
+                "summary": "ユーザー画像を更新します",
+                "parameters": [
+                    {
+                        "name": "item",
+                        "in": "formData",
+                        "description": "設定したいImageのByte列",
+                        "required": true,
+                        "type": "file"
+                    }
+                ],
+                "tags": [
+                    "UserInfo",
+                    "My",
+                    "Image"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "変更が完了"
+                    }
+                }
+            }
+        },
+        "/my/profile": {
+            "get": {
+                "summary": "現在ログイン中の利用者の詳細情報を取得します",
+                "tags": [
+                    "My",
+                    "UserInfo"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ユーザー情報",
+                        "schema": {
+                            "$ref": "#/definitions/UserInfoResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/my/status": {
+            "get": {
+                "summary": "現在の利用,予約,予約待ち状況を取得します",
+                "tags": [
+                    "UserInfo",
+                    "My"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ユーザーの待ち情報"
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "summary": "ログインを行います",
+                "tags": [
+                    "Login"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "ログインに成功した場合。このときのSet-Cookieを保持し、以降のリクエストに付与する。\n"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "IdNamePair": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "Id field"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name field"
+                }
+            }
+        },
+        "IdNumberNamePair": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "number",
+                    "description": "Id field"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name field"
+                }
+            }
+        },
+        "ObjectTagRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ObjectTagのId"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "表示名"
+                },
+                "place": {
+                    "type": "string",
+                    "description": "場所"
+                },
+                "object_uri": {
+                    "type": "string",
+                    "description": "オブジェクトのURI"
+                },
+                "optional_uri": {
+                    "type": "string",
+                    "description": "Optional(バーコード)のURI"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "説明文"
+                },
+                "category": {
+                    "type": "number",
+                    "description": "カテゴリId"
+                },
+                "booking_enabled": {
+                    "type": "boolean",
+                    "description": "将来の予約が可能か"
+                }
+            }
+        },
+        "ObjectTagResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ObjectTagのId"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "表示名"
+                },
+                "place": {
+                    "type": "string",
+                    "description": "場所"
+                },
+                "object_uri": {
+                    "type": "string",
+                    "description": "オブジェクトのURI"
+                },
+                "optional_uri": {
+                    "type": "string",
+                    "description": "Optional(バーコード)のURI"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "説明文"
+                },
+                "image_uri": {
+                    "type": "string",
+                    "description": "画像Uri"
+                },
+                "thumbnail_image_uri": {
+                    "type": "string",
+                    "description": "画像サムネイルuri"
+                },
+                "in_use_reservation_id": {
+                    "type": "string",
+                    "description": "現在利用中の予約Id"
+                },
+                "booking_enabled": {
+                    "type": "boolean",
+                    "description": "将来の予約が可能か"
+                },
+                "category": {
+                    "$ref": "#/definitions/IdNumberNamePair"
+                }
+            }
+        },
+        "ReservationRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ReservationのId"
+                },
+                "comment": {
+                    "type": "string",
+                    "description": "予約時の要件"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "使用者のユーザーId"
+                },
+                "object_tag_id": {
+                    "type": "string",
+                    "description": "予約するObjectTagのId"
+                },
+                "priority": {
+                    "type": "number",
+                    "description": "優先度(列挙型にする予定)"
+                },
+                "start_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約の開始日時"
+                },
+                "end_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約の終了日時"
+                },
+                "is_endless": {
+                    "type": "boolean",
+                    "description": "予約の終了が無期限であるかどうか"
+                }
+            }
+        },
+        "ReservationResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ReservationのId"
+                },
+                "comment": {
+                    "type": "string",
+                    "description": "Reservationのcomment"
+                },
+                "owner": {
+                    "$ref": "#/definitions/IdNamePair"
+                },
+                "users": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/IdNamePair"
+                    },
+                    "description": "使用者のユーザーId, 表示名のリスト"
+                },
+                "object_tag": {
+                    "$ref": "#/definitions/IdNamePair"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約を行った日時"
+                },
+                "modified_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "最終更新日"
+                },
+                "priority": {
+                    "type": "number",
+                    "description": "優先度(列挙型にする予定)"
+                },
+                "start_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約の開始日時"
+                },
+                "end_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約の終了日時"
+                },
+                "is_endless": {
+                    "type": "boolean",
+                    "description": "予約の終了が無期限であるかどうか"
+                }
+            }
+        },
+        "ReservationOverviewResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "ReservationのId"
+                },
+                "comment": {
+                    "type": "string",
+                    "description": "Reservationのcomment"
+                },
+                "object_tag": {
+                    "$ref": "#/definitions/IdNamePair"
+                },
+                "created_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約を行った日時"
+                },
+                "modified_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "最終更新日"
+                },
+                "priority": {
+                    "type": "number",
+                    "description": "優先度(列挙型にする予定)"
+                },
+                "start_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約の開始日時"
+                },
+                "end_at": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "予約の終了日時"
+                },
+                "is_endless": {
+                    "type": "boolean",
+                    "description": "予約の終了が無期限であるかどうか"
+                },
+                "is_active": {
+                    "type": "boolean",
+                    "description": "現在利用中なものであるかどうか"
+                }
+            }
+        },
+        "CategoryRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "CategoryのId"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Categoryの説明"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Categoryの表示名"
+                }
+            }
+        },
+        "CategoryResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "CategoryのId"
+                },
+                "description": {
+                    "type": "string",
+                    "description": "Categoryの説明"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Categoryの表示名"
+                }
+            }
+        },
+        "UserInfoRequest": {
+            "type": "object",
+            "properties": {
+                "display_name": {
+                    "type": "string",
+                    "description": "表示名"
+                }
+            }
+        },
+        "UserInfoResponse": {
+            "type": "object",
+            "properties": {
+                "user_name": {
+                    "type": "string",
+                    "description": "user name"
+                },
+                "display_name": {
+                    "type": "string",
+                    "description": "表示名"
+                },
+                "profile_image_uri": {
+                    "type": "string",
+                    "description": "プロフィールimage uri"
+                },
+                "profile_thumbnail_image_uri": {
+                    "type": "string",
+                    "description": "プロフィールimageサムネイルuri"
+                }
+            }
+        },
+        "UserReservationStatus": {
+            "type": "object",
+            "properties": {
+                "reserved_items": {
+                    "description": "自身が予約を行ったものを示します",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ReservationOverviewResponse"
+                    }
+                },
+                "assigned_items": {
+                    "description": "利用者としてアサインされた予約を示します",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ReservationOverviewResponse"
+                    }
+                }
+            }
+        },
+        "PaginationItem": {
+            "type": "object",
+            "properties": {
+                "total_count": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "トータル件数"
+                },
+                "total_page": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "トータルページ数"
+                },
+                "current_page": {
+                    "type": "integer",
+                    "format": "int32",
+                    "description": "現在のページ"
+                },
+                "items": {
+                    "description": "ここに返り値のリストが挿入されます",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}
