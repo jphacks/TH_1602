@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 import { NavController, NavParams, LoadingController, Refresher, AlertController } from 'ionic-angular';
-import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, ReservationApi, ReservationResponse } from '../../../api/';
+import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, ReservationApi, ReservationRequest, ReservationResponse } from '../../../api/';
 import { MyApp } from '../../../app/app.component';
 import { MyErrorCard } from '../../../components/error-card';
+import {ObjectReservationPage} from '../reservation/object-reservation'
 
 @Component({
   selector: 'page-object-details',
@@ -29,7 +30,6 @@ export class ObjectDetailsPage {
     });
     loader.present();
     this.load(() => loader.dismiss());
-    this.checkInTime();
   }
 
   load(finish?: () => any) {
@@ -90,7 +90,22 @@ export class ObjectDetailsPage {
   }
 
   checkIn() {
-
+    let req: ReservationRequest = {}
+    req.objectTagId = this.objId
+    let loader = this.loadingCtrl.create({
+      content: "送信中..."
+    });
+    loader.present();
+    this.reservationApi.reservationsPost(req).toPromise()
+      .then(() => { loader.dismiss(); })
+      .catch(() => {
+        loader.dismiss();
+        let alert = this.alertCtrl.create({
+          title: 'エラー',
+          message: '送信失敗'
+        });
+        alert.present();
+      });
   }
 
   checkInTime() {
@@ -106,15 +121,35 @@ export class ObjectDetailsPage {
       ],
       buttons: [
         {
-          text: 'Cancel',
+          text: 'キャンセル',
           role: 'cancel',
           handler: data => {
           }
         },
         {
-          text: 'Login',
+          text: '設定',
           handler: data => {
-            data["time"];
+            let req: ReservationRequest = {}
+            req.objectTagId = this.objId;
+            let spr = data["time"].split(":");
+            let date = new Date();
+            date.setHours(spr[0]);
+            date.setMinutes(spr[1]);
+            req.endAt = date;
+            let loader = this.loadingCtrl.create({
+              content: "送信中..."
+            });
+            loader.present();
+            this.reservationApi.reservationsPost(req).toPromise()
+              .then(() => { loader.dismiss(); })
+              .catch(() => {
+                loader.dismiss();
+                let alert = this.alertCtrl.create({
+                  title: 'エラー',
+                  message: '送信失敗'
+                });
+                alert.present();
+              });
           }
         }
       ]
@@ -124,7 +159,7 @@ export class ObjectDetailsPage {
   }
 
   reservate() {
-
+    this.navCtrl.push(ObjectReservationPage, {object_tag_id: this.objId});
   }
 
 
