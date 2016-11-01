@@ -4,7 +4,7 @@ import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { LicensePage, HomePage, LoginPage, ObjectDetailsPage, ObjectListPage, CategoryListPage, ObjectRegistrationPage, ObjectReservationPage, UserDetailsPage, UserListPage } from '../pages'
 import { CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api';
-import { MyErrorCard, QrCodeButtonComponent } from '../components';
+import { MyErrorCard, QrCodeButtonComponent, MyImage } from '../components';
 import {MyUserItem} from "../pages/object/details/object-details";
 
 @NgModule({
@@ -21,6 +21,7 @@ import {MyUserItem} from "../pages/object/details/object-details";
     UserDetailsPage,
     UserListPage,
     MyErrorCard,
+    MyImage,
     MyUserItem,
     QrCodeButtonComponent
   ],
@@ -30,8 +31,8 @@ import {MyUserItem} from "../pages/object/details/object-details";
         { component: HomePage, name: 'Home', segment: '', defaultHistory: []},
         { component: LoginPage, name: 'Login', segment: 'login' },
         { component: LicensePage, name: 'License', segment: 'license' },
-        { component: ObjectDetailsPage, name: 'ObjectDetails', segment: 'object/:catId/:objId' },
-        { component: ObjectListPage, name: 'ObjectList', segment: 'object/:catId' },
+        { component: ObjectDetailsPage, name: 'ObjectDetails', segment: 'object/details/:objId' },
+        { component: ObjectListPage, name: 'ObjectList', segment: 'object/category/:catId' },
         { component: CategoryListPage, name: 'CategoryList', segment: 'object' },
         { component: ObjectRegistrationPage, name: 'ObjectRegistration', segment: 'object/registration' },
         { component: ObjectReservationPage, name: 'ObjectReservation', segment: 'object/reservation' },

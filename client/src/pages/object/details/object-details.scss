@@ -1,8 +1,4 @@
 page-object-details {
-    .category, .description, .place {
-        margin-left: 10px;
-        margin-right: 10px;
-    }
 
     .category, .place {
         color: gray;
@@ -15,14 +11,18 @@ page-object-details {
 
     .description {
         color: black;
-        font-size: 28px;
+        font-size: 20px;
     }
 
-    my-img {
-        max-height: 200px;
+    .obj-image {
+        height: 200px;
         width: 100%;
         position: relative;
         overflow: hidden;
+    }
+
+    .obj-info {
+        margin: 10px;
     }
 }
 
@@ -34,14 +34,5 @@ my-user-item {
     }
     div.time {
       color: gray;
-    }
-}
-
-my-img {
-    .image {
-        width: 100%;
-        height: 100%;
-        line-height: 100%;
-        text-align: center;
     }
 }

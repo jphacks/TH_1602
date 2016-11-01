@@ -131,8 +131,8 @@ export class ObjectListPage {
 
   push(obj: ObjectTagResponse) {
     this.navCtrl.push(ObjectDetailsPage, {
-      catId: obj.category.id,
-      objId: obj.id
+      objId: obj.id,
+      objTag: obj
     });
   }
 

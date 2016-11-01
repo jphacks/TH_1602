@@ -15,13 +15,12 @@
     <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
     </ion-refresher-content>
   </ion-refresher>
-  <div *ngIf="objTag != null && objTag.imageUri && !imgError">
-    <img class="obj-image" src="{{objTag.imageUri}}" (error)="onImgError($event)" />
-  </div>
+  <my-img class="obj-image" [src]="objTag && objTag.imageUri"></my-img>
+
   <div *ngIf="objTag == null || !objTag.imageUri || imgError">
 
   </div>
-  <div *ngIf="objTag != null">
+  <div *ngIf="objTag != null" class="obj-info">
 
     <div class="category" *ngIf="objTag.category != null">
       {{objTag.category.name}}
@@ -33,17 +32,16 @@
       場所：{{objTag.place}}
     </div>
   </div>
-  <ion-list *ngIf="reservations">
-    <ion-list-header *ngIf="currentReservation">
-      現在使用中
-    </ion-list-header>
+  <ion-item-group>
+    <ion-item-divider>現在使用中</ion-item-divider>
     <my-user-item *ngIf="currentReservation" [reservation]="currentReservation"></my-user-item>
-
-    <ion-list-header *ngIf="reservations && reservations.length">
-      予約中
-    </ion-list-header>
+    <ion-item *ngIf="!currentReservation">なし</ion-item>
+  </ion-item-group>
+  <ion-item-group>
+    <ion-item-divider>予約中</ion-item-divider>
     <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation"></my-user-item>
-  </ion-list>
+    <ion-item *ngIf="!reservations || !reservations.length">なし</ion-item>
+  </ion-item-group>
 
   <ion-fab bottom right *ngIf="objTag && reservations">
     <button ion-fab>

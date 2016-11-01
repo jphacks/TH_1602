@@ -1,8 +1,16 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
-import { NavController, NavParams, LoadingController, Refresher, AlertController } from 'ionic-angular';
-import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, ReservationApi, ReservationRequest, ReservationResponse } from '../../../api/';
-import { MyApp } from '../../../app/app.component';
+import {NavController, NavParams, LoadingController, Refresher, AlertController} from 'ionic-angular';
+import {
+  CategoryResponse,
+  CategoryApi,
+  ObjectTagResponse,
+  ObjectTagApi,
+  ReservationApi,
+  ReservationRequest,
+  ReservationResponse
+} from '../../../api/';
+import {MyApp} from '../../../app/app.component';
 import {ObjectReservationPage} from '../reservation/object-reservation'
 
 @Component({
@@ -13,17 +21,20 @@ export class ObjectDetailsPage {
   catId: number;
   objId: string;
   objTag: ObjectTagResponse;
-  category: CategoryResponse;
+  catName: string;
   reservations: Array<ReservationResponse>;
   currentReservation: ReservationResponse = null;
   serverError = false;
   networkError = false;
   imgError = false;
+
   constructor(public navCtrl: NavController, private navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
-    this.catId = navParams.get("catId");
     this.objId = navParams.get("objId");
     this.objTag = navParams.get("objectTag");
-    this.category = navParams.get("category");
+    if(this.objTag) {
+      this.catId = this.objTag.category.id;
+      this.catName = this.objTag.category.name;
+    }
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
     });
@@ -33,17 +44,21 @@ export class ObjectDetailsPage {
 
   load(finish?: () => any) {
     if (!this.objTag) {
-      this.objectApi.objectTagsIdGet(this.objId).toPromise().then(data => {
-        this.objTag = data;
-        this.getReservations(finish);
-        this.imgError = false;
-        this.serverError = false;
-        this.networkError = false;
-      }, reason => {
-        this.serverError = reason.status !== 0;
-        this.networkError = reason.status === 0;
-        finish && finish();
-      })
+      this.objectApi.objectTagsIdGet(this.objId).toPromise()
+        .then(data => {
+          this.objTag = data;
+          this.getReservations(finish);
+          this.catName = data.category.name;
+          this.catId = data.category.id;
+          this.imgError = false;
+          this.serverError = false;
+          this.networkError = false;
+
+        }, reason => {
+          this.serverError = reason.status !== 0;
+          this.networkError = reason.status === 0;
+          finish && finish();
+        });
     } else {
       this.getReservations(finish);
     }
@@ -146,15 +161,15 @@ export class ObjectDetailsPage {
             });
             loader.present();
             this.reservationApi.reservationsPost(req).toPromise().then(data => {
-                loader.dismiss();
-              }, reason => {
-                loader.dismiss();
-                let alert = this.alertCtrl.create({
-                  title: 'エラー',
-                  message: '送信失敗'
-                });
-                alert.present();
+              loader.dismiss();
+            }, reason => {
+              loader.dismiss();
+              let alert = this.alertCtrl.create({
+                title: 'エラー',
+                message: '送信失敗'
               });
+              alert.present();
+            });
           }
         }
       ]
@@ -172,8 +187,7 @@ export class ObjectDetailsPage {
 
 @Component({
   selector: 'my-user-item',
-  template:
-  `<ion-item>
+  template: `<ion-item>
     <div class="users">{{_reservation.users[0].name}}</div>
     <div class="time" *ngIf="_reservation.startAt"><span> {{_reservation.startAt | date: 'yyyy/MM/dd hh:mm'}} </span>&nbsp;~&nbsp;<span *ngIf="_reservation.endAt"> {{_reservation.endAt | date: 'yyyy/MM/dd hh:mm'}} </span></div>
   </ion-item>`
@@ -184,29 +198,5 @@ export class MyUserItem {
   @Input()
   set reservation(reservation: ReservationResponse) {
     this._reservation = reservation;
-  }
-}
-
-@Component({
-  selector: 'my-img',
-  template: `
-<div>
-  <img class="image" *ngIf="_src && !error" src="{{_src}}" (error)="onError()" />
-  <div class="image" *ngIf="!_src || error">No Image</div>
-</div>
-`
-})
-export class MyImage {
-  _src: string = null;
-  error = false;
-
-  @Input()
-  set src(src: string) {
-    this.error = false;
-    this._src = src;
-  }
-
-  onError() {
-    this.error = true;
   }
 }

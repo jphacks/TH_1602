@@ -58,15 +58,9 @@ export class UserDetailsPage {
 
   push(res: ReservationResponse) {
     let objId = res.objectTag.id;
-    this.objectApi.objectTagsIdGet(objId).toPromise().then(obj => {
-      this.navCtrl.push(ObjectDetailsPage, {
-        catId: obj.category.id,
-        objId: obj.id,
-        objectTag: res.objectTag,
-        category: obj.category
-      });
-    }, reason => {
-
+    this.navCtrl.push(ObjectDetailsPage, {
+      objId: objId,
+      objectTag: res.objectTag
     });
   }
 
