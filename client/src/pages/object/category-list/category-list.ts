@@ -28,7 +28,7 @@ export class CategoryListPage {
       this.networkError = false;
       this.serverError = false;
       loader.dismiss();
-    }).catch(reason => {
+    }, reason => {
       this.networkError = reason.status === 0;
       this.serverError = !this.networkError;
       loader.dismiss();
@@ -42,7 +42,7 @@ export class CategoryListPage {
         this.networkError = false;
         this.serverError = false;
         refresher.complete();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         refresher.complete();
@@ -80,18 +80,18 @@ export class CategoryListPage {
       if (endCount === 1 && finish) {
         finish();
       }
-    }
+    };
     this.categoryApi.searchCategoriesGet(value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchCategories = data.items;
       end(false);
-    }).catch(reason => {
+    }, reason => {
       this.searchCategories = null;
       end(true, reason.status);
     });
     this.objectApi.searchObjectTagsGet(null, value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchObjects = data.items;
       end(false);
-    }).catch(reason => {
+    }, reason => {
       this.searchObjects = null;
       end(true, reason.status);
     });
@@ -118,7 +118,7 @@ export class CategoryListPage {
         this.networkError = false;
         this.serverError = false;
         loader.dismiss();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         loader.dismiss();

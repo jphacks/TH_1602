@@ -25,7 +25,7 @@ export class ObjectReservationPage {
     this.otherReservations = navParams.get('reservations');
     this.reservation.comment = '';
   }
-  private  formatTime(startOrEnd: string) {
+  private formatTime(startOrEnd: string) {
     let now = new Date();
     const y = now.getFullYear(), 
           m = ("0"+(now.getMonth()+1)).slice(-2), 
@@ -56,7 +56,7 @@ export class ObjectReservationPage {
     this.reservationApi.reservationsPost(this.reservation).toPromise().then((response) => {
         this.response = response;
         this.navCtrl.popToRoot();
-      }).catch(reason => {
+      }, reason => {
         if (reason.status !== 0) {
           this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
         }else {

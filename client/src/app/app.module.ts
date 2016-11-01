@@ -1,20 +1,11 @@
 import { NgModule } from '@angular/core';
+import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
-import { LicensePage } from '../pages/license/license';
-import { HomePage } from '../pages/home/home';
-import { LoginPage } from '../pages/login/login';
-import { ObjectDetailsPage, MyUserItem } from '../pages/object/details/object-details';
-import { ObjectListPage } from '../pages/object/list/object-list';
-import { CategoryListPage } from '../pages/object/category-list/category-list';
-import { ObjectRegistrationPage } from '../pages/object/registration/object-registration';
-import { ObjectReservationPage } from '../pages/object/reservation/object-reservation';
-import { UserDetailsPage } from '../pages/user/details/user-details';
-import { UserListPage } from '../pages/user/list/user-list';
-import { HttpModule } from '@angular/http';
-import { CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api'
-import { MyErrorCard } from '../components'
-import { QrCodeButtonComponent } from '../components/qrcode-button/component';
+import { LicensePage, HomePage, LoginPage, ObjectDetailsPage, ObjectListPage, CategoryListPage, ObjectRegistrationPage, ObjectReservationPage, UserDetailsPage, UserListPage } from '../pages'
+import { CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api';
+import { MyErrorCard, QrCodeButtonComponent } from '../components';
+import {MyUserItem} from "../pages/object/details/object-details";
 
 @NgModule({
   declarations: [

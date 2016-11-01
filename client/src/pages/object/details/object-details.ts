@@ -3,7 +3,6 @@ import { Component, Input } from '@angular/core';
 import { NavController, NavParams, LoadingController, Refresher, AlertController } from 'ionic-angular';
 import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, ReservationApi, ReservationRequest, ReservationResponse } from '../../../api/';
 import { MyApp } from '../../../app/app.component';
-import { MyErrorCard } from '../../../components/error-card';
 import {ObjectReservationPage} from '../reservation/object-reservation'
 
 @Component({
@@ -23,7 +22,7 @@ export class ObjectDetailsPage {
   constructor(public navCtrl: NavController, private navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
     this.catId = navParams.get("catId");
     this.objId = navParams.get("objId");
-    this.objTag = navParams.get("object_tag");
+    this.objTag = navParams.get("objectTag");
     this.category = navParams.get("category");
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
@@ -40,7 +39,7 @@ export class ObjectDetailsPage {
         this.imgError = false;
         this.serverError = false;
         this.networkError = false;
-      }).catch(reason => {
+      }, reason => {
         this.serverError = reason.status !== 0;
         this.networkError = reason.status === 0;
         finish && finish();
@@ -67,7 +66,7 @@ export class ObjectDetailsPage {
         this.serverError = false;
         this.networkError = false;
         finish && finish();
-      }).catch(reason => {
+      }, reason => {
         this.serverError = reason.status !== 0;
         this.networkError = reason.status === 0;
         finish && finish();
@@ -102,8 +101,9 @@ export class ObjectDetailsPage {
     });
     loader.present();
     this.reservationApi.reservationsPost(req).toPromise()
-      .then(() => { loader.dismiss(); })
-      .catch(() => {
+      .then(() => {
+        loader.dismiss();
+      }, reason => {
         loader.dismiss();
         let alert = this.alertCtrl.create({
           title: 'エラー',
@@ -134,7 +134,7 @@ export class ObjectDetailsPage {
         {
           text: '設定',
           handler: data => {
-            let req: ReservationRequest = {}
+            let req: ReservationRequest = {};
             req.objectTagId = this.objId;
             let spr = data["time"].split(":");
             let date = new Date();
@@ -145,9 +145,9 @@ export class ObjectDetailsPage {
               content: "送信中..."
             });
             loader.present();
-            this.reservationApi.reservationsPost(req).toPromise()
-              .then(() => { loader.dismiss(); })
-              .catch(() => {
+            this.reservationApi.reservationsPost(req).toPromise().then(data => {
+                loader.dismiss();
+              }, reason => {
                 loader.dismiss();
                 let alert = this.alertCtrl.create({
                   title: 'エラー',
@@ -187,3 +187,26 @@ export class MyUserItem {
   }
 }
 
+@Component({
+  selector: 'my-img',
+  template: `
+<div>
+  <img class="image" *ngIf="_src && !error" src="{{_src}}" (error)="onError()" />
+  <div class="image" *ngIf="!_src || error">No Image</div>
+</div>
+`
+})
+export class MyImage {
+  _src: string = null;
+  error = false;
+
+  @Input()
+  set src(src: string) {
+    this.error = false;
+    this._src = src;
+  }
+
+  onError() {
+    this.error = true;
+  }
+}

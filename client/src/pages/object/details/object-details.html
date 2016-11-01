@@ -18,6 +18,9 @@
   <div *ngIf="objTag != null && objTag.imageUri && !imgError">
     <img class="obj-image" src="{{objTag.imageUri}}" (error)="onImgError($event)" />
   </div>
+  <div *ngIf="objTag == null || !objTag.imageUri || imgError">
+
+  </div>
   <div *ngIf="objTag != null">
 
     <div class="category" *ngIf="objTag.category != null">

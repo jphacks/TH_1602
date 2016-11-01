@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
-import { NavController, LoadingController, Refresher } from 'ionic-angular';
-import { UserInfoResponse, UserInfoApi } from '../../../api/';
-import { MyApp } from '../../../app/app.component';
-import { UserDetailsPage } from '../details/user-details';
+import {NavController, LoadingController, Refresher} from 'ionic-angular';
+import {UserInfoResponse, UserInfoApi} from '../../../api/';
+import {MyApp} from '../../../app/app.component';
+import {UserDetailsPage} from '../details/user-details';
 
 @Component({
   selector: 'page-user-list',
@@ -12,6 +12,7 @@ import { UserDetailsPage } from '../details/user-details';
 export class UserListPage {
   error: boolean = false;
   users: Array<UserInfoResponse> = null;
+
   constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
@@ -22,10 +23,10 @@ export class UserListPage {
         this.users = data.items;
         this.error = false;
         loader.dismiss();
-      }).catch(reason => {
+      }, reason => {
         this.error = true;
         loader.dismiss();
-      })
+      });
   }
 
   private get userApi(): UserInfoApi {
@@ -33,14 +34,15 @@ export class UserListPage {
   }
 
   doRefresh(refresher: Refresher) {
-    this.userApi.listUsersGet().toPromise().then(data => {
-      this.users = data.items;
-      this.error = false;
-      refresher.complete();
-    }).catch(reason => {
-      this.error = true;
-      refresher.complete();
-    });
+    this.userApi.listUsersGet().toPromise()
+      .then(data => {
+        this.users = data.items;
+        this.error = false;
+        refresher.complete();
+      }, reason => {
+        this.error = true;
+        refresher.complete();
+      });
   }
 
   push(user: UserInfoResponse) {

@@ -10,7 +10,7 @@ import { ObjectDetailsPage } from '../details/object-details';
   templateUrl: 'object-list.html'
 })
 export class ObjectListPage {
-  catId: number = null
+  catId: number = null;
   networkError: boolean = false;
   serverError: boolean = false;
   value: string = null;
@@ -20,11 +20,11 @@ export class ObjectListPage {
 
   constructor(public navCtrl: NavController, private navParams: NavParams, public loadingCtrl: LoadingController) {
     this.catId = navParams.get("catId");
-    this.category = navParams.get("category")
+    this.category = navParams.get("category");
     if (!this.category) {
       this.categoryApi.categoriesIdGet(this.catId).toPromise().then((response) => {
         this.category = response;
-      }).catch(() => {
+      }, reason => {
       })
     }
     let loader = this.loadingCtrl.create({
@@ -37,7 +37,7 @@ export class ObjectListPage {
         this.networkError = false;
         this.serverError = false;
         loader.dismiss();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         loader.dismiss();
@@ -59,7 +59,7 @@ export class ObjectListPage {
         this.networkError = false;
         this.serverError = false;
         refresher.complete();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         refresher.complete();
@@ -86,7 +86,7 @@ export class ObjectListPage {
       if (finish) {
         finish();
       }
-    }).catch(reason => {
+    }, reason => {
       this.searchObjects = null;
       this.networkError = reason.status === 0;
       this.serverError = !this.networkError;
@@ -118,7 +118,7 @@ export class ObjectListPage {
           this.networkError = false;
           this.serverError = false;
           loader.dismiss();
-        }).catch(reason => {
+        }, reason => {
           this.networkError = reason.status === 0;
           this.serverError = !this.networkError;
           loader.dismiss();
