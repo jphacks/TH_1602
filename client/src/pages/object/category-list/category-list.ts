@@ -131,15 +131,15 @@ export class CategoryListPage {
 
   push(category: CategoryResponse) {
     this.navCtrl.push(ObjectListPage, {
-      catid: category.id,
+      catId: category.id,
       category: category
     });
   }
 
   pushObject(object: ObjectTagResponse) {
     this.navCtrl.push(ObjectDetailsPage, {
-      catid: object.category.id,
-      objid: object.id
+      catId: object.category.id,
+      objId: object.id
     });
   }
 }

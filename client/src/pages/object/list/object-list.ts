@@ -19,7 +19,7 @@ export class ObjectListPage {
   searchObjects: Array<ObjectTagResponse> = null;
 
   constructor(public navCtrl: NavController, private navParams: NavParams, public loadingCtrl: LoadingController) {
-    this.catId = navParams.get("catid");
+    this.catId = navParams.get("catId");
     this.category = navParams.get("category")
     if (!this.category) {
       this.categoryApi.categoriesIdGet(this.catId).toPromise().then((response) => {
@@ -131,8 +131,8 @@ export class ObjectListPage {
 
   push(obj: ObjectTagResponse) {
     this.navCtrl.push(ObjectDetailsPage, {
-      catid: obj.category.id,
-      objid: obj.id
+      catId: obj.category.id,
+      objId: obj.id
     });
   }
 

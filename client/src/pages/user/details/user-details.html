@@ -10,7 +10,7 @@
 </ion-header>
 
 <ion-content>
-  <ion-item>
+  <ion-item *ngIf="userInfo">
     <img src="{{userInfo.profileImageUri}}">
     <p>{{userInfo.userName}}</p>
     <p>{{userInfo.displayName}}</p>

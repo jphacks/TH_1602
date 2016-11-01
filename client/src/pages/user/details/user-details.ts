@@ -15,34 +15,46 @@ export class UserDetailsPage {
   objTag: ObjectTagResponse;
   error: boolean = false;
   usings: ReservationResponse[] = [];
-  reservations: ReservationResponse[] =[];
+  reservations: ReservationResponse[] = [];
 
   constructor(public navCtrl: NavController, private navParams: NavParams) {
-    this.userName = navParams.get("username");
-    this.userInfo = navParams.get("userinfo");
+    this.userName = navParams.get("userName");
+    this.userInfo = navParams.get("userInfo");
+    if (!this.userInfo) {
+      this.userApi.usersUserNameGet(this.userName).toPromise()
+        .then(data => {
+          this.userInfo = data;
+          this.getReservation();
+        }).catch(() => {
+          this.error = true;
+        });
+    }
+    this.getReservation();
+  }
 
+  getReservation() {
     this.reservationApi.searchReservationsGet(null, this.userName).toPromise().then((response) => {
       let now = new Date();
-      for(let r of response.items){
-        let resStart = new Date(r.startAt); 
-        if(resStart < now ){
+      for (let r of response.items) {
+        let resStart = new Date(r.startAt);
+        if (resStart < now) {
           this.usings.push(r);
         }
-        else{
+        else {
           this.reservations.push(r);
         }
-      }      
+      }
     }).catch(() => {
       this.error = true;
     })
   }
 
   push(res: ReservationResponse) {
-    let objid = res.objectTag.id; 
-    this.objectApi.objectTagsIdGet(objid).toPromise().then((obj) => {
+    let objId = res.objectTag.id;
+    this.objectApi.objectTagsIdGet(objId).toPromise().then((obj) => {
       this.navCtrl.push(ObjectDetailsPage, {
-        catid: obj.category.id,
-        objid: obj.id,
+        catId: obj.category.id,
+        objId: obj.id,
         object_tag: res.objectTag,
         category: obj.category
       });

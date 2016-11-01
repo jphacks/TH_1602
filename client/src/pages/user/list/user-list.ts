@@ -45,7 +45,8 @@ export class UserListPage {
 
   push(user: UserInfoResponse) {
     this.navCtrl.push(UserDetailsPage, {
-      username: user.userName,
+      userName: user.userName,
+      userInfo: user
     });
   }
 

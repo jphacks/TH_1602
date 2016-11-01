@@ -21,8 +21,8 @@ export class ObjectDetailsPage {
   networkError = false;
   imgError = false;
   constructor(public navCtrl: NavController, private navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
-    this.catId = navParams.get("catid");
-    this.objId = navParams.get("objid");
+    this.catId = navParams.get("catId");
+    this.objId = navParams.get("objId");
     this.objTag = navParams.get("object_tag");
     this.category = navParams.get("category");
     let loader = this.loadingCtrl.create({
