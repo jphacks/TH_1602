@@ -3,9 +3,9 @@ import { HttpModule } from '@angular/http';
 import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { LicensePage, HomePage, LoginPage, ObjectDetailsPage, ObjectListPage, CategoryListPage, ObjectRegistrationPage, ObjectReservationPage, UserDetailsPage, UserListPage } from '../pages'
-import { CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi } from '../api';
+import { CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi, LoginApi } from '../api';
 import { MyErrorCard, QrCodeButtonComponent, MyImage } from '../components';
-import {MyUserItem} from "../pages/object/details/object-details";
+import { MyUserItem } from "../pages/object/details/object-details";
 
 @NgModule({
   declarations: [
@@ -28,8 +28,8 @@ import {MyUserItem} from "../pages/object/details/object-details";
   imports: [
     IonicModule.forRoot(MyApp, {}, {
       links: [
-        { component: HomePage, name: 'Home', segment: '', defaultHistory: []},
-        { component: LoginPage, name: 'Login', segment: 'login' },
+        { component: HomePage, name: 'Home' },
+        { component: LoginPage, name: 'Login' },
         { component: LicensePage, name: 'License', segment: 'license' },
         { component: ObjectDetailsPage, name: 'ObjectDetails', segment: 'object/details/:objId' },
         { component: ObjectListPage, name: 'ObjectList', segment: 'object/category/:catId' },
@@ -57,6 +57,6 @@ import {MyUserItem} from "../pages/object/details/object-details";
     UserListPage,
     QrCodeButtonComponent,
   ],
-  providers: [CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi]
+  providers: [CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi, LoginApi]
 })
 export class AppModule {}

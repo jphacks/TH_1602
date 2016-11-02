@@ -31,11 +31,12 @@ import 'rxjs/Rx';
 /* tslint:disable:no-unused-variable member-ordering */
 
 'use strict';
+import {ApiConfig} from "../config";
 
 @Injectable()
 export class ImageApi {
-    protected basePath = 'http://localhost:21774/api';
-    public defaultHeaders : Headers = new Headers();
+    protected basePath = ApiConfig.apiPath;
+    public defaultHeaders : Headers = ApiConfig.defaultHeaders;
 
     constructor(protected http: Http) {
     }

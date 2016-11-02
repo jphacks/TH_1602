@@ -6,3 +6,4 @@ export * from './ObjectTagApi';
 export * from './PaginationEnabledApi';
 export * from './ReservationApi';
 export * from './UserInfoApi';
+export * from './LoginApi';

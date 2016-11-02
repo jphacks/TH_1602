@@ -1,4 +1,4 @@
-<ion-menu [content]="content">
+<ion-menu [content]="content" *ngIf="login">
   <ion-content>
     <ion-list>
       <button ion-item (click)="clearPageStack()" menuClose>
@@ -17,7 +17,7 @@
         ライセンス
       </button>
       <button ion-item (click)="runQrCode()" menuClose>
-        QrCode
+        QRコードリーダー
       </button>
 
     </ion-list>
