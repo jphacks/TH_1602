@@ -26,7 +26,7 @@ export class MyApp {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      StatusBar.styleDefault();
+      StatusBar.styleLightContent();
       Splashscreen.hide();
     });
 
@@ -46,7 +46,7 @@ export class MyApp {
     window["handleOpenURL"] = (urlString: string) => {
       let parser = document.createElement("a");
       parser.href = urlString;
-      if(parser.protocol === "monogement://") {
+      if(parser.protocol === "monogement:") {
         this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search));
       }
     }
