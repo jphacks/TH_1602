@@ -45,10 +45,11 @@ export class MyApp {
           p[spr[0]] = spr[1];
           return p;
         }, {});
-
+        this.rootPage = HomePage;
+        this.login = true;
         Preference.username = params["user_name"];
         Preference.code = params["code"];
-        this.loginApi.login().toPromise().then();
+        this.loginApi.login().toPromise();
       }
     }
   }

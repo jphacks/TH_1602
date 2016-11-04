@@ -12,6 +12,7 @@ import {
 } from '../../../api/';
 import {MyApp} from '../../../app/app.component';
 import {ObjectReservationPage} from '../reservation/object-reservation'
+import {Preference} from "../../../utils/preference";
 
 @Component({
   selector: 'page-object-details',
@@ -149,8 +150,11 @@ export class ObjectDetailsPage {
         {
           text: '設定',
           handler: data => {
-            let req: ReservationRequest = {};
-            req.object_tag_id = this.objId;
+            let req: ReservationRequest = {
+              object_tag_id: this.objId,
+              users: [Preference.username]
+            };
+
             let spr = data["time"].split(":");
             let date = new Date();
             date.setHours(spr[0]);
