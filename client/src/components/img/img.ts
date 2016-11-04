@@ -2,7 +2,7 @@ import {Component, Input} from "@angular/core";
 @Component({
   selector: 'my-img',
   template: `
-<img class="image {{_class}}" *ngIf="_src && !error" [src]="_src" (error)="onSrcError()" />
+<img class="image {{_class}}" *ngIf="_src && !srcError" [src]="_src" (error)="onSrcError()" />
 <img class="image {{_class}}" *ngIf="(!_src || srcError) && _placeholder && !placeholderError" [src]="_placeholder" (error)="onPlaceholderError()" />
 <div class="image {{_class}}" *ngIf="!_src && !_placeholder || placeholderError && srcError">No Image</div>
 `
