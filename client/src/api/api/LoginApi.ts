@@ -44,8 +44,9 @@ export class LoginApi {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             observer.next(xhr.response);
-            if(xhr.response.headers["Set-Cookie"]) {
-              Preference.cookie = xhr.response.headers["Set-Cookie"];
+            let cookie = xhr.getResponseHeader("Set-Cookie");
+            if(cookie) {
+              Preference.cookie = cookie;
             }
             observer.complete();
           } else if(xhr.status === 204) {
