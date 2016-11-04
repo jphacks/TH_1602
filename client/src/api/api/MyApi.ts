@@ -42,31 +42,6 @@ export class MyApi {
     }
 
     /**
-     * 現在ログイン中の利用者の詳細情報を取得します
-     * 
-     */
-    public myProfileGet (extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
-        const path = this.basePath + '/my/profile';
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        let requestOptions: RequestOptionsArgs = {
-            method: 'GET',
-            headers: headerParams,
-            search: queryParameters
-        };
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
-    }
-
-    /**
      * 現在の利用,予約,予約待ち状況を取得します
      * 
      */
