@@ -3,7 +3,7 @@ import {Platform, NavController} from 'ionic-angular';
 import {StatusBar, Splashscreen, BarcodeScanner} from 'ionic-native';
 import {LicensePage, HomePage, CategoryListPage, ObjectRegistrationPage, UserListPage, LoginPage} from '../pages'
 import {Preference} from "../utils/preference";
-import {LoginApi, MyApi, UserInfoResponse} from "../api/";
+import {LoginApi, UserInfoApi, UserInfoResponse} from "../api/";
 import {URLSearchParams} from "@angular/http";
 
 @Component({
@@ -34,9 +34,8 @@ export class MyApp {
       this.rootPage = LoginPage;
       this.login = false;
     } else {
-      this.profile = this.myApi.myProfileGet();
       this.loginApi.login().toPromise().then(data => {
-        return this.myApi.myProfileGet().toPromise();
+        return this.userInfoApi.usersUserNameGet(Preference.username).toPromise();
       }).then(data => {
         this.profile = data;
       });
@@ -62,7 +61,7 @@ export class MyApp {
           Preference.username = params.get("user_name");
           Preference.code = params.get("code");
           this.loginApi.login().toPromise().then(data => {
-            return this.myApi.myProfileGet().toPromise();
+            return this.userInfoApi.usersUserNameGet(Preference.username).toPromise();
           }).then(data => {
             this.profile = data;
           });
@@ -75,8 +74,8 @@ export class MyApp {
     return MyApp.injector.get(LoginApi);
   }
   
-  private get myApi(): MyApi {
-    return MyApp.injector.get(MyApi);
+  private get userInfoApi(): UserInfoApi {
+    return MyApp.injector.get(UserInfoApi);
   }
 
   openPage(page) {
