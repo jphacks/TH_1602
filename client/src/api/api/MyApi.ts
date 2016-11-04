@@ -35,35 +35,10 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class MyApi {
-    protected basePath = ApiConfig.basePath;
-    public defaultHeaders : Headers = new Headers();
+    protected basePath = ApiConfig.apiPath;
+    get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
     constructor(protected http: Http) {
-    }
-
-    /**
-     * 現在ログイン中の利用者の詳細情報を取得します
-     * 
-     */
-    public myProfileGet (extraHttpRequestParams?: any ) : Observable<models.UserInfoResponse> {
-        const path = this.basePath + '/my/profile';
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        let requestOptions: RequestOptionsArgs = {
-            method: 'GET',
-            headers: headerParams,
-            search: queryParameters
-        };
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
     }
 
     /**

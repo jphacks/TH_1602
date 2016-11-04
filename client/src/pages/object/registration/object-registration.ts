@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, AlertController } from 'ionic-angular';
 import { NavParams } from 'ionic-angular';
-import { ObjectTagApi } from '../../../api/api/ObjectTagApi';
+import { ObjectTagApi, ObjectTagRequest } from '../../../api';
 import { MyApp } from '../../../app/app.component';
 
 @Component({
@@ -11,11 +11,11 @@ import { MyApp } from '../../../app/app.component';
 
 export class ObjectRegistrationPage {
 
-  register = {item: ''}
-  error = false
+  register: ObjectTagRequest = {name: ''};
+  error = false;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams) {
-    console.log(this.register.item.length)
+    console.log(this.register.name.length)
   }
 
   private get api(): ObjectTagApi {
@@ -23,11 +23,11 @@ export class ObjectRegistrationPage {
   }
 
   public post () {
-    if (this.register.item) {
-      console.log('post')
+    if (this.register.name) {
+      console.log('post');
       var response = this.api.objectTagsPost(this.register).toPromise().then((response) => {
-        this.navCtrl.pop //うまく言ったときの処理
-      }).catch(reason => { //エラー吐いたときの処理
+        this.navCtrl.pop() //うまく言ったときの処理
+      }, reason => { //エラー吐いたときの処理
       if (reason.status !== 0) {
         this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
       }else {
@@ -36,7 +36,7 @@ export class ObjectRegistrationPage {
       })
     }
     else {
-      console.log('not post')
+      console.log('not post');
       return undefined;
     }
   }

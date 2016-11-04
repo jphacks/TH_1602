@@ -1,13 +1,19 @@
 <ion-header>
-	<ion-navbar>
-		<button ion-button menuToggle icon-only>
-      <ion-icon name='menu'></ion-icon>
-    </button>
-		<ion-title>
-			ログイン
-		</ion-title>
-	</ion-navbar>
+  <ion-navbar>
+    <ion-title>
+      ログイン
+    </ion-title>
+  </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
+  <div class="login">
+    <my-img src="" class="image"></my-img>
+    <h2 class="title">Monogement</h2>
+    <p>みんなで使うモノはみんなで管理をしよう</p>
+    <p>使いたいモノを今誰が使っているか，ひと目でわかるようになります</p>
+    <p>使いたいものを前の人が使い終わったら，通知ですぐにそのことがわかります</p>
+    <p>ログインをして共用物を手軽に管理しよう！</p>
+    <button ion-button block (click)="login()">ログインする</button>
+  </div>
 </ion-content>
