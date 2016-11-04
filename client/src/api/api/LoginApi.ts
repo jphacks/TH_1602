@@ -12,7 +12,7 @@ import {Preference} from "../../utils/preference";
 @Injectable()
 export class LoginApi {
   protected basePath = ApiConfig.apiPath;
-  public defaultHeaders : Headers = ApiConfig.defaultHeaders;
+  get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
   constructor() {
   }

@@ -36,7 +36,7 @@ import 'rxjs/Rx';
 @Injectable()
 export class ObjectTagApi {
     protected basePath = ApiConfig.apiPath;
-    public defaultHeaders : Headers = ApiConfig.defaultHeaders;
+    get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
     constructor(protected http: Http) {
     }
@@ -185,6 +185,7 @@ export class ObjectTagApi {
         if (item === null || item === undefined) {
             throw new Error('Required parameter item was null or undefined when calling objectTagsPost.');
         }
+        headerParams.append("Content-Type", "application/json")
         let requestOptions: RequestOptionsArgs = {
             method: 'POST',
             headers: headerParams,
