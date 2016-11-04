@@ -4,6 +4,7 @@ import {StatusBar, Splashscreen, BarcodeScanner} from 'ionic-native';
 import {LicensePage, HomePage, CategoryListPage, ObjectRegistrationPage, UserListPage, LoginPage} from '../pages'
 import {Preference} from "../utils/preference";
 import {LoginApi} from "../api/api/LoginApi";
+import {URLSearchParams} from "@angular/http";
 
 @Component({
   templateUrl: 'app.html'
@@ -37,20 +38,26 @@ export class MyApp {
       this.login = true;
     }
 
-    window["handleOpenURL"] = (url: string) => {
-      let match = url.match(/^monogement:\/\/callback\?(.*)$/);
-      if(match) {
-        let params = match[1].split("&").reduce((p, c) => {
-          let spr = c.split("=");
-          p[spr[0]] = spr[1];
-          return p;
-        }, {});
-        this.rootPage = HomePage;
-        this.login = true;
-        Preference.username = params["user_name"];
-        Preference.code = params["code"];
-        this.loginApi.login().toPromise();
+    window["handleOpenURL"] = (urlString: string) => {
+      let parser = document.createElement("a");
+      parser.href = urlString;
+      if(parser.protocol === "monogement://") {
+        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search));
       }
+    }
+  }
+
+  private gotMonogementUri(path: string, params: URLSearchParams) {
+    switch(path) {
+      case "//callback":
+        if(!this.login) {
+          this.rootPage = HomePage;
+          this.login = true;
+          Preference.username = params.get("user_name");
+          Preference.code = params.get("code");
+          this.loginApi.login().toPromise();
+        }
+        break;
     }
   }
 
