@@ -35,8 +35,8 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class MyApi {
-    protected basePath = ApiConfig.basePath;
-    public defaultHeaders : Headers = new Headers();
+    protected basePath = ApiConfig.apiPath;
+    public defaultHeaders : Headers = ApiConfig.defaultHeaders;
 
     constructor(protected http: Http) {
     }
