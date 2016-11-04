@@ -46,8 +46,8 @@ export class MyApp {
     window["handleOpenURL"] = (urlString: string) => {
       let parser = document.createElement("a");
       parser.href = urlString;
-      if(parser.protocol === "monogement://") {
-        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search));
+      if(parser.protocol === "monogement:") {
+        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search.substring(1)));
       }
     }
   }
