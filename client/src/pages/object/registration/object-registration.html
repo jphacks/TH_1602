@@ -36,7 +36,7 @@
       <ion-item>
         <ion-label color="primary">予約のタイプ</ion-label>
         <ion-select [(ngModel)]="register.bookingEnabled" name="booking">
-          <ion-option [value]="true">時間指定</ion-option>
+          <ion-option [value]="true" default>時間指定</ion-option>
           <ion-option [value]="false">順番のみ</ion-option>
         </ion-select>
       </ion-item>
