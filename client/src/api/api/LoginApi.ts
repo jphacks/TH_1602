@@ -39,15 +39,11 @@ export class LoginApi {
 
       formData.append("username", username);
       formData.append("token", code);
-
+      xhr.withCredentials = true;
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             observer.next(xhr.response);
-            let cookie = xhr.getResponseHeader("Set-Cookie");
-            if(cookie) {
-              Preference.cookie = cookie;
-            }
             observer.complete();
           } else if(xhr.status === 204) {
             observer.next(xhr.response);
