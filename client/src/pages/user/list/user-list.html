@@ -23,7 +23,12 @@
   
   <ion-list *ngIf="users != null">
     <ion-item *ngFor="let user of users" (click)="push(user)">
-      {{user.userName}}
+      <ion-avatar item-left>
+        <my-img [src]="user.thumbnailImageUri" [placeholder]="'assets/dummy-account.png'"></my-img>
+      </ion-avatar>
+      <p>{{user.displayName}}</p>
+      <p>@{{user.userName}}</p>
+
     </ion-item>
   </ion-list>
 
