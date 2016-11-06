@@ -154,6 +154,7 @@ export class CategoryApi {
         if (item === null || item === undefined) {
             throw new Error('Required parameter item was null or undefined when calling categoriesPost.');
         }
+        headerParams.append("Content-Type", "application/json");
         let requestOptions: RequestOptionsArgs = {
             method: 'POST',
             headers: headerParams,
@@ -185,7 +186,6 @@ export class CategoryApi {
             headers: headerParams,
             search: queryParameters
         };
-
         return this.http.request(path, requestOptions)
             .map((response: Response) => {
                 if (response.status === 204) {
