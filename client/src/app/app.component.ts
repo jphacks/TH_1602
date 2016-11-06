@@ -47,7 +47,7 @@ export class MyApp {
       let parser = document.createElement("a");
       parser.href = urlString;
       if(parser.protocol === "monogement:") {
-        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search));
+        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search.substring(1)));
       }
     }
   }

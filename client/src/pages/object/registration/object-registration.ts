@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
-import { NavParams } from 'ionic-angular';
-import { ObjectTagApi, ObjectTagRequest } from '../../../api';
-import { MyApp } from '../../../app/app.component';
+import {Component} from '@angular/core';
+import {NavController, AlertController} from 'ionic-angular';
+import {NavParams} from 'ionic-angular';
+import {ObjectTagApi, ObjectTagRequest, CategoryApi, CategoryResponse} from '../../../api';
+import {MyApp} from '../../../app/app.component';
 
 @Component({
   selector: 'page-object-registration',
@@ -11,33 +11,45 @@ import { MyApp } from '../../../app/app.component';
 
 export class ObjectRegistrationPage {
 
-  register: ObjectTagRequest = {name: ''};
+  register: ObjectTagRequest = {name: '', category: 0};
   error = false;
+  categories: CategoryResponse[] = null;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams) {
-    console.log(this.register.name.length)
-  }
-
-  private get api(): ObjectTagApi {
-    return MyApp.injector.get(ObjectTagApi)
-  }
-
-  public post () {
-    if (this.register.name) {
-      console.log('post');
-      var response = this.api.objectTagsPost(this.register).toPromise().then((response) => {
-        this.navCtrl.pop() //うまく言ったときの処理
-      }, reason => { //エラー吐いたときの処理
-      if (reason.status !== 0) {
-        this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
-      }else {
-        this.showAlert('ネットワークエラー', 'インターネットに接続されているか，確認してください');
+    this.categoryApi.listCategoriesGet().toPromise().then(data => {
+      this.categories = data.items;
+      if(this.categories.length > 0) {
+        this.register.category = this.categories[0].id;
       }
-      })
+    }, reason => {
+      this.showError(reason);
+      this.error = true;
+    });
+  }
+
+  private get objApi(): ObjectTagApi {
+    return MyApp.injector.get(ObjectTagApi);
+  }
+
+  private get categoryApi(): CategoryApi {
+    return MyApp.injector.get(CategoryApi);
+  }
+
+  public post() {
+    if (this.register.name) {
+      this.objApi.objectTagsPost(this.register).toPromise().then((response) => {
+        this.navCtrl.pop();
+      }, reason => {
+        this.showError(reason);
+      });
     }
-    else {
-      console.log('not post');
-      return undefined;
+  }
+
+  showError(reason: {status:number}) {
+    if (reason.status !== 0) {
+      this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
+    } else {
+      this.showAlert('ネットワークエラー', 'インターネットに接続されているか，確認してください');
     }
   }
 
