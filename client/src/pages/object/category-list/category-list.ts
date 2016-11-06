@@ -1,7 +1,14 @@
-import {Component, ViewChild} from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
-import {NavController, LoadingController, Refresher, AlertController, Searchbar, NavParams} from 'ionic-angular';
-import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, CategoryRequest, PaginationItem } from '../../../api/';
+import { NavController, LoadingController, Refresher, AlertController, Searchbar, NavParams } from 'ionic-angular';
+import {
+  CategoryResponse,
+  CategoryApi,
+  ObjectTagResponse,
+  ObjectTagApi,
+  CategoryRequest,
+  PaginationItem
+} from '../../../api/';
 import { MyApp } from '../../../app/app.component';
 import { ObjectListPage } from '../list/object-list';
 import { ObjectDetailsPage } from '../details/object-details';
@@ -29,19 +36,19 @@ export class CategoryListPage {
       this.categories = data.items;
       this.networkError = false;
       this.serverError = false;
-      loader.dismiss();
-
-      if(this.navParams.get("focus")) {
-        this.searchbar.setFocus();
-      }
+      loader.dismiss().then(() => {
+        if (this.navParams.get("focus")) {
+          this.searchbar.setFocus();
+        }
+      })
     }, reason => {
       this.networkError = reason.status === 0;
       this.serverError = !this.networkError;
-      loader.dismiss();
-
-      if(this.navParams.get("focus")) {
-        this.searchbar.setFocus();
-      }
+      loader.dismiss().then(() => {
+        if (this.navParams.get("focus")) {
+          this.searchbar.setFocus();
+        }
+      })
     });
   }
 
@@ -179,7 +186,7 @@ export class CategoryListPage {
         {
           text: '設定',
           handler: data => {
-            if(!data["name"]) {
+            if (!data["name"]) {
               return false;
             }
             let req: CategoryRequest = {
@@ -202,7 +209,7 @@ export class CategoryListPage {
               alert.present();
               return null;
             }).then(data => {
-              if(data) {
+              if (data) {
                 this.categories = data.items;
                 this.networkError = false;
                 this.serverError = false;
