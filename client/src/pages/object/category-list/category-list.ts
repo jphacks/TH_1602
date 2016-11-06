@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 
-import {NavController, LoadingController, Refresher, AlertController} from 'ionic-angular';
+import {NavController, LoadingController, Refresher, AlertController, Searchbar, NavParams} from 'ionic-angular';
 import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, CategoryRequest, PaginationItem } from '../../../api/';
 import { MyApp } from '../../../app/app.component';
 import { ObjectListPage } from '../list/object-list';
@@ -18,7 +18,9 @@ export class CategoryListPage {
   searchCategories: Array<CategoryResponse> = null;
   searchObjects: Array<ObjectTagResponse> = null;
 
-  constructor(private navCtrl: NavController, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
+  @ViewChild("mySearchbar") searchbar: Searchbar;
+
+  constructor(private navCtrl: NavController, private navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
     });
@@ -28,10 +30,18 @@ export class CategoryListPage {
       this.networkError = false;
       this.serverError = false;
       loader.dismiss();
+
+      if(this.navParams.get("focus")) {
+        this.searchbar.setFocus();
+      }
     }, reason => {
       this.networkError = reason.status === 0;
       this.serverError = !this.networkError;
       loader.dismiss();
+
+      if(this.navParams.get("focus")) {
+        this.searchbar.setFocus();
+      }
     });
   }
 
@@ -150,7 +160,8 @@ export class CategoryListPage {
         {
           name: 'name',
           placeholder: 'カテゴリ名',
-          type: 'text'
+          type: 'text',
+
         },
         {
           name: 'description',
@@ -168,6 +179,9 @@ export class CategoryListPage {
         {
           text: '設定',
           handler: data => {
+            if(!data["name"]) {
+              return false;
+            }
             let req: CategoryRequest = {
               name: data["name"],
               description: data["description"]

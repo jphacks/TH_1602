@@ -1,17 +1,53 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-navbar>
     <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-    <ion-title>Monogement</ion-title>
+    <ion-title>
+      Monogement
+    </ion-title>
     <ion-buttons end>
+
+      <button ion-button icon-only (click)="search()">
+        <ion-icon name='search'></ion-icon>
+      </button>
       <button ion-button icon-only qrcode>
         <ion-icon name='qr-scanner'></ion-icon>
       </button>
     </ion-buttons>
-  </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  マイページ
+<ion-content *ngIf="userInfo" padding>
+
+  <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="スワイプして更新" refreshingText="更新中...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <my-img [src]="userInfo.profileImageUri" [placeholder]="'assets/dummy-account.png'" class="user-image"></my-img>
+  <p class="center">@{{userInfo.userName}}</p>
+  <p class="center">{{userInfo.displayName}}</p>
+  <ion-list>
+    <ion-list-header>現在使用中</ion-list-header>
+    <ion-item *ngFor="let u of usingObjects" (click)="push(u)">
+      {{u.objectTag.name}} {{u.startAt}} ~ {{u.endAt}}
+    </ion-item>
+    <ion-item *ngIf="!usingObjects || !usingObjects.length">
+      なし
+    </ion-item>
+
+  </ion-list>
+  <ion-list>
+    <ion-list-header>予約中</ion-list-header>
+    <ion-item *ngFor="let r of reservations" (click)="push(r)">
+      {{r.objectTag.name}} {{r.startAt}} ~ {{r.endAt}}
+    </ion-item>
+
+    <ion-item *ngIf="!reservations || !reservations.length">
+      なし
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-content *ngIf="!userInfo" >
+  <div class="center-spinner"><ion-spinner></ion-spinner></div>
 </ion-content>

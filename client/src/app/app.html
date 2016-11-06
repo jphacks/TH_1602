@@ -1,13 +1,15 @@
 <ion-menu [content]="content" *ngIf="login">
   <ion-content>
-    <ion-item no-lines *ngIf="profile">
-      <ion-avatar item-left>
-        <my-img [src]="profile.profileThumbnailImageUri" [placeholder]="'assets/dummy-account.png'"></my-img>
-      </ion-avatar>
-      <p>{{profile.userName}}</p>
-      <p>{{profile.displayName}}</p>
-    </ion-item>
     <ion-list>
+
+      <div class="profile">
+        <my-img *ngIf="profile" [src]="profile.profileThumbnailImageUri" [placeholder]="'assets/dummy-account.png'"></my-img>
+        <my-img *ngIf="!profile" [src]="'assets/dummy-account.png'"></my-img>
+        <div class="name-container" *ngIf="profile">
+          <p>{{profile.displayName}}</p>
+          <p>@{{profile.userName}}</p>
+        </div>
+      </div>
       <button ion-item (click)="clearPageStack()" menuClose>
         マイページ
       </button>

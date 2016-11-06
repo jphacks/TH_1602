@@ -1,4 +1,7 @@
 page-user-details {
+  .center {
+    text-align: center;
+  }
   .user-image {
     margin-top: 20px;
     margin-left: auto;
@@ -7,5 +10,13 @@ page-user-details {
     width: 100px;
     height: 100px;
     border-radius: 50%;
+  }
+
+  .scroll-content {
+    background-color: #fff;
+    margin-top: 56px;
+  }
+  .center-spinner {
+    margin: 10px auto;
   }
 }

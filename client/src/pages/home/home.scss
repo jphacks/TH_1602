@@ -1,3 +1,20 @@
 page-home {
+  .center {
+    text-align: center;
+  }
+  .user-image {
+    margin: 20px auto;
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
 
+  .scroll-content {
+    background-color: #fff;
+    margin-top: 56px;
+  }
+
+  .center-spinner {
+    margin: 10px auto;
+  }
 }

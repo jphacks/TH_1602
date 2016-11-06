@@ -16,7 +16,7 @@
     </ion-buttons>
   </ion-navbar>
   <ion-toolbar>
-    <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
+    <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)" #mySearchbar></ion-searchbar>
 
     <ion-buttons end>
       <button ion-button icon-only (click)="addCategory()">
@@ -29,8 +29,7 @@
 <ion-content>
 
   <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles"
-                           refreshingText="Refreshing...">
+    <ion-refresher-content pullingText="スワイプして更新" refreshingText="更新中...">
     </ion-refresher-content>
   </ion-refresher>
   <ion-list
