@@ -1,13 +1,14 @@
 import {Component} from '@angular/core';
 
-import {NavController, NavParams} from 'ionic-angular';
+import {NavController, NavParams, Refresher} from 'ionic-angular';
 import {
   UserInfoResponse,
   UserInfoApi,
   ObjectTagResponse,
   ObjectTagApi,
   ReservationResponse,
-  ReservationApi
+  ReservationApi,
+  PaginationItem
 } from '../../../api/';
 import {MyApp} from '../../../app/app.component';
 import {ObjectDetailsPage} from '../../object/details/object-details';
@@ -21,7 +22,7 @@ export class UserDetailsPage {
   userInfo: UserInfoResponse;
   objTag: ObjectTagResponse;
   error: boolean = false;
-  usings: ReservationResponse[] = [];
+  usingObjects: ReservationResponse[] = [];
   reservations: ReservationResponse[] = [];
 
   constructor(public navCtrl: NavController, private navParams: NavParams) {
@@ -31,26 +32,35 @@ export class UserDetailsPage {
       this.userApi.usersUserNameGet(this.userName).toPromise()
         .then(data => {
           this.userInfo = data;
-          this.getReservation();
+          return this.reservationGet;
         }, reason => {
           this.error = true;
         });
     }
-    this.getReservation();
+    this.reservationGet;
   }
 
-  getReservation() {
-    this.reservationApi.searchReservationsGet(null, this.userName).toPromise()
+  gotReservation(response: PaginationItem<ReservationResponse>) {
+    if(!response) {
+      return;
+    }
+    let now = new Date();
+    let reservations = response.items.sort((a, b) => {
+      if(!a.startAt) return -1;
+      if(!b.startAt) return 1;
+      return a.startAt.getTime() - b.startAt.getTime();
+    });
+    for(var i = 0; i < reservations.length; i++) {
+      if(reservations[i].startAt < now) {
+        this.usingObjects.push(reservations.shift());
+      }
+    }
+  }
+
+  get reservationGet() {
+    return this.reservationApi.searchReservationsGet(null, this.userName).toPromise()
       .then((response) => {
-        let now = new Date();
-        for (let r of response.items) {
-          let resStart = r.startAt;
-          if (resStart < now) {
-            this.usings.push(r);
-          } else {
-            this.reservations.push(r);
-          }
-        }
+        this.gotReservation(response);
       }, reason => {
         this.error = true;
       });
@@ -74,5 +84,19 @@ export class UserDetailsPage {
 
   private get reservationApi(): ReservationApi {
     return MyApp.injector.get(ReservationApi);
+  }
+
+  doRefresh(refresher: Refresher) {
+    this.userApi.usersUserNameGet(this.userName).toPromise()
+      .then(data => {
+        this.userInfo = data;
+        return this.reservationGet;
+      }, reason => {
+        this.error = true;
+        refresher.complete();
+      })
+      .then(() => {
+        refresher.complete();
+      });
   }
 }

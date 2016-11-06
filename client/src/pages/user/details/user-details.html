@@ -15,15 +15,20 @@
 </ion-header>
 
 <ion-content *ngIf="userInfo" padding>
+
+  <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    </ion-refresher-content>
+  </ion-refresher>
   <my-img [src]="userInfo.profileImageUri" [placeholder]="'assets/dummy-account.png'" class="user-image"></my-img>
   <p>@{{userInfo.userName}}</p>
   <p>{{userInfo.displayName}}</p>
   <ion-list>
     <ion-list-header>現在使用中</ion-list-header>
-    <ion-item *ngFor="let u of usings" (click)="push(u)">
+    <ion-item *ngFor="let u of usingObjects" (click)="push(u)">
       {{u.objectTag.name}} {{u.startAt}} ~ {{u.endAt}}
     </ion-item>
-    <ion-item *ngIf="!usings || !usings.length">
+    <ion-item *ngIf="!usingObjects || !usingObjects.length">
       なし
     </ion-item>
 
