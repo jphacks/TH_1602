@@ -2,7 +2,6 @@ import {Component, Input} from '@angular/core';
 
 import {NavController, NavParams, LoadingController, Refresher, AlertController} from 'ionic-angular';
 import {
-  CategoryResponse,
   CategoryApi,
   ObjectTagResponse,
   ObjectTagApi,

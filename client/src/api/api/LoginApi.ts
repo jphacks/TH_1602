@@ -12,7 +12,7 @@ import {Preference} from "../../utils/preference";
 @Injectable()
 export class LoginApi {
   protected basePath = ApiConfig.apiPath;
-  public defaultHeaders : Headers = ApiConfig.defaultHeaders;
+  get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
   constructor() {
   }
@@ -39,14 +39,11 @@ export class LoginApi {
 
       formData.append("username", username);
       formData.append("token", code);
-
+      xhr.withCredentials = true;
       xhr.onreadystatechange = () => {
         if (xhr.readyState === 4) {
           if (xhr.status === 200) {
             observer.next(xhr.response);
-            if(xhr.response.headers["Set-Cookie"]) {
-              Preference.cookie = xhr.response.headers["Set-Cookie"];
-            }
             observer.complete();
           } else if(xhr.status === 204) {
             observer.next(xhr.response);

@@ -36,7 +36,7 @@ import 'rxjs/Rx';
 @Injectable()
 export class CategoryApi {
     protected basePath = ApiConfig.apiPath;
-    public defaultHeaders : Headers = ApiConfig.defaultHeaders;
+    get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
     constructor(protected http: Http) {
     }

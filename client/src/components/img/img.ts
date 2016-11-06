@@ -2,18 +2,20 @@ import {Component, Input} from "@angular/core";
 @Component({
   selector: 'my-img',
   template: `
-<img class="image {{_class}}" *ngIf="_src && !error" src="{{_src}}" (error)="onError()" />
-<div class="image {{_class}}" *ngIf="!_src || error">No Image</div>
+<img class="image {{_class}}" *ngIf="_src && !srcError" [src]="_src" (error)="onSrcError()" />
+<img class="image {{_class}}" *ngIf="(!_src || srcError) && _placeholder && !placeholderError" [src]="_placeholder" (error)="onPlaceholderError()" />
+<div class="image {{_class}}" *ngIf="(!_placeholder || placeholderError) && (!_src || srcError)">No Image</div>
 `
 })
 export class MyImage {
   _src: string = null;
   _class: string = null;
-  error = false;
-
+  srcError = false;
+  placeholderError = false;
+  _placeholder: string = null;
   @Input()
   set src(src: string) {
-    this.error = false;
+    this.srcError = false;
     this._src = src;
   }
 
@@ -22,7 +24,17 @@ export class MyImage {
     this._class = classStr;
   }
 
-  onError() {
-    this.error = true;
+  @Input()
+  set placeholder(path: string) {
+    this._placeholder = path;
+    this.placeholderError = false;
+  }
+
+  onSrcError() {
+    this.srcError = true;
+  }
+
+  onPlaceholderError() {
+    this.placeholderError = true;
   }
 }

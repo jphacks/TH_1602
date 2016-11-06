@@ -1,9 +1,9 @@
 import {Component, ViewChild, Injector} from '@angular/core';
 import {Platform, NavController} from 'ionic-angular';
-import {StatusBar, Splashscreen, BarcodeScanner} from 'ionic-native';
-import {LicensePage, HomePage, CategoryListPage, ObjectRegistrationPage, UserListPage, LoginPage} from '../pages'
+import {StatusBar, Splashscreen} from 'ionic-native';
+import {LicensePage, HomePage, CategoryListPage, ObjectRegistrationPage, UserListPage, LoginPage, ObjectDetailsPage} from '../pages';
 import {Preference} from "../utils/preference";
-import {LoginApi} from "../api/api/LoginApi";
+import {LoginApi, UserInfoApi, UserInfoResponse} from "../api/";
 import {URLSearchParams} from "@angular/http";
 
 @Component({
@@ -17,6 +17,7 @@ export class MyApp {
   userListPage = UserListPage;
   login: boolean;
   static injector: Injector = null;
+  profile: UserInfoResponse = null;
 
   @ViewChild('content') nav: NavController;
 
@@ -25,7 +26,7 @@ export class MyApp {
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      StatusBar.styleDefault();
+      StatusBar.styleLightContent();
       Splashscreen.hide();
     });
 
@@ -33,7 +34,11 @@ export class MyApp {
       this.rootPage = LoginPage;
       this.login = false;
     } else {
-      this.loginApi.login().toPromise().then();
+      this.loginApi.login().toPromise().then(data => {
+        return this.userInfoApi.usersUserNameGet(Preference.username).toPromise();
+      }).then(data => {
+        this.profile = data;
+      });
       this.rootPage = HomePage;
       this.login = true;
     }
@@ -41,8 +46,8 @@ export class MyApp {
     window["handleOpenURL"] = (urlString: string) => {
       let parser = document.createElement("a");
       parser.href = urlString;
-      if(parser.protocol === "monogement://") {
-        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search));
+      if(parser.protocol === "monogement:") {
+        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search && parser.search.substring(1)));
       }
     }
   }
@@ -55,7 +60,16 @@ export class MyApp {
           this.login = true;
           Preference.username = params.get("user_name");
           Preference.code = params.get("code");
-          this.loginApi.login().toPromise();
+          this.loginApi.login().toPromise().then(data => {
+            return this.userInfoApi.usersUserNameGet(Preference.username).toPromise();
+          }).then(data => {
+            this.profile = data;
+          });
+        }
+        break;
+      case "//object-tag":
+        if(this.login && params.get("id")) {
+          this.nav.push(ObjectDetailsPage, {objId: params.get("id")});
         }
         break;
     }
@@ -63,6 +77,10 @@ export class MyApp {
 
   private get loginApi(): LoginApi {
     return MyApp.injector.get(LoginApi);
+  }
+  
+  private get userInfoApi(): UserInfoApi {
+    return MyApp.injector.get(UserInfoApi);
   }
 
   openPage(page) {
@@ -73,13 +91,5 @@ export class MyApp {
     if (this.nav.canGoBack()) {
       this.nav.popToRoot();
     }
-  }
-
-  runQrCode() {
-    BarcodeScanner.scan().then(result => {
-      console.log(result)
-    }, error => {
-      console.log(error)
-    });
   }
 }

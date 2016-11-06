@@ -9,6 +9,11 @@
     <ion-title *ngIf="searchCategories != null || searchObjects != null">
       検索結果
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only qrcode>
+        <ion-icon name='qr-scanner'></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
   <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
 </ion-header>

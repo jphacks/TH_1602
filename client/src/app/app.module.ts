@@ -4,7 +4,8 @@ import { IonicApp, IonicModule } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { LicensePage, HomePage, LoginPage, ObjectDetailsPage, ObjectListPage, CategoryListPage, ObjectRegistrationPage, ObjectReservationPage, UserDetailsPage, UserListPage } from '../pages'
 import { CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi, LoginApi } from '../api';
-import { MyErrorCard, QrCodeButtonComponent, MyImage } from '../components';
+import { MyErrorCard, MyImage } from '../components';
+import { QrCodeButtonDirective } from '../directives';
 import { MyUserItem } from "../pages/object/details/object-details";
 
 @NgModule({
@@ -20,10 +21,10 @@ import { MyUserItem } from "../pages/object/details/object-details";
     ObjectReservationPage,
     UserDetailsPage,
     UserListPage,
+    QrCodeButtonDirective,
     MyErrorCard,
     MyImage,
-    MyUserItem,
-    QrCodeButtonComponent
+    MyUserItem
   ],
   imports: [
     IonicModule.forRoot(MyApp, {}, {
@@ -37,8 +38,7 @@ import { MyUserItem } from "../pages/object/details/object-details";
         { component: ObjectRegistrationPage, name: 'ObjectRegistration', segment: 'object/registration' },
         { component: ObjectReservationPage, name: 'ObjectReservation', segment: 'object/reservation' },
         { component: UserDetailsPage, name: 'UserDetails', segment: 'user/:userName' },
-        { component: UserListPage, name: 'UserList', segment: 'user' },
-        { component: QrCodeButtonComponent, name: 'QrCode', segment: 'qrcode' },
+        { component: UserListPage, name: 'UserList', segment: 'user' }
       ]
     }), HttpModule
   ],
@@ -55,7 +55,6 @@ import { MyUserItem } from "../pages/object/details/object-details";
     ObjectReservationPage,
     UserDetailsPage,
     UserListPage,
-    QrCodeButtonComponent,
   ],
   providers: [CategoryApi, AdminApi, MyApi, ObjectTagApi, ReservationApi, UserInfoApi, PaginationEnabledApi, LoginApi]
 })
