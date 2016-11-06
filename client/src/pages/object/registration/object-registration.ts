@@ -1,8 +1,9 @@
 import {Component} from '@angular/core';
-import {NavController, AlertController} from 'ionic-angular';
+import {NavController, AlertController, LoadingController, ToastController} from 'ionic-angular';
 import {NavParams} from 'ionic-angular';
 import {ObjectTagApi, ObjectTagRequest, CategoryApi, CategoryResponse} from '../../../api';
 import {MyApp} from '../../../app/app.component';
+import {ObjectListPage} from "../../../pages";
 
 @Component({
   selector: 'page-object-registration',
@@ -13,18 +14,27 @@ export class ObjectRegistrationPage {
 
   register: ObjectTagRequest = {name: '', category: 0};
   error = false;
-  categories: CategoryResponse[] = null;
+  categoryName: string;
+  badOperation = false;
 
-  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams) {
-    this.categoryApi.listCategoriesGet().toPromise().then(data => {
-      this.categories = data.items;
-      if(this.categories.length > 0) {
-        this.register.category = this.categories[0].id;
-      }
-    }, reason => {
-      this.showError(reason);
-      this.error = true;
-    });
+  constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController) {
+    if(!params.get("categoryId") || !params.get("categoryName")) {
+      toastCtrl.create({
+        message: '不正な操作',
+        duration: 3000,
+        position: 'bottom'
+      }).present();
+      this.badOperation = true;
+    } else {
+      this.register["category"] = params.get("categoryId");
+      this.categoryName = params.get("categoryName");
+    }
+  }
+
+  ionViewDidEnter() {
+    if(this.badOperation) {
+      this.navCtrl.pop();
+    }
   }
 
   private get objApi(): ObjectTagApi {
@@ -61,5 +71,4 @@ export class ObjectRegistrationPage {
     });
     alert.present();
   }
-
 }

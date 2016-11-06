@@ -1,7 +1,7 @@
 import {Component, ViewChild, Injector} from '@angular/core';
 import {Platform, NavController} from 'ionic-angular';
 import {StatusBar, Splashscreen} from 'ionic-native';
-import {LicensePage, HomePage, CategoryListPage, ObjectRegistrationPage, UserListPage, LoginPage, ObjectDetailsPage} from '../pages';
+import {LicensePage, HomePage, CategoryListPage, UserListPage, LoginPage, ObjectDetailsPage} from '../pages';
 import {Preference} from "../utils/preference";
 import {LoginApi, UserInfoApi, UserInfoResponse} from "../api/";
 import {URLSearchParams} from "@angular/http";
@@ -13,7 +13,6 @@ export class MyApp {
   rootPage: Component;
   categoryListPage = CategoryListPage;
   licensePage = LicensePage;
-  objectRegistrationPage = ObjectRegistrationPage;
   userListPage = UserListPage;
   login: boolean;
   static injector: Injector = null;

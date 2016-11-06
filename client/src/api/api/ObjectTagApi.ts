@@ -207,9 +207,9 @@ export class ObjectTagApi {
      * ObjectTagの検索を結果を返します
      * 
      * @param categoryId ObjectTagのId
-     * @param name ObjectTagの名前(部分一致)
+     * @param keywords ObjectTagの名前(部分一致)
      */
-    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
+    public searchObjectTagsGet (categoryId?: string, keywords?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/search/object_tags';
 
         let queryParameters = new URLSearchParams();
@@ -218,8 +218,8 @@ export class ObjectTagApi {
             queryParameters.set('category_id', String(categoryId));
         }
 
-        if (name !== undefined) {
-            queryParameters.set('name', String(name));
+        if (keywords !== undefined) {
+            queryParameters.set('keywords', String(keywords));
         }
 
         let requestOptions: RequestOptionsArgs = {

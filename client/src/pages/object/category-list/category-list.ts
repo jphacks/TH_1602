@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
-import { NavController, LoadingController, Refresher } from 'ionic-angular';
-import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi } from '../../../api/';
+import {NavController, LoadingController, Refresher, AlertController} from 'ionic-angular';
+import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, CategoryRequest, PaginationItem } from '../../../api/';
 import { MyApp } from '../../../app/app.component';
 import { ObjectListPage } from '../list/object-list';
 import { ObjectDetailsPage } from '../details/object-details';
@@ -18,7 +18,7 @@ export class CategoryListPage {
   searchCategories: Array<CategoryResponse> = null;
   searchObjects: Array<ObjectTagResponse> = null;
 
-  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
+  constructor(private navCtrl: NavController, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
     });
@@ -141,5 +141,68 @@ export class CategoryListPage {
       catId: object.category.id,
       objId: object.id
     });
+  }
+
+  addCategory() {
+    let alert = this.alertCtrl.create({
+      title: 'カテゴリの追加',
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'カテゴリ名',
+          type: 'text'
+        },
+        {
+          name: 'description',
+          placeholder: '説明',
+          type: 'text'
+        }
+      ],
+      buttons: [
+        {
+          text: 'キャンセル',
+          role: 'cancel',
+          handler: data => {
+          }
+        },
+        {
+          text: '設定',
+          handler: data => {
+            let req: CategoryRequest = {
+              name: data["name"],
+              description: data["description"]
+            };
+
+            let loader = this.loadingCtrl.create({
+              content: "追加中..."
+            });
+            loader.present();
+            this.categoryApi.categoriesPost(req).toPromise().then(data => {
+              return this.categoryApi.listCategoriesGet().toPromise();
+            }, reason => {
+              loader.dismiss();
+              let alert = this.alertCtrl.create({
+                title: 'エラー',
+                message: '追加失敗'
+              });
+              alert.present();
+              return null;
+            }).then(data => {
+              if(data) {
+                this.categories = data.items;
+                this.networkError = false;
+                this.serverError = false;
+              }
+              loader.dismiss();
+            }, reason => {
+              this.networkError = reason.status === 0;
+              this.serverError = !this.networkError;
+              loader.dismiss();
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

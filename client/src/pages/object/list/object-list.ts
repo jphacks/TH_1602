@@ -4,6 +4,7 @@ import { NavController, NavParams, LoadingController, Refresher } from 'ionic-an
 import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi } from '../../../api/';
 import { MyApp } from '../../../app/app.component';
 import { ObjectDetailsPage } from '../details/object-details';
+import {ObjectRegistrationPage} from "../../../pages";
 
 @Component({
   selector: 'page-object-list',
@@ -133,6 +134,12 @@ export class ObjectListPage {
     this.navCtrl.push(ObjectDetailsPage, {
       objId: obj.id,
       objTag: obj
+    });
+  }
+
+  addObjectTag() {
+    this.navCtrl.push(ObjectRegistrationPage, {
+      categoryId: this.catId, categoryName: this.category && this.category.name || ""
     });
   }
 

@@ -21,12 +21,9 @@
         <ion-label color='primary'>物品名</ion-label>
         <ion-input placeholder="Text Input" [(ngModel)]="register.name" name="name"></ion-input>
       </ion-item>
-
       <ion-item>
         <ion-label color='primary'>カテゴリ</ion-label>
-        <ion-select *ngIf="categories" [(ngModel)]="register.category" name="category">
-          <ion-option *ngFor="let category of categories" [value]="category.id">{{category.name}}</ion-option>
-        </ion-select>
+        <ion-input disabled [(ngModel)]="categoryName" name="category"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color='primary'>場所</ion-label>
@@ -35,6 +32,13 @@
       <ion-item>
         <ion-label color='primary'>説明</ion-label>
         <ion-input placeholder="Text Input" [(ngModel)]="register.description" name="description"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">予約のタイプ</ion-label>
+        <ion-select [(ngModel)]="register.bookingEnabled" name="booking">
+          <ion-option [value]="true">時間指定</ion-option>
+          <ion-option [value]="false">順番のみ</ion-option>
+        </ion-select>
       </ion-item>
       <button ion-button [disabled]="register.name.length == 0 && register.category != -1 && !error" type="submit" block>物品登録</button>
     </form>

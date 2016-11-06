@@ -19,7 +19,15 @@
       </button>
     </ion-buttons>
   </ion-navbar>
-  <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
+  <ion-toolbar>
+    <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addObjectTag()">
+        <ion-icon name='ios-add-circle-outline'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
