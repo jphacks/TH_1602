@@ -37,16 +37,16 @@
       場所：{{objTag.place}}
     </div>
   </div>
-  <ion-item-group>
-    <ion-item-divider>現在使用中</ion-item-divider>
+  <ion-list>
+    <ion-list-header>現在使用中</ion-list-header>
     <my-user-item *ngIf="currentReservation" [reservation]="currentReservation"></my-user-item>
     <ion-item *ngIf="!currentReservation">なし</ion-item>
-  </ion-item-group>
-  <ion-item-group>
-    <ion-item-divider>予約中</ion-item-divider>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>予約中</ion-list-header>
     <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation"></my-user-item>
     <ion-item *ngIf="!reservations || !reservations.length">なし</ion-item>
-  </ion-item-group>
+  </ion-list>
 
   <ion-fab bottom right *ngIf="objTag && reservations">
     <button ion-fab *ngIf="!currentReservation && !objTag.bookingEnabled" (click)="checkIn()">
