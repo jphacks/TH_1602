@@ -41,4 +41,5 @@
     <variable name="URL_SCHEME" value="monogement"/>
   </plugin>
   <plugin name="cordova-plugin-inappbrowser" spec="~1.6.0-dev"/>
+  <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.3"/>
 </widget>

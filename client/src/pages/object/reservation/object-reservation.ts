@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { NavController, NavParams, AlertController } from 'ionic-angular';
 import { ReservationApi, ReservationRequest, ReservationResponse  } from '../../../api/';
@@ -14,7 +14,6 @@ export class ObjectReservationPage {
   public start: string;
   public end: string;
   public otherReservations: ReservationResponse[];
-  private error = false;
   private response;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {

@@ -1,7 +1,7 @@
 import {Component, ViewChild, Injector} from '@angular/core';
 import {Platform, NavController} from 'ionic-angular';
-import {StatusBar, Splashscreen, BarcodeScanner} from 'ionic-native';
-import {LicensePage, HomePage, CategoryListPage, ObjectRegistrationPage, UserListPage, LoginPage} from '../pages'
+import {StatusBar, Splashscreen} from 'ionic-native';
+import {LicensePage, HomePage, CategoryListPage, ObjectRegistrationPage, UserListPage, LoginPage, ObjectDetailsPage} from '../pages';
 import {Preference} from "../utils/preference";
 import {LoginApi, UserInfoApi, UserInfoResponse} from "../api/";
 import {URLSearchParams} from "@angular/http";
@@ -47,7 +47,7 @@ export class MyApp {
       let parser = document.createElement("a");
       parser.href = urlString;
       if(parser.protocol === "monogement:") {
-        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search.substring(1)));
+        this.gotMonogementUri(parser.pathname, new URLSearchParams(parser.search && parser.search.substring(1)));
       }
     }
   }
@@ -65,6 +65,11 @@ export class MyApp {
           }).then(data => {
             this.profile = data;
           });
+        }
+        break;
+      case "//object-tag":
+        if(this.login && params.get("id")) {
+          this.nav.push(ObjectDetailsPage, {objId: params.get("id")});
         }
         break;
     }
@@ -86,13 +91,5 @@ export class MyApp {
     if (this.nav.canGoBack()) {
       this.nav.popToRoot();
     }
-  }
-
-  runQrCode() {
-    BarcodeScanner.scan().then(result => {
-      console.log(result)
-    }, error => {
-      console.log(error)
-    });
   }
 }
