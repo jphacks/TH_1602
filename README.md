@@ -44,4 +44,4 @@ NFCタグにも対応
 
 ### 動作画面
 PowerPointに纏めましたのでこちらをご覧ください
-https://1drv.ms/p/s!Asza9vd2cUuY8BwgWiv__4Kf8-iV
+https://1drv.ms/p/s!Asza9vd2cUuY8Bz7IVtFD-vQIpva
