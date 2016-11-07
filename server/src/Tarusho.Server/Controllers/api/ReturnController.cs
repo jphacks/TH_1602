@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Tarusho.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Tarusho.Server.Extensions;
+using Tarusho.Server.Models;
 using Tarusho.Server.Services;
 
 namespace Tarusho.Server.Controllers.api
@@ -39,6 +41,10 @@ namespace Tarusho.Server.Controllers.api
             if (reservation == null)
                 return NotFound();
 
+            var user = await GetApplicationUser();
+            if (reservation.OwnerUserId != user.Id)
+                return Forbid();
+
             if (!reservation.IsActiveReservations())
                 return Forbid();
 
@@ -51,5 +57,13 @@ namespace Tarusho.Server.Controllers.api
 
             return Ok();
         }
+
+        private async Task<ApplicationUser> GetApplicationUser()
+        {
+            var userId = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var appUser = await _context.Users.FirstOrDefaultAsync(user => user.Id == userId);
+            return appUser;
+        }
+        
     }
 }
