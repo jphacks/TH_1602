@@ -18,16 +18,19 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content *ngIf="userInfo" padding>
+<ion-content padding>
 
-  <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+  <ion-refresher *ngIf="!editing" pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content pullingText="スワイプして更新" refreshingText="更新中...">
     </ion-refresher-content>
   </ion-refresher>
-  <my-img [src]="userInfo.profileImageUri" [placeholder]="'assets/dummy-account.png'" class="user-image"></my-img>
-  <p class="center">@{{userInfo.userName}}</p>
-  <p class="center">{{userInfo.displayName}}</p>
-  <ion-list>
+
+  <div  *ngIf="!userInfo" class="center-spinner"><ion-spinner></ion-spinner></div>
+  <my-img *ngIf="userInfo" [src]="userInfo.profileImageUri" [placeholder]="'assets/dummy-account.png'" class="user-image" [edit]="editing" (editClick)="editImage()"></my-img>
+  <p *ngIf="userInfo && !editing" class="center">{{userInfo.displayName}}</p>
+  <ion-input *ngIf="userInfo && editing" type="text" placeholder="表示名" [(ngModel)]="displayName" name="dispname" class="center"></ion-input>
+  <p *ngIf="userInfo" class="center">@{{userInfo.userName}}</p>
+  <ion-list *ngIf="userInfo && !editing">
     <ion-list-header>現在使用中</ion-list-header>
     <ion-item *ngFor="let u of usingObjects" (click)="push(u)">
       {{u.objectTag.name}} {{u.startAt}} ~ {{u.endAt}}
@@ -37,7 +40,7 @@
     </ion-item>
 
   </ion-list>
-  <ion-list>
+  <ion-list *ngIf="userInfo && !editing">
     <ion-list-header>予約中</ion-list-header>
     <ion-item *ngFor="let r of reservations" (click)="push(r)">
       {{r.objectTag.name}} {{r.startAt}} ~ {{r.endAt}}
@@ -47,7 +50,7 @@
       なし
     </ion-item>
   </ion-list>
-</ion-content>
-<ion-content *ngIf="!userInfo" >
-  <div class="center-spinner"><ion-spinner></ion-spinner></div>
+  <ion-fab bottom right>
+    <button ion-fab mini (click)="edit(editing)"><ion-icon name="settings" *ngIf="!editing"></ion-icon><ion-icon name="checkmark" *ngIf="editing"></ion-icon></button>
+  </ion-fab>
 </ion-content>

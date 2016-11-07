@@ -14,6 +14,17 @@ page-home {
   }
 
   .center-spinner {
-    margin: 10px auto;
+    position: relative;
+    ion-spinner {
+      margin: 10px auto;
+    }
+  }
+
+  ion-input {
+    background: #EEE;
+    border-radius: 3px;
+    input {
+      text-align: center;
+    }
   }
 }
