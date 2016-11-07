@@ -19,7 +19,7 @@
     <form (ngSubmit)='post()'>
       <ion-item>
         <ion-label color='primary'>物品名</ion-label>
-        <ion-input placeholder="Text Input" [(ngModel)]="register.name" name="name"></ion-input>
+        <ion-input placeholder="テキスト入力" [(ngModel)]="register.name" name="name"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color='primary'>カテゴリ</ion-label>
@@ -27,11 +27,15 @@
       </ion-item>
       <ion-item>
         <ion-label color='primary'>場所</ion-label>
-        <ion-input placeholder="Text Input" [(ngModel)]="register.place" name="place"></ion-input>
+        <ion-input placeholder="テキスト入力" [(ngModel)]="register.place" name="place"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color='primary'>説明</ion-label>
-        <ion-input placeholder="Text Input" [(ngModel)]="register.description" name="description"></ion-input>
+        <ion-input placeholder="テキスト入力" [(ngModel)]="register.description" name="description"></ion-input>
+      </ion-item>
+      <ion-item (click)="selectImage()">
+        <ion-label color='primary'>画像</ion-label>
+        <ion-input placeholder="ファイル選択" [(ngModel)]="imageName" name="image" disabled></ion-input>
       </ion-item>
       <ion-item>
         <ion-label color="primary">予約のタイプ</ion-label>

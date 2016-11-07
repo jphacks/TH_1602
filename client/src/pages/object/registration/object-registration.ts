@@ -1,9 +1,8 @@
-import {Component} from '@angular/core';
-import {NavController, AlertController, LoadingController, ToastController} from 'ionic-angular';
-import {NavParams} from 'ionic-angular';
-import {ObjectTagApi, ObjectTagRequest, CategoryApi, CategoryResponse} from '../../../api';
-import {MyApp} from '../../../app/app.component';
-import {ObjectListPage} from "../../../pages";
+import { Component } from '@angular/core';
+import { NavController, AlertController, LoadingController, ToastController, NavParams } from 'ionic-angular';
+import { ObjectTagApi, ObjectTagRequest, CategoryApi, ImageApi } from '../../../api';
+import { MyApp } from '../../../app/app.component';
+import { ImagePicker, getPlugin } from "ionic-native";
 
 @Component({
   selector: 'page-object-registration',
@@ -16,9 +15,11 @@ export class ObjectRegistrationPage {
   error = false;
   categoryName: string;
   badOperation = false;
+  imageName: string = null;
+  image: any = null;
 
   constructor(public navCtrl: NavController, public alertCtrl: AlertController, public params: NavParams, private loadingCtrl: LoadingController, private toastCtrl: ToastController) {
-    if(!params.get("categoryId") || !params.get("categoryName")) {
+    if (!params.get("categoryId") || !params.get("categoryName")) {
       toastCtrl.create({
         message: '不正な操作',
         duration: 3000,
@@ -32,7 +33,7 @@ export class ObjectRegistrationPage {
   }
 
   ionViewDidEnter() {
-    if(this.badOperation) {
+    if (this.badOperation) {
       this.navCtrl.pop();
     }
   }
@@ -45,17 +46,25 @@ export class ObjectRegistrationPage {
     return MyApp.injector.get(CategoryApi);
   }
 
+  private get imageApi(): ImageApi {
+    return MyApp.injector.get(ImageApi);
+  }
+
   public post() {
     if (this.register.name) {
       this.objApi.objectTagsPost(this.register).toPromise().then((response) => {
-        this.navCtrl.pop();
+        if (this.image) {
+          return this.imageApi.imagesObjectTagsIdPut(response.id, this.image).toPromise();
+        }
       }, reason => {
         this.showError(reason);
-      });
+      }).then(() => {
+        this.navCtrl.pop();
+      })
     }
   }
 
-  showError(reason: {status:number}) {
+  showError(reason: {status: number}) {
     if (reason.status !== 0) {
       this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
     } else {
@@ -70,5 +79,36 @@ export class ObjectRegistrationPage {
       buttons: ['OK']
     });
     alert.present();
+  }
+
+  selectImage() {
+    let permissions = getPlugin("cordova.plugins.permissions");
+    new Promise((resolve, reject) => {
+      permissions.hasPermission(permissions.READ_EXTERNAL_STORAGE, resolve, reject);
+    }).then((result: {hasPermission: boolean}) => {
+      if (!result.hasPermission) {
+        return new Promise((resolve, reject) => {
+          permissions.requestPermission(
+            permissions.READ_EXTERNAL_STORAGE,
+            function (status) {
+              if (!status.hasPermission) reject(status); else resolve(status);
+            },
+            reject);
+        })
+      }
+      return result;
+    }).then((result: {hasPermission: boolean}) => {
+      if (result && result.hasPermission) {
+        return ImagePicker.getPictures({
+          maximumImagesCount: 1
+        });
+      }
+    }).then((results) => {
+      if (results.length > 0) {
+        this.image = results[0];
+        this.imageName = this.image.split("/").pop();
+      }
+    }, (err) => {
+    });
   }
 }
