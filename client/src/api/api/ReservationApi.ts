@@ -214,7 +214,7 @@ export class ReservationApi {
      * @param toAt 指定時間以前に重なるものを検索 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
      * @param includesPast 現在予約が終了しているものも検索に含めるかどうか。 defaultばfalseです。 
      */
-    public searchReservationsGet (objectTagId?: string, userName?: string, keywords?: Array<string>, sinceAt?: Date, toAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ReservationResponse>> {
+    public searchReservationsGet (objectTagId?: string, userName?: string, keywords?: Array<string>, sinceAt?: Date, toAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.JsonReservationResponse>> {
         const path = this.basePath + '/search/reservations';
 
         let queryParameters = new URLSearchParams();

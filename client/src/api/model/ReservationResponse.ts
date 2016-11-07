@@ -82,3 +82,82 @@ export interface ReservationResponse {
      */
     isActive?: boolean;
 }
+
+export class ReservationResponseConverter {
+    public static convert(res: JsonReservationResponse): ReservationResponse {
+        return {
+            id: res.id,
+            comment: res.comment,
+            owner: res.owner,
+            users: res.users,
+            objectTag: res.objectTag,
+            createdAt: res.createdAt === null ? null : new Date(res.createdAt),
+            modifiedAt: res.createdAt === null ? null : new Date(res.modifiedAt),
+            priority: res.priority,
+            startAt: res.startAt === null ? null : new Date(res.startAt),
+            endAt: res.endAt === null ? null : new Date(res.endAt),
+            isEndless: res.isEndless,
+            isActive: res.isActive
+        };
+    }
+
+    public static convertAll(res: JsonReservationResponse[]) {
+        return res.map(this.convert);
+    }
+}
+
+export interface JsonReservationResponse {
+    /**
+     * ReservationのId
+     */
+    id?: string;
+
+    /**
+     * Reservationのcomment
+     */
+    comment?: string;
+
+    owner?: models.IdNamePair;
+
+    /**
+     * 使用者のユーザーId, 表示名のリスト
+     */
+    users?: Array<models.IdNamePair>;
+
+    objectTag?: models.IdNamePair;
+
+    /**
+     * 予約を行った日時
+     */
+    createdAt?: string;
+
+    /**
+     * 最終更新日
+     */
+    modifiedAt?: string;
+
+    /**
+     * 優先度(列挙型にする予定)
+     */
+    priority?: number;
+
+    /**
+     * 予約の開始日時
+     */
+    startAt?: string;
+
+    /**
+     * 予約の終了日時
+     */
+    endAt?: string;
+
+    /**
+     * 予約の終了が無期限であるかどうか
+     */
+    isEndless?: boolean;
+
+    /**
+     * 現在利用中なものであるかどうか
+     */
+    isActive?: boolean;
+}

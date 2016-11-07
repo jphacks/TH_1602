@@ -12,6 +12,7 @@ import {
 } from '../../../api/';
 import {MyApp} from '../../../app/app.component';
 import {ObjectDetailsPage} from '../../object/details/object-details';
+import { JsonReservationResponse, ReservationResponseConverter } from "../../../api/model/ReservationResponse";
 
 @Component({
   selector: 'page-user-details',
@@ -40,12 +41,12 @@ export class UserDetailsPage {
     this.reservationGet;
   }
 
-  gotReservation(response: PaginationItem<ReservationResponse>) {
+  gotReservation(response: PaginationItem<JsonReservationResponse>) {
     if(!response) {
       return;
     }
     let now = new Date();
-    let reservations = response.items.sort((a, b) => {
+    let reservations = ReservationResponseConverter.convertAll(response.items).sort((a, b) => {
       if(!a.startAt) return -1;
       if(!b.startAt) return 1;
       return a.startAt.getTime() - b.startAt.getTime();
@@ -58,7 +59,7 @@ export class UserDetailsPage {
   }
 
   get reservationGet() {
-    return this.reservationApi.searchReservationsGet(null, this.userName).toPromise()
+    return this.reservationApi.searchReservationsGet(undefined, this.userName).toPromise()
       .then((response) => {
         this.gotReservation(response);
       }, reason => {
@@ -69,8 +70,7 @@ export class UserDetailsPage {
   push(res: ReservationResponse) {
     let objId = res.objectTag.id;
     this.navCtrl.push(ObjectDetailsPage, {
-      objId: objId,
-      objectTag: res.objectTag
+      objId: objId
     });
   }
 

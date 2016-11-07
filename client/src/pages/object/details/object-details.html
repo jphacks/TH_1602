@@ -39,12 +39,12 @@
   </div>
   <ion-list>
     <ion-list-header>現在使用中</ion-list-header>
-    <my-user-item *ngIf="currentReservation" [reservation]="currentReservation"></my-user-item>
+    <my-user-item *ngIf="currentReservation" [reservation]="currentReservation" (click)="push(currentReservation)"></my-user-item>
     <ion-item *ngIf="!currentReservation">なし</ion-item>
   </ion-list>
   <ion-list>
     <ion-list-header>予約中</ion-list-header>
-    <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation"></my-user-item>
+    <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation" (click)="push(reservation)"></my-user-item>
     <ion-item *ngIf="!reservations || !reservations.length">なし</ion-item>
   </ion-list>
 
@@ -52,7 +52,10 @@
     <button ion-fab *ngIf="!currentReservation && !objTag.bookingEnabled" (click)="checkIn()">
       <ion-icon name="checkmark"></ion-icon>
     </button>
-    <button ion-fab *ngIf="currentReservation" (click)="reserve()">
+    <button ion-fab *ngIf="!objTag.bookingEnabled && using" (click)="checkOut()">
+      <ion-icon name="checkmark"></ion-icon>
+    </button>
+    <button ion-fab *ngIf="currentReservation && !using" (click)="reserve()">
       <ion-icon name="calendar"></ion-icon>
     </button>
     <button ion-fab *ngIf="!currentReservation && objTag.bookingEnabled">

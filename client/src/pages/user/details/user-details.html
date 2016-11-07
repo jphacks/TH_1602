@@ -26,7 +26,7 @@
   <ion-list>
     <ion-list-header>現在使用中</ion-list-header>
     <ion-item *ngFor="let u of usingObjects" (click)="push(u)">
-      {{u.objectTag.name}} {{u.startAt}} ~ {{u.endAt}}
+      <p>{{u.objectTag.name}}</p><p>{{u.startAt}} ~ {{u.endAt}}</p>
     </ion-item>
     <ion-item *ngIf="!usingObjects || !usingObjects.length">
       なし
@@ -36,7 +36,7 @@
   <ion-list>
     <ion-list-header>予約中</ion-list-header>
     <ion-item *ngFor="let r of reservations" (click)="push(r)">
-      {{r.objectTag.name}} {{r.startAt}} ~ {{r.endAt}}
+      <p>{{r.objectTag.name}}</p><p>{{r.startAt}} ~ {{r.endAt}}</p>
     </ion-item>
 
     <ion-item *ngIf="!reservations || !reservations.length">

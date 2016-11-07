@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
 import { NavController, NavParams, AlertController } from 'ionic-angular';
-import { ReservationApi, ReservationRequest, ReservationResponse  } from '../../../api/';
+import { ReservationApi, ReservationRequest, ReservationResponse } from '../../../api/';
 import { MyApp } from '../../../app/app.component'
-import {DateFormatter} from "@angular/common/src/facade/intl";
+import { DateFormatter } from "@angular/common/src/facade/intl";
+import { Preference } from "../../../utils/preference";
 
 @Component({
   selector: 'page-object-reservation',
@@ -17,7 +18,7 @@ export class ObjectReservationPage {
   private response;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
-    this.reservation.users = [navParams.get('user')];
+    this.reservation.users = [Preference.username];
     this.reservation.objectTagId = navParams.get('object_tag_id');
     this.timeInit();
     this.otherReservations = navParams.get('reservations');
@@ -34,24 +35,24 @@ export class ObjectReservationPage {
     let myRes = this.reservation;
     myRes.startAt = new Date(this.start);
     myRes.endAt = new Date(this.end);
-    if(this.otherReservations != null){
-      for(let anotherRes of this.otherReservations){
-        if(anotherRes.startAt < myRes.endAt && myRes.startAt < anotherRes.endAt){
+    if (this.otherReservations != null) {
+      for (let anotherRes of this.otherReservations) {
+        if (anotherRes.startAt < myRes.endAt && myRes.startAt < anotherRes.endAt) {
           this.showAlert('予定が被ってます', 'あなたが予約指定した期間はすでに別の人の予約が入っているので期間を変えてください');
           return;
-        }  
+        }
       }
     }
     this.reservationApi.reservationsPost(this.reservation).toPromise().then((response) => {
-        this.response = response;
-        this.navCtrl.popToRoot();
-      }, reason => {
-        if (reason.status !== 0) {
-          this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
-        }else {
-          this.showAlert('ネットワークエラー', 'インターネットに接続されているか，確認してください');
-        }
-      })
+      this.response = response;
+      this.navCtrl.popToRoot();
+    }, reason => {
+      if (reason.status !== 0) {
+        this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
+      } else {
+        this.showAlert('ネットワークエラー', 'インターネットに接続されているか，確認してください');
+      }
+    })
   }
 
   showAlert(title: string, subTitle: string) {
@@ -62,6 +63,7 @@ export class ObjectReservationPage {
     });
     alert.present();
   }
+
   private get reservationApi(): ReservationApi {
     return MyApp.injector.get(ReservationApi)
   }
