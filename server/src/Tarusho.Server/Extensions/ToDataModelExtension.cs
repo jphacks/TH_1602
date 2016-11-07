@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Tarusho.Server.Models;
 using Tarusho.Server.Models.Api;
 using Tarusho.Server.Models.Data;
 
@@ -10,7 +11,7 @@ namespace Tarusho.Server.Extensions
     public static class ToDataModelExtension
     {
 
-        public static Reservation ToDataModel(this ReservationRequest request, string userId, Reservation item = null)
+        public static Reservation ToDataModel(this ReservationRequest request, ApplicationUser user, ObjectTag objectTag, Reservation item = null)
         {
             if (item == null)
             {
@@ -30,13 +31,24 @@ namespace Tarusho.Server.Extensions
             item.StartAt = request.StartAt;
             item.EndAt = request.EndAt;
             item.IsEndless = request.IsEndless;
-            item.ObjectTagId = request.ObjectTagId;
-            item.OwnerUserId = userId;
+
+            if (objectTag != null)
+            {
+                item.ObjectTag = objectTag;
+                item.ObjectTagId = objectTag.Id;
+            }
+            else
+            {
+                item.ObjectTagId = request.ObjectTagId;
+            }
+
+            item.OwnerUser = user;
+            item.OwnerUserId = user.Id;
             item.Priority = request.Priority;
             return item;
         }
 
-        public static ObjectTag ToDataModel(this ObjectTagRequest request, ObjectTag item = null)
+        public static ObjectTag ToDataModel(this ObjectTagRequest request, Category category = null, ObjectTag item = null)
         {
             if (item == null)
             {
@@ -50,7 +62,15 @@ namespace Tarusho.Server.Extensions
                 item.Id = request.Id;
             }
 
-            item.CategoryId = request.Category;
+            if (category != null)
+            {
+                item.Category = category;
+                item.CategoryId = category.Id;
+            }
+            else
+            {
+                item.CategoryId = request.Category;
+            }
             item.Description = request.Description;
             item.IsBookingEnabled = request.BookingEnabled;
             item.Name = request.Name;

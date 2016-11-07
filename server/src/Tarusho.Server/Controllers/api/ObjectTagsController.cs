@@ -16,6 +16,7 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/object_tags")]
+    [Authorize]
     public class ObjectTagsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -55,11 +56,12 @@ namespace Tarusho.Server.Controllers.api
             if (objectTag == null)
                 return NotFound();
 
-            if (!_context.Categories.Any(c => c.Id == request.Category))
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.Category);
+            if (category == null)
                 return BadRequest();
 
-            objectTag = request.ToDataModel(objectTag);
-            
+            objectTag = request.ToDataModel(category, objectTag);
+
             _context.Entry(objectTag).State = EntityState.Modified;
 
             try
@@ -88,7 +90,8 @@ namespace Tarusho.Server.Controllers.api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (!_context.Categories.Any(c => c.Id == request.Category))
+            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.Category);
+            if (category == null)
                 return BadRequest();
 
             var objectTag = request.ToDataModel();
@@ -108,6 +111,8 @@ namespace Tarusho.Server.Controllers.api
                     throw;
                 }
             }
+
+            await _context.Categories.Where(c => c.Id == category.Id).LoadAsync();
 
             return CreatedAtAction("GetObjectTag", new { id = objectTag.Id }, objectTag.ToApiModel());
         }

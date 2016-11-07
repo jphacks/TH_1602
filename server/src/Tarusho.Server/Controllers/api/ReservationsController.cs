@@ -27,7 +27,7 @@ namespace Tarusho.Server.Controllers.api
         private readonly ReservationService _reservationService;
 
 
-        public ReservationsController(ApplicationDbContext context,ReservationService service)
+        public ReservationsController(ApplicationDbContext context, ReservationService service)
         {
             _context = context;
             _reservationService = service;
@@ -73,11 +73,12 @@ namespace Tarusho.Server.Controllers.api
             if (user.Id != reservation.OwnerUserId)
                 return Forbid();
 
-            if (!_context.ObjectTags.Any(c => c.Id == item.ObjectTagId))
+            var objectTag = await _context.ObjectTags.FirstOrDefaultAsync(c => c.Id == item.ObjectTagId);
+            if (objectTag == null)
                 return BadRequest();
 
             // TODO: 予約可能かどうか、判定
-            reservation = item.ToDataModel(user.Id, reservation);
+            reservation = item.ToDataModel(user, objectTag, reservation);
             _context.Entry(reservation).State = EntityState.Modified;
 
             try
@@ -92,7 +93,6 @@ namespace Tarusho.Server.Controllers.api
 
                 await _context.SaveChangesAsync();
 
-
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -106,6 +106,10 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
+            await _context.ReservationUsers.Where(c => c.ReservationId == reservation.Id).LoadAsync();
+            await _context.Users.Where(c => c.Id == reservation.OwnerUserId).LoadAsync();
+            await _context.ObjectTags.Where(c => c.Id == reservation.ObjectTagId).LoadAsync();
+            
             return Ok(reservation.ToApiModel());
         }
 
@@ -120,10 +124,11 @@ namespace Tarusho.Server.Controllers.api
 
             var user = await GetApplicationUser();
 
-            if (!_context.ObjectTags.Any(c => c.Id == item.ObjectTagId))
+            var objectTag = await _context.ObjectTags.FirstOrDefaultAsync(c => c.Id == item.ObjectTagId);
+            if (objectTag == null)
                 return BadRequest();
 
-            var reservation = item.ToDataModel(user.Id);
+            var reservation = item.ToDataModel(user, objectTag);
             // TODO: 予約可能かどうか、判定
             // TODO: 先約にリクエストを送る処理なども検討...？
 
@@ -148,6 +153,10 @@ namespace Tarusho.Server.Controllers.api
                     throw;
                 }
             }
+            
+            await _context.ReservationUsers.Where(c => c.ReservationId == reservation.Id).LoadAsync();
+            await _context.Users.Where(c => c.Id == reservation.OwnerUserId).LoadAsync();
+            await _context.ObjectTags.Where(c => c.Id == reservation.ObjectTagId).LoadAsync();
 
             return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation.ToApiModel());
         }
