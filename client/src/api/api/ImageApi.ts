@@ -24,15 +24,14 @@
 
 import {Http, Headers, RequestOptionsArgs, Response, URLSearchParams} from '@angular/http';
 import {Injectable, Optional} from '@angular/core';
+import {Transfer} from 'ionic-native'
 import {Observable} from 'rxjs/Observable';
 import * as models from '../model/models';
-import 'rxjs/Rx';
+import {ApiConfig} from "../config";
 
 /* tslint:disable:no-unused-variable member-ordering */
 
 'use strict';
-import {ApiConfig} from "../config";
-import { Transfer } from "ionic-native/dist/es5/index";
 
 @Injectable()
 export class ImageApi {

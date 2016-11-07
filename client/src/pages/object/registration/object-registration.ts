@@ -54,7 +54,7 @@ export class ObjectRegistrationPage {
     if (this.register.name) {
       this.objApi.objectTagsPost(this.register).toPromise().then((response) => {
         if (this.image) {
-          return this.imageApi.imagesObjectTagsIdPut(response.id, this.image).toPromise();
+          return this.imageApi.imagesObjectTagsIdPut(response.id, this.image);
         }
       }, reason => {
         this.showError(reason);
