@@ -31,7 +31,7 @@ namespace Tarusho.Server.Controllers.api
         }
 
         // GET: api/return/{reservation_id}
-        [HttpGet("{reservation_id}")]
+        [HttpPost("{reservation_id}")]
         public async Task<IActionResult> CompleteReservation([FromRoute] string reservation_id)
         {
             if (!ModelState.IsValid)
