@@ -68,7 +68,7 @@ namespace Tarusho.Server.Controllers
             var user = await _userManager.FindByUserNameOrEmailAsync(model.UserNameOrEmail);
             if (user != null)
             {
-                var result = await _signInManager.PasswordSignInAsync(model.UserNameOrEmail, model.Password, model.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(user, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");

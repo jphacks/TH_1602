@@ -13,6 +13,7 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/users")]
+    [Authorize]
     public class UsersController : Controller
     {
 

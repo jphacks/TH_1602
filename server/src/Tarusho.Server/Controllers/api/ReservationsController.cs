@@ -19,6 +19,7 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/reservation")]
+    [Authorize]
     public class ReservationsController : Controller
     {
         private readonly ApplicationDbContext _context;

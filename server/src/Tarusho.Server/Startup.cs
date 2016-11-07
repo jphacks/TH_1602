@@ -25,7 +25,6 @@ namespace Tarusho.Server
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("tokens.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())
@@ -97,9 +96,9 @@ namespace Tarusho.Server
 
             app.UseCors("AllowAll");
 
-            //seeder.SeedAdminUserAsync("p@ssw0rd").Wait();
+            seeder.SeedAdminUserAsync("p@ssw0rd").Wait();
 
-            //seeder.SeedUserAsync().Wait();
+            seeder.SeedUserAsync().Wait();
 
             seeder.SeedCategory().Wait();
 
