@@ -159,6 +159,7 @@ export class ObjectTagApi {
             headers: headerParams,
             search: queryParameters
         };
+        headerParams.set('Content-Type', 'application/json');
         requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
