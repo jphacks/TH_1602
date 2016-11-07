@@ -51,6 +51,18 @@ export class ObjectDetailsPage {
     return this.currentReservation && this.currentReservation.users.length && (this.currentReservation.users[0].id === Preference.username)
   }
 
+  get fabButtonState(): number {
+    if(this.using) { // show checkout button
+      return 0;
+    } else if(this.currentReservation) { // show reserve button (either booking enabled or disabled)
+      return 1;
+    } else if(!this.objTag.bookingEnabled) { // show check in button
+      return 2;
+    } else { // show parent button
+      return 3;
+    }
+  }
+
   load(finish?: () => any) {
     if (!this.objTag) {
       this.objectApi.objectTagsIdGet(this.objId).toPromise()
@@ -149,7 +161,7 @@ export class ObjectDetailsPage {
       content: "完了処理中..."
     });
     loader.present();
-    this.reservationApi.returnReservationIdPost(this.objId).toPromise()
+    this.reservationApi.returnReservationIdPost(this.currentReservation.id).toPromise()
       .then(() => {
         loader.dismiss();
         this.toastCtrl.create({
@@ -158,6 +170,7 @@ export class ObjectDetailsPage {
           position: 'bottom'
         }).present();
       }, reason => {
+        console.log(reason);
         loader.dismiss();
         let alert = this.alertCtrl.create({
           title: 'エラー',
@@ -208,6 +221,11 @@ export class ObjectDetailsPage {
             loader.present();
             this.reservationApi.reservationsPost(req).toPromise().then(data => {
               loader.dismiss();
+              this.toastCtrl.create({
+                message: '完了',
+                duration: 3000,
+                position: 'bottom'
+              }).present();
             }, reason => {
               loader.dismiss();
               let alert = this.alertCtrl.create({

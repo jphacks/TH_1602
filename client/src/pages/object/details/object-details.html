@@ -49,19 +49,19 @@
   </ion-list>
 
   <ion-fab bottom right *ngIf="objTag && reservations">
-    <button ion-fab *ngIf="!currentReservation && !objTag.bookingEnabled" (click)="checkIn()">
+    <button ion-fab *ngIf="fabButtonState == 2" (click)="checkIn()">
       <ion-icon name="checkmark"></ion-icon>
     </button>
-    <button ion-fab *ngIf="!objTag.bookingEnabled && using" (click)="checkOut()">
+    <button ion-fab *ngIf="fabButtonState == 0" (click)="checkOut()">
       <ion-icon name="checkmark"></ion-icon>
     </button>
-    <button ion-fab *ngIf="currentReservation && !using" (click)="reserve()">
+    <button ion-fab *ngIf="fabButtonState == 1" (click)="reserve()">
       <ion-icon name="calendar"></ion-icon>
     </button>
-    <button ion-fab *ngIf="!currentReservation && objTag.bookingEnabled">
+    <button ion-fab *ngIf="fabButtonState == 3">
       <ion-icon name="arrow-up"></ion-icon>
     </button>
-    <ion-fab-list side="top" *ngIf="!currentReservation && objTag.bookingEnabled">
+    <ion-fab-list side="top" *ngIf="fabButtonState == 3">
       <button ion-fab (click)="checkInTime()"><ion-icon name="checkmark"></ion-icon></button>
       <button ion-fab (click)="reserve()"><ion-icon name="calendar"></ion-icon></button>
     </ion-fab-list>

@@ -97,6 +97,8 @@ export class HomePage {
   }
 
   doRefresh(refresher: Refresher) {
+    this.usingObjects = [];
+    this.reservations = [];
     this.userApi.usersUserNameGet(this.userName).toPromise()
       .then(data => {
         this.userInfo = data;
