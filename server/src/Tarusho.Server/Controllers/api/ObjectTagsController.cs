@@ -16,6 +16,7 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/object_tags")]
+    [Authorize]
     public class ObjectTagsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -59,7 +60,7 @@ namespace Tarusho.Server.Controllers.api
                 return BadRequest();
 
             objectTag = request.ToDataModel(objectTag);
-            
+
             _context.Entry(objectTag).State = EntityState.Modified;
 
             try
@@ -78,7 +79,9 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
-            return Ok(objectTag.ToApiModel());
+            var response = await _context.IncludeObjectTagCategory().FirstOrDefaultAsync(c => c.Id == objectTag.Id);
+
+            return Ok(response.ToApiModel());
         }
 
         // POST: api/ObjectTags
@@ -109,7 +112,9 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
-            return CreatedAtAction("GetObjectTag", new { id = objectTag.Id }, objectTag.ToApiModel());
+            var response = await _context.IncludeObjectTagCategory().FirstOrDefaultAsync(c => c.Id == objectTag.Id);
+
+            return CreatedAtAction("GetObjectTag", new { id = objectTag.Id }, response.ToApiModel());
         }
 
         // DELETE: api/ObjectTags/5

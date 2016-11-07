@@ -27,7 +27,7 @@ namespace Tarusho.Server.Controllers.api
         private readonly ReservationService _reservationService;
 
 
-        public ReservationsController(ApplicationDbContext context,ReservationService service)
+        public ReservationsController(ApplicationDbContext context, ReservationService service)
         {
             _context = context;
             _reservationService = service;
@@ -92,7 +92,6 @@ namespace Tarusho.Server.Controllers.api
 
                 await _context.SaveChangesAsync();
 
-
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -106,7 +105,9 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
-            return Ok(reservation.ToApiModel());
+            var response = await _context.IncludeReservationContext().FirstOrDefaultAsync(c => c.Id == reservation.Id);
+
+            return Ok(response.ToApiModel());
         }
 
         // POST: api/Reservations
@@ -149,7 +150,9 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation.ToApiModel());
+            var response = await _context.IncludeReservationContext().FirstOrDefaultAsync(c => c.Id == reservation.Id);
+
+            return CreatedAtAction("GetReservation", new { id = reservation.Id }, response.ToApiModel());
         }
 
         // DELETE: api/Reservations/5
@@ -189,6 +192,9 @@ namespace Tarusho.Server.Controllers.api
 
         private async Task RemoveReservationUser(List<string> userIds, string reservationId)
         {
+            if (userIds == null)
+                return;
+
             foreach (var userId in userIds)
             {
                 var item =
@@ -204,6 +210,9 @@ namespace Tarusho.Server.Controllers.api
 
         private async Task RegisterReservationUser(List<string> userNames, Reservation reservation)
         {
+            if (userNames == null)
+                return;
+
             foreach (var userName in userNames)
             {
                 var user = _context.Users.FirstOrDefault(c => c.UserName == userName);
