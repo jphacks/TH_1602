@@ -62,7 +62,7 @@ namespace Tarusho.Server.Data
                     {
                         UserName = $"User{i}",
                         NormalizedUserName = $"User{i}",
-                        DisplayName = $"おぼユーザー{i}"
+                        DisplayName = $"ユーザー{i}さん"
                     };
                     var hashed = hasher.HashPassword(user, $"userPass{i}");
                     user.PasswordHash = hashed;
@@ -82,8 +82,8 @@ namespace Tarusho.Server.Data
                 {
                     var item = new Category()
                     {
-                        Name = $"おぼえにくい{i}",
-                        Description = $"たるしょ～{i}"
+                        Name = $"書籍タイプ{i}",
+                        Description = $"書籍{i}"
                     };
                     _context.Categories.Add(item);
                     _context.SaveChanges();
@@ -95,23 +95,24 @@ namespace Tarusho.Server.Data
         {
             for (var i = 1; i < 20; i++)
             {
-                if (!_context.ObjectTags.Any(c => c.Name == $"obo{i}"))
+                if (!_context.ObjectTags.Any(c => c.Name == $"PRML {i}巻"))
                 {
                     //var category = _context.Categories.FirstOrDefault(c => c.Id == 5);
                     var item = new ObjectTag()
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Name = $"obo{i}",
-                        Description = $"tarusho{i}",
+                        Name = $"PRML {i}巻",
+                        Description = $"PRML {i}巻",
                         //Category = category,
                         CategoryId = 5,
-                        ObjectUri = $"tarusho://oboobo{i}-{i/2}",
-                        Place = $"{i}のあたり",
+                        ObjectUri = $"object://sample-{i}-{i / 2}",
+                        Place = $"場所{i}のあたり",
                         IsBookingEnabled = i % 2 == 0
                     };
                     _context.ObjectTags.Add(item);
                 }
             }
+
             await _context.SaveChangesAsync();
         }
 

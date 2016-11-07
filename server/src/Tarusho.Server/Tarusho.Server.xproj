@@ -14,6 +14,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <SchemaVersion>2.0</SchemaVersion>
+    <ApplicationInsightsResourceId>/subscriptions/f7ad7b6e-7aec-4ee0-bf0e-ca6a6b061d57/resourcegroups/Default-ApplicationInsights-CentralUS/providers/microsoft.insights/components/Tarusho.Server</ApplicationInsightsResourceId>
   </PropertyGroup>
   <ItemGroup>
     <DnxInvisibleContent Include="bower.json" />
