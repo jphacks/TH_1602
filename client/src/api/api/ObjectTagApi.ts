@@ -35,8 +35,8 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class ObjectTagApi {
-    protected basePath = ApiConfig.basePath;
-    public defaultHeaders : Headers = new Headers();
+    protected basePath = ApiConfig.apiPath;
+    get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
     constructor(protected http: Http) {
     }
@@ -159,6 +159,7 @@ export class ObjectTagApi {
             headers: headerParams,
             search: queryParameters
         };
+        headerParams.set('Content-Type', 'application/json');
         requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
@@ -185,6 +186,7 @@ export class ObjectTagApi {
         if (item === null || item === undefined) {
             throw new Error('Required parameter item was null or undefined when calling objectTagsPost.');
         }
+        headerParams.append("Content-Type", "application/json")
         let requestOptions: RequestOptionsArgs = {
             method: 'POST',
             headers: headerParams,
@@ -206,9 +208,9 @@ export class ObjectTagApi {
      * ObjectTagの検索を結果を返します
      * 
      * @param categoryId ObjectTagのId
-     * @param name ObjectTagの名前(部分一致)
+     * @param keywords ObjectTagの名前(部分一致)
      */
-    public searchObjectTagsGet (categoryId?: string, name?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
+    public searchObjectTagsGet (categoryId?: string, keywords?: Array<string>, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ObjectTagResponse>> {
         const path = this.basePath + '/search/object_tags';
 
         let queryParameters = new URLSearchParams();
@@ -217,8 +219,8 @@ export class ObjectTagApi {
             queryParameters.set('category_id', String(categoryId));
         }
 
-        if (name !== undefined) {
-            queryParameters.set('name', String(name));
+        if (keywords !== undefined) {
+            queryParameters.set('keywords', String(keywords));
         }
 
         let requestOptions: RequestOptionsArgs = {

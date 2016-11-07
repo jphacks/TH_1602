@@ -1,23 +1,26 @@
-<ion-menu [content]="content">
+<ion-menu [content]="content" *ngIf="login">
   <ion-content>
     <ion-list>
+
+      <div class="profile">
+        <my-img *ngIf="profile" [src]="profile.profileThumbnailImageUri" [placeholder]="'assets/dummy-account.png'"></my-img>
+        <my-img *ngIf="!profile" [src]="'assets/dummy-account.png'"></my-img>
+        <div class="name-container" *ngIf="profile">
+          <p>{{profile.displayName}}</p>
+          <p>@{{profile.userName}}</p>
+        </div>
+      </div>
       <button ion-item (click)="clearPageStack()" menuClose>
         マイページ
       </button>
       <button ion-item (click)="openPage(categoryListPage)" menuClose>
         物品一覧
       </button>
-      <button ion-item (click)="openPage(objectRegistrationPage)" menuClose>
-        物品登録
-      </button>
       <button ion-item (click)="openPage(userListPage)" menuClose>
         ユーザー一覧
       </button>
       <button ion-item (click)="openPage(licensePage)" menuClose>
         ライセンス
-      </button>
-      <button ion-item (click)="runQrCode()" menuClose>
-        QrCode
       </button>
 
     </ion-list>

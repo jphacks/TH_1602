@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<widget id="com.ionicframework.tarushoclient339076" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-  <name>tarusho.client</name>
+<widget id="com.ionicframework.tarushoclient339076" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:android="http://schemas.android.com/apk/res/android" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <name>MONOgement</name>
   <description>An awesome Ionic/Cordova app.</description>
   <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
   <content src="index.html"/>
@@ -13,6 +13,9 @@
   <allow-intent href="geo:*"/>
   <platform name="android">
     <allow-intent href="market:*"/>
+    <config-file parent="/manifest" target="AndroidManifest.xml">
+      <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    </config-file>
   </platform>
   <platform name="ios">
     <allow-intent href="itms:*"/>
@@ -36,4 +39,13 @@
   <plugin name="cordova-plugin-splashscreen" spec="~4.0.0"/>
   <plugin name="cordova-plugin-statusbar" spec="~2.2.0"/>
   <plugin name="ionic-plugin-keyboard" spec="~2.2.1"/>
+  <plugin name="cordova-plugin-customurlscheme" spec="~4.2.0">
+    <variable name="URL_SCHEME" value="monogement"/>
+  </plugin>
+  <plugin name="cordova-plugin-inappbrowser" spec="~1.6.0-dev"/>
+  <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.3"/>
+  <plugin name="cordova-plugin-image-picker" spec="~1.1.1"/>
+  <plugin name="cordova-plugin-android-permissions" spec="~0.10.0"/>
+  <plugin name="cordova-plugin-file-transfer" spec="~1.6.0"/>
+  <allow-navigation href="http://192.168.1.7:8100"/>
 </widget>

@@ -35,8 +35,8 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class UserInfoApi {
-    protected basePath = ApiConfig.basePath;
-    public defaultHeaders : Headers = new Headers();
+    protected basePath = ApiConfig.apiPath;
+    get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
     constructor(protected http: Http) {
     }
@@ -172,6 +172,7 @@ export class UserInfoApi {
             headers: headerParams,
             search: queryParameters
         };
+        headerParams.set('Content-Type', 'application/json');
         requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)

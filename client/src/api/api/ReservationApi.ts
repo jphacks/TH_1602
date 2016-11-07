@@ -35,8 +35,8 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class ReservationApi {
-    protected basePath = ApiConfig.basePath;
-    public defaultHeaders : Headers = new Headers();
+    protected basePath = ApiConfig.apiPath;
+    get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
     constructor(protected http: Http) {
     }
@@ -47,7 +47,7 @@ export class ReservationApi {
      * @param id ReservationのId
      */
     public reservationsIdDelete (id: string, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/reservations/{id}'
+        const path = this.basePath + '/reservation/{id}'
             .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
@@ -78,7 +78,7 @@ export class ReservationApi {
      * @param id ReservationのId
      */
     public reservationsIdGet (id: string, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
-        const path = this.basePath + '/reservations/{id}'
+        const path = this.basePath + '/reservation/{id}'
             .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
@@ -110,7 +110,7 @@ export class ReservationApi {
      * @param item 変更を行う詳細情報(idの値に格納された要素を変更)
      */
     public reservationsIdPut (id: string, item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
-        const path = this.basePath + '/reservations/{id}'
+        const path = this.basePath + '/reservation/{id}'
             .replace('{' + 'id' + '}', String(id));
 
         let queryParameters = new URLSearchParams();
@@ -128,6 +128,7 @@ export class ReservationApi {
             headers: headerParams,
             search: queryParameters
         };
+        headerParams.set('Content-Type', 'application/json');
         requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
@@ -146,7 +147,7 @@ export class ReservationApi {
      * @param item 新規登録を行う際の詳細情報(ただしidの値は不要/サーバーが自動で採番)
      */
     public reservationsPost (item: models.ReservationRequest, extraHttpRequestParams?: any ) : Observable<models.ReservationResponse> {
-        const path = this.basePath + '/reservations/';
+        const path = this.basePath + '/reservation/';
 
         let queryParameters = new URLSearchParams();
         let headerParams = this.defaultHeaders;
@@ -159,6 +160,7 @@ export class ReservationApi {
             headers: headerParams,
             search: queryParameters
         };
+        headerParams.set('Content-Type', 'application/json');
         requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
@@ -212,7 +214,7 @@ export class ReservationApi {
      * @param toAt 指定時間以前に重なるものを検索 現在進行形の無期限貸出が存在する場合は、この値によらず含まれます。 
      * @param includesPast 現在予約が終了しているものも検索に含めるかどうか。 defaultばfalseです。 
      */
-    public searchReservationsGet (objectTagId?: string, userName?: string, keywords?: Array<string>, sinceAt?: Date, toAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.ReservationResponse>> {
+    public searchReservationsGet (objectTagId?: string, userName?: string, keywords?: Array<string>, sinceAt?: Date, toAt?: Date, includesPast?: boolean, extraHttpRequestParams?: any ) : Observable<models.PaginationItem<models.JsonReservationResponse>> {
         const path = this.basePath + '/search/reservations';
 
         let queryParameters = new URLSearchParams();

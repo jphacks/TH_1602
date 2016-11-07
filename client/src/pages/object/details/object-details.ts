@@ -1,10 +1,22 @@
-import { Component, Input } from '@angular/core';
+import {Component, Input} from '@angular/core';
 
-import { NavController, NavParams, LoadingController, Refresher, AlertController } from 'ionic-angular';
-import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi, ReservationApi, ReservationRequest, ReservationResponse } from '../../../api/';
-import { MyApp } from '../../../app/app.component';
-import { MyErrorCard } from '../../../components/error-card';
+import {
+  NavController, NavParams, LoadingController, Refresher, AlertController,
+  ToastController
+} from 'ionic-angular';
+import {
+  CategoryApi,
+  ObjectTagResponse,
+  ObjectTagApi,
+  ReservationApi,
+  ReservationRequest,
+  ReservationResponse
+} from '../../../api/';
+import {MyApp} from '../../../app/app.component';
 import {ObjectReservationPage} from '../reservation/object-reservation'
+import {Preference} from "../../../utils/preference";
+import { ReservationResponseConverter } from "../../../api/model/ReservationResponse";
+import { UserDetailsPage } from "../../user/details/user-details";
 
 @Component({
   selector: 'page-object-details',
@@ -14,17 +26,20 @@ export class ObjectDetailsPage {
   catId: number;
   objId: string;
   objTag: ObjectTagResponse;
-  category: CategoryResponse;
+  catName: string;
   reservations: Array<ReservationResponse>;
   currentReservation: ReservationResponse = null;
   serverError = false;
   networkError = false;
   imgError = false;
-  constructor(public navCtrl: NavController, private navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
-    this.catId = navParams.get("catid");
-    this.objId = navParams.get("objid");
-    this.objTag = navParams.get("object_tag");
-    this.category = navParams.get("category");
+
+  constructor(public navCtrl: NavController, private navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+    this.objId = navParams.get("objId");
+    this.objTag = navParams.get("objectTag");
+    if(this.objTag) {
+      this.catId = this.objTag.category.id;
+      this.catName = this.objTag.category.name;
+    }
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
     });
@@ -32,20 +47,27 @@ export class ObjectDetailsPage {
     this.load(() => loader.dismiss());
   }
 
+  get using():boolean {
+    return this.currentReservation && this.currentReservation.users.length && (this.currentReservation.users[0].id === Preference.username)
+  }
+
   load(finish?: () => any) {
     if (!this.objTag) {
-      this.objectApi.objectTagsIdGet(this.objId).toPromise().then(data => {
-        this.objTag = data;
-        this.getReservations(finish);
-        this.imgError = false;
+      this.objectApi.objectTagsIdGet(this.objId).toPromise()
+        .then(data => {
+          this.objTag = data;
+          this.getReservations(finish);
+          this.catName = data.category.name;
+          this.catId = data.category.id;
+          this.imgError = false;
+          this.serverError = false;
+          this.networkError = false;
 
-        this.serverError = false;
-        this.networkError = false;
-      }).catch(reason => {
-        this.serverError = reason.status !== 0;
-        this.networkError = reason.status === 0;
-        finish && finish();
-      })
+        }, reason => {
+          this.serverError = reason.status !== 0;
+          this.networkError = reason.status === 0;
+          finish && finish();
+        });
     } else {
       this.getReservations(finish);
     }
@@ -54,21 +76,21 @@ export class ObjectDetailsPage {
   getReservations(finish?: () => any) {
     this.reservationApi.searchReservationsGet(this.objTag.id).toPromise()
       .then(data => {
-        this.reservations = data.items.sort((a, b) => {
+        this.reservations = ReservationResponseConverter.convertAll(data.items).sort((a, b) => {
           if (this.objTag.bookingEnabled) {
             return a.startAt.valueOf() - b.startAt.valueOf()
           } else {
             return a.createdAt.valueOf() - b.createdAt.valueOf()
           }
         });
-        if (this.reservations[0].isActive) {
+        if (this.reservations.length && this.reservations[0].isActive) {
           this.currentReservation = this.reservations.shift();
         }
 
         this.serverError = false;
         this.networkError = false;
         finish && finish();
-      }).catch(reason => {
+      }, reason => {
         this.serverError = reason.status !== 0;
         this.networkError = reason.status === 0;
         finish && finish();
@@ -96,15 +118,46 @@ export class ObjectDetailsPage {
   }
 
   checkIn() {
-    let req: ReservationRequest = {}
-    req.objectTagId = this.objId
+    let req: ReservationRequest = {
+      objectTagId: this.objId,
+      users: [Preference.username]
+    };
     let loader = this.loadingCtrl.create({
-      content: "送信中..."
+      content: "使用申請中..."
     });
     loader.present();
     this.reservationApi.reservationsPost(req).toPromise()
-      .then(() => { loader.dismiss(); })
-      .catch(() => {
+      .then(() => {
+        loader.dismiss();
+        this.toastCtrl.create({
+          message: '使用申請完了',
+          duration: 3000,
+          position: 'bottom'
+        }).present();
+      }, reason => {
+        loader.dismiss();
+        let alert = this.alertCtrl.create({
+          title: 'エラー',
+          message: '送信失敗'
+        });
+        alert.present();
+      });
+  }
+
+  checkOut() {
+    let loader = this.loadingCtrl.create({
+      content: "完了処理中..."
+    });
+    loader.present();
+    this.reservationApi.returnReservationIdPost(this.objId).toPromise()
+      .then(() => {
+        loader.dismiss();
+        this.toastCtrl.create({
+          message: '完了',
+          duration: 3000,
+          position: 'bottom'
+        }).present();
+      }, reason => {
         loader.dismiss();
         let alert = this.alertCtrl.create({
           title: 'エラー',
@@ -135,27 +188,34 @@ export class ObjectDetailsPage {
         {
           text: '設定',
           handler: data => {
-            let req: ReservationRequest = {}
-            req.objectTagId = this.objId;
+            let req: ReservationRequest = {
+              objectTagId: this.objId,
+              users: [Preference.username]
+            };
+
             let spr = data["time"].split(":");
             let date = new Date();
             date.setHours(spr[0]);
             date.setMinutes(spr[1]);
+            req.startAt = new Date();
+            if(date < req.startAt) {
+              date.setDate(date.getDate() + 1);
+            }
             req.endAt = date;
             let loader = this.loadingCtrl.create({
               content: "送信中..."
             });
             loader.present();
-            this.reservationApi.reservationsPost(req).toPromise()
-              .then(() => { loader.dismiss(); })
-              .catch(() => {
-                loader.dismiss();
-                let alert = this.alertCtrl.create({
-                  title: 'エラー',
-                  message: '送信失敗'
-                });
-                alert.present();
+            this.reservationApi.reservationsPost(req).toPromise().then(data => {
+              loader.dismiss();
+            }, reason => {
+              loader.dismiss();
+              let alert = this.alertCtrl.create({
+                title: 'エラー',
+                message: '送信失敗'
               });
+              alert.present();
+            });
           }
         }
       ]
@@ -164,27 +224,58 @@ export class ObjectDetailsPage {
 
   }
 
-  reservate() {
-    this.navCtrl.push(ObjectReservationPage, {object_tag_id: this.objId});
+  reserve() {
+    if(this.objTag.bookingEnabled) {
+      this.navCtrl.push(ObjectReservationPage, {object_tag_id: this.objId});
+    } else {
+      let req: ReservationRequest = {
+        objectTagId: this.objId,
+        users: [Preference.username]
+      };
+      let loader = this.loadingCtrl.create({
+        content: "予約中..."
+      });
+      loader.present();
+      this.reservationApi.reservationsPost(req).toPromise()
+        .then(() => {
+          loader.dismiss();
+          this.toastCtrl.create({
+            message: '予約完了',
+            duration: 3000,
+            position: 'bottom'
+          }).present();
+        }, reason => {
+          loader.dismiss();
+          let alert = this.alertCtrl.create({
+            title: 'エラー',
+            message: '送信失敗'
+          });
+          alert.present();
+        });
+    }
   }
 
-
+  push(r: ReservationResponse) {
+    this.navCtrl.push(UserDetailsPage, {
+      userName: r.users[0].id
+    })
+  }
 }
 
 @Component({
   selector: 'my-user-item',
-  template:
-  `<ion-item>
-    <div class="users">{{_reservation.users[0].name}}</div>
-    <div class="time" *ngIf="_reservation.startAt"><span> {{_reservation.startAt | date: 'yyyy/MM/dd hh:mm'}} </span>&nbsp;~&nbsp;<span *ngIf="_reservation.endAt"> {{_reservation.endAt | date: 'yyyy/MM/dd hh:mm'}} </span></div>
-  </ion-item>`
+  template: `
+<ion-item>
+  <div class="users" *ngIf="_reservation?.users?.length">{{_reservation?.users[0]?.name}}&nbsp;@{{_reservation?.users[0]?.id}}</div>
+  <div class="time" *ngIf="_reservation?.startAt"><span> {{_reservation?.startAt}} </span>&nbsp;~&nbsp;<span *ngIf="_reservation?.endAt"> {{_reservation?.endAt}} </span></div>
+</ion-item>
+`
 })
 export class MyUserItem {
-  _reservation: ReservationResponse = null
+  _reservation: ReservationResponse = null;
 
   @Input()
   set reservation(reservation: ReservationResponse) {
     this._reservation = reservation;
   }
 }
-

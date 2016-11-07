@@ -1,9 +1,10 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { NavController, NavParams, AlertController } from 'ionic-angular';
-import { ReservationApi, ReservationRequest, ReservationResponse  } from '../../../api/';
+import { ReservationApi, ReservationRequest, ReservationResponse } from '../../../api/';
 import { MyApp } from '../../../app/app.component'
-
+import { DateFormatter } from "@angular/common/src/facade/intl";
+import { Preference } from "../../../utils/preference";
 
 @Component({
   selector: 'page-object-reservation',
@@ -14,55 +15,44 @@ export class ObjectReservationPage {
   public start: string;
   public end: string;
   public otherReservations: ReservationResponse[];
-  private error = false;
   private response;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
-    this.reservation.users.push(navParams.get('user'));
+    this.reservation.users = [Preference.username];
     this.reservation.objectTagId = navParams.get('object_tag_id');
-    this.start = this.formatTime("start");
-    this.end = this.formatTime("end");
+    this.timeInit();
     this.otherReservations = navParams.get('reservations');
     this.reservation.comment = '';
   }
-  private  formatTime(startOrEnd: string) {
+
+  private timeInit() {
     let now = new Date();
-    const y = now.getFullYear(), 
-          m = ("0"+(now.getMonth()+1)).slice(-2), 
-          d = ("0"+now.getDate()).slice(-2),
-          min = ("0"+now.getMinutes()).slice(-2);
-    if(startOrEnd === "start"){
-      const h = ("0"+now.getHours()).slice(-2);
-      return `${y}-${m}-${d}T${h}:${min}`;
-    }
-    else{
-      const h = ("0"+(now.getHours()+1)).slice(-2);
-      return `${y}-${m}-${d}T${h}:${min}`;
-    }
+    this.start = DateFormatter.format(now, "ja-JP", "yyyy-MM-ddThh:mm");
+    this.end = DateFormatter.format(new Date(now.getTime() + 60 * 60 * 1000), "ja-JP", "yyyy-MM-ddThh:mm");
   }
-  
+
   post() {
     let myRes = this.reservation;
     myRes.startAt = new Date(this.start);
     myRes.endAt = new Date(this.end);
-    if(this.otherReservations != null){
-      for(let anotherRes of this.otherReservations){
-        if(anotherRes.startAt < myRes.endAt && myRes.startAt < anotherRes.endAt){
+    if (this.otherReservations != null) {
+      for (let anotherRes of this.otherReservations) {
+        if (anotherRes.startAt < myRes.endAt && myRes.startAt < anotherRes.endAt) {
           this.showAlert('予定が被ってます', 'あなたが予約指定した期間はすでに別の人の予約が入っているので期間を変えてください');
           return;
-        }  
+        }
       }
     }
     this.reservationApi.reservationsPost(this.reservation).toPromise().then((response) => {
-        this.response = response;
-        this.navCtrl.popToRoot();
-      }).catch(reason => {
-        if (reason.status !== 0) {
-          this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
-        }else {
-          this.showAlert('ネットワークエラー', 'インターネットに接続されているか，確認してください');
-        }
-      })
+      this.response = response;
+      this.navCtrl.popToRoot();
+    }, reason => {
+      if (reason.status !== 0) {
+        this.showAlert('サーバーエラー', 'サーバーの管理者に問い合わせてください');
+      } else {
+        this.showAlert('ネットワークエラー', 'インターネットに接続されているか，確認してください');
+      }
+    })
   }
 
   showAlert(title: string, subTitle: string) {
@@ -73,6 +63,7 @@ export class ObjectReservationPage {
     });
     alert.present();
   }
+
   private get reservationApi(): ReservationApi {
     return MyApp.injector.get(ReservationApi)
   }

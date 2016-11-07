@@ -6,19 +6,26 @@
     <ion-title *ngIf="objTag != null">
       {{objTag.name}}
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only qrcode>
+        <ion-icon name='qr-scanner'></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content>
 
   <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    <ion-refresher-content pullingText="スワイプして更新" refreshingText="更新中...">
     </ion-refresher-content>
   </ion-refresher>
-  <div *ngIf="objTag != null && objTag.imageUri && !imgError">
-    <img class="obj-image" src="{{objTag.imageUri}}" (error)="onImgError($event)" />
+  <my-img class="obj-image" [src]="objTag && objTag.imageUri"></my-img>
+
+  <div *ngIf="objTag == null || !objTag.imageUri || imgError">
+
   </div>
-  <div *ngIf="objTag != null">
+  <div *ngIf="objTag != null" class="obj-info">
 
     <div class="category" *ngIf="objTag.category != null">
       {{objTag.category.name}}
@@ -30,27 +37,33 @@
       場所：{{objTag.place}}
     </div>
   </div>
-  <ion-list *ngIf="reservations">
-    <ion-list-header *ngIf="currentReservation">
-      現在使用中
-    </ion-list-header>
-    <my-user-item *ngIf="currentReservation" [reservation]="currentReservation"></my-user-item>
-
-    <ion-list-header *ngIf="reservations && reservations.length">
-      予約中
-    </ion-list-header>
-    <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation"></my-user-item>
+  <ion-list>
+    <ion-list-header>現在使用中</ion-list-header>
+    <my-user-item *ngIf="currentReservation" [reservation]="currentReservation" (click)="push(currentReservation)"></my-user-item>
+    <ion-item *ngIf="!currentReservation">なし</ion-item>
+  </ion-list>
+  <ion-list>
+    <ion-list-header>予約中</ion-list-header>
+    <my-user-item *ngFor="let reservation of reservations" [reservation]="reservation" (click)="push(reservation)"></my-user-item>
+    <ion-item *ngIf="!reservations || !reservations.length">なし</ion-item>
   </ion-list>
 
   <ion-fab bottom right *ngIf="objTag && reservations">
-    <button ion-fab>
-      <ion-icon name="arrow-up" *ngIf="!currentReservation && objTag.bookingEnabled"></ion-icon>
-      <ion-icon name="checkmark" *ngIf="!currentReservation && !objTag.bookingEnabled" (click)="checkIn()"></ion-icon>
-      <ion-icon name="calendar" *ngIf="currentReservation" (click)="reservate()"></ion-icon>
+    <button ion-fab *ngIf="!currentReservation && !objTag.bookingEnabled" (click)="checkIn()">
+      <ion-icon name="checkmark"></ion-icon>
+    </button>
+    <button ion-fab *ngIf="!objTag.bookingEnabled && using" (click)="checkOut()">
+      <ion-icon name="checkmark"></ion-icon>
+    </button>
+    <button ion-fab *ngIf="currentReservation && !using" (click)="reserve()">
+      <ion-icon name="calendar"></ion-icon>
+    </button>
+    <button ion-fab *ngIf="!currentReservation && objTag.bookingEnabled">
+      <ion-icon name="arrow-up"></ion-icon>
     </button>
     <ion-fab-list side="top" *ngIf="!currentReservation && objTag.bookingEnabled">
-      <button ion-fab><ion-icon name="checkmark" (click)="checkInTime()"></ion-icon></button>
-      <button ion-fab><ion-icon name="calendar" (click)="reservate()"></ion-icon></button>
+      <button ion-fab (click)="checkInTime()"><ion-icon name="checkmark"></ion-icon></button>
+      <button ion-fab (click)="reserve()"><ion-icon name="calendar"></ion-icon></button>
     </ion-fab-list>
   </ion-fab>
   <my-error-card [networkError]="networkError" [serverError]="serverError"></my-error-card>

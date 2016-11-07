@@ -9,17 +9,31 @@
     <ion-title *ngIf="searchCategories != null || searchObjects != null">
       検索結果
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only qrcode>
+        <ion-icon name='qr-scanner'></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
-  <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)"></ion-searchbar>
+  <ion-toolbar>
+    <ion-searchbar (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" (ionClear)="onClear($event)" #mySearchbar></ion-searchbar>
+
+    <ion-buttons end>
+      <button ion-button icon-only (click)="addCategory()">
+        <ion-icon name='ios-add-circle-outline'></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content>
 
   <ion-refresher pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
-    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="Pull to refresh" refreshingSpinner="circles" refreshingText="Refreshing...">
+    <ion-refresher-content pullingText="スワイプして更新" refreshingText="更新中...">
     </ion-refresher-content>
   </ion-refresher>
-  <ion-list *ngIf="categories !== null && searchCategories == null && searchObjects == null && !serverError && !networkError">
+  <ion-list
+      *ngIf="categories !== null && searchCategories == null && searchObjects == null && !serverError && !networkError">
     <ion-item *ngFor="let category of categories" (click)="push(category)">
       {{category.name}}
     </ion-item>

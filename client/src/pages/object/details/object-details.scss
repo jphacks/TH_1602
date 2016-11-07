@@ -1,8 +1,4 @@
 page-object-details {
-    .category, .description, .place {
-        margin-left: 10px;
-        margin-right: 10px;
-    }
 
     .category, .place {
         color: gray;
@@ -15,21 +11,24 @@ page-object-details {
 
     .description {
         color: black;
-        font-size: 28px;
+        font-size: 20px;
     }
 
-    img.obj-image {
+    .obj-image {
+        height: 200px;
         width: 100%;
-        max-height: 200px;
         position: relative;
         overflow: hidden;
+    }
+
+    .obj-info {
+        margin: 10px;
     }
 }
 
 my-user-item {
     div.users {
-      font-size: 20px;
-      font-weight: 700;
+      font-size: 16px;
       color: black;
     }
     div.time {

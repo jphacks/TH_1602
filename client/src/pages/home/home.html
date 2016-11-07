@@ -1,12 +1,56 @@
 <ion-header>
   <ion-navbar>
-		<button ion-button menuToggle icon-only>
+    <button ion-button menuToggle icon-only>
       <ion-icon name='menu'></ion-icon>
     </button>
-    <ion-title>Home</ion-title>
+    <ion-title>
+      MONOgement
+    </ion-title>
+    <ion-buttons end>
+
+      <button ion-button icon-only (click)="search()">
+        <ion-icon name='search'></ion-icon>
+      </button>
+      <button ion-button icon-only qrcode>
+        <ion-icon name='qr-scanner'></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  マイページ
+
+  <ion-refresher *ngIf="!editing" pulling-text="スワイプして更新" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingText="スワイプして更新" refreshingText="更新中...">
+    </ion-refresher-content>
+  </ion-refresher>
+
+  <div  *ngIf="!userInfo" class="center-spinner"><ion-spinner></ion-spinner></div>
+  <my-img *ngIf="userInfo" [src]="(editing && image) ? image : userInfo.profileImageUri" [placeholder]="'assets/dummy-account.png'" class="user-image" [edit]="editing" (editClick)="editImage()"></my-img>
+  <p *ngIf="userInfo && !editing" class="center">{{userInfo.displayName}}</p>
+  <ion-input *ngIf="userInfo && editing" type="text" placeholder="表示名" [(ngModel)]="displayName" name="dispname" class="center"></ion-input>
+  <p *ngIf="userInfo" class="center">@{{userInfo.userName}}</p>
+  <ion-list *ngIf="userInfo && !editing">
+    <ion-list-header>現在使用中</ion-list-header>
+    <ion-item *ngFor="let u of usingObjects" (click)="push(u)">
+      <p>{{u.objectTag.name}}</p><p>{{u.startAt}} ~ {{u.endAt}}</p>
+    </ion-item>
+    <ion-item *ngIf="!usingObjects || !usingObjects.length">
+      なし
+    </ion-item>
+
+  </ion-list>
+  <ion-list *ngIf="userInfo && !editing">
+    <ion-list-header>予約中</ion-list-header>
+    <ion-item *ngFor="let r of reservations" (click)="push(r)">
+      <p>{{r.objectTag.name}}</p><p>{{r.startAt}} ~ {{r.endAt}}</p>
+    </ion-item>
+
+    <ion-item *ngIf="!reservations || !reservations.length">
+      なし
+    </ion-item>
+  </ion-list>
+  <ion-fab bottom right>
+    <button ion-fab mini (click)="edit(editing)"><ion-icon name="settings" *ngIf="!editing"></ion-icon><ion-icon name="checkmark" *ngIf="editing"></ion-icon></button>
+  </ion-fab>
 </ion-content>

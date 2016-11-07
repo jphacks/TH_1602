@@ -24,9 +24,10 @@
 
 import {Http, Headers, RequestOptionsArgs, Response, URLSearchParams} from '@angular/http';
 import {Injectable, Optional} from '@angular/core';
+import {Transfer, FileUploadResult} from 'ionic-native'
 import {Observable} from 'rxjs/Observable';
 import * as models from '../model/models';
-import 'rxjs/Rx';
+import {ApiConfig} from "../config";
 
 /* tslint:disable:no-unused-variable member-ordering */
 
@@ -34,8 +35,8 @@ import 'rxjs/Rx';
 
 @Injectable()
 export class ImageApi {
-    protected basePath = 'http://localhost:21774/api';
-    public defaultHeaders : Headers = new Headers();
+    protected basePath = ApiConfig.apiPath;
+    get defaultHeaders() : Headers { return ApiConfig.defaultHeaders };
 
     constructor(protected http: Http) {
     }
@@ -44,80 +45,37 @@ export class ImageApi {
      * ObjectTagの画像をセットします
      * 
      * @param id 設定したいObjectTagのId
-     * @param item 設定したいImageのByte列
+     * @param itemUri 設定したいImageのUri
      */
-    public imagesObjectTagsIdPut (id: string, item: any, extraHttpRequestParams?: any ) : Observable<{}> {
+    public imagesObjectTagsIdPut (id: string, itemUri: string, extraHttpRequestParams?: any ) : Promise<FileUploadResult> {
         const path = this.basePath + '/images/object_tags/{id}'
             .replace('{' + 'id' + '}', String(id));
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        let formParams = new URLSearchParams();
 
         // verify required parameter 'id' is not null or undefined
         if (id === null || id === undefined) {
             throw new Error('Required parameter id was null or undefined when calling imagesObjectTagsIdPut.');
         }
         // verify required parameter 'item' is not null or undefined
-        if (item === null || item === undefined) {
+        if (itemUri === null || itemUri === undefined) {
             throw new Error('Required parameter item was null or undefined when calling imagesObjectTagsIdPut.');
         }
-        headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
 
-        formParams['item'] = item;
-
-        let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
-            headers: headerParams,
-            search: queryParameters
-        };
-        requestOptions.body = formParams.toString();
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
+        return new Transfer().upload(itemUri, path)
     }
 
     /**
      * ユーザー画像を更新します
      * 
-     * @param item 設定したいImageのByte列
+     * @param itemUri 設定したいImageのUri
      */
-    public myUpdateProfileImagePut (item: any, extraHttpRequestParams?: any ) : Observable<{}> {
+    public myUpdateProfileImagePut (itemUri: string, extraHttpRequestParams?: any ) : Promise<FileUploadResult> {
         const path = this.basePath + '/my/update_profile_image';
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        let formParams = new URLSearchParams();
-
         // verify required parameter 'item' is not null or undefined
-        if (item === null || item === undefined) {
+        if (itemUri === null || itemUri === undefined) {
             throw new Error('Required parameter item was null or undefined when calling myUpdateProfileImagePut.');
         }
-        headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
 
-        formParams['item'] = item;
-
-        let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
-            headers: headerParams,
-            search: queryParameters
-        };
-        requestOptions.body = formParams.toString();
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
+        return new Transfer().upload(itemUri, path)
     }
 
 }

@@ -4,13 +4,14 @@ import { NavController, NavParams, LoadingController, Refresher } from 'ionic-an
 import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi } from '../../../api/';
 import { MyApp } from '../../../app/app.component';
 import { ObjectDetailsPage } from '../details/object-details';
+import {ObjectRegistrationPage} from "../../../pages";
 
 @Component({
   selector: 'page-object-list',
   templateUrl: 'object-list.html'
 })
 export class ObjectListPage {
-  catId: number = null
+  catId: number = null;
   networkError: boolean = false;
   serverError: boolean = false;
   value: string = null;
@@ -19,12 +20,12 @@ export class ObjectListPage {
   searchObjects: Array<ObjectTagResponse> = null;
 
   constructor(public navCtrl: NavController, private navParams: NavParams, public loadingCtrl: LoadingController) {
-    this.catId = navParams.get("catid");
-    this.category = navParams.get("category")
+    this.catId = navParams.get("catId");
+    this.category = navParams.get("category");
     if (!this.category) {
       this.categoryApi.categoriesIdGet(this.catId).toPromise().then((response) => {
         this.category = response;
-      }).catch(() => {
+      }, reason => {
       })
     }
     let loader = this.loadingCtrl.create({
@@ -37,7 +38,7 @@ export class ObjectListPage {
         this.networkError = false;
         this.serverError = false;
         loader.dismiss();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         loader.dismiss();
@@ -59,7 +60,7 @@ export class ObjectListPage {
         this.networkError = false;
         this.serverError = false;
         refresher.complete();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         refresher.complete();
@@ -86,7 +87,7 @@ export class ObjectListPage {
       if (finish) {
         finish();
       }
-    }).catch(reason => {
+    }, reason => {
       this.searchObjects = null;
       this.networkError = reason.status === 0;
       this.serverError = !this.networkError;
@@ -118,7 +119,7 @@ export class ObjectListPage {
           this.networkError = false;
           this.serverError = false;
           loader.dismiss();
-        }).catch(reason => {
+        }, reason => {
           this.networkError = reason.status === 0;
           this.serverError = !this.networkError;
           loader.dismiss();
@@ -131,8 +132,14 @@ export class ObjectListPage {
 
   push(obj: ObjectTagResponse) {
     this.navCtrl.push(ObjectDetailsPage, {
-      catid: obj.category.id,
-      objid: obj.id
+      objId: obj.id,
+      objTag: obj
+    });
+  }
+
+  addObjectTag() {
+    this.navCtrl.push(ObjectRegistrationPage, {
+      categoryId: this.catId, categoryName: this.category && this.category.name || ""
     });
   }
 

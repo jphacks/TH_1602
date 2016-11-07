@@ -1,7 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
-import { NavController, LoadingController, Refresher } from 'ionic-angular';
-import { CategoryResponse, CategoryApi, ObjectTagResponse, ObjectTagApi } from '../../../api/';
+import { NavController, LoadingController, Refresher, AlertController, Searchbar, NavParams } from 'ionic-angular';
+import {
+  CategoryResponse,
+  CategoryApi,
+  ObjectTagResponse,
+  ObjectTagApi,
+  CategoryRequest,
+  PaginationItem
+} from '../../../api/';
 import { MyApp } from '../../../app/app.component';
 import { ObjectListPage } from '../list/object-list';
 import { ObjectDetailsPage } from '../details/object-details';
@@ -18,7 +25,9 @@ export class CategoryListPage {
   searchCategories: Array<CategoryResponse> = null;
   searchObjects: Array<ObjectTagResponse> = null;
 
-  constructor(public navCtrl: NavController, public loadingCtrl: LoadingController) {
+  @ViewChild("mySearchbar") searchbar: Searchbar;
+
+  constructor(private navCtrl: NavController, private navParams: NavParams, private loadingCtrl: LoadingController, private alertCtrl: AlertController) {
     let loader = this.loadingCtrl.create({
       content: "読み込み中..."
     });
@@ -27,11 +36,19 @@ export class CategoryListPage {
       this.categories = data.items;
       this.networkError = false;
       this.serverError = false;
-      loader.dismiss();
-    }).catch(reason => {
+      loader.dismiss().then(() => {
+        if (this.navParams.get("focus")) {
+          this.searchbar.setFocus();
+        }
+      })
+    }, reason => {
       this.networkError = reason.status === 0;
       this.serverError = !this.networkError;
-      loader.dismiss();
+      loader.dismiss().then(() => {
+        if (this.navParams.get("focus")) {
+          this.searchbar.setFocus();
+        }
+      })
     });
   }
 
@@ -42,7 +59,7 @@ export class CategoryListPage {
         this.networkError = false;
         this.serverError = false;
         refresher.complete();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         refresher.complete();
@@ -80,18 +97,18 @@ export class CategoryListPage {
       if (endCount === 1 && finish) {
         finish();
       }
-    }
+    };
     this.categoryApi.searchCategoriesGet(value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchCategories = data.items;
       end(false);
-    }).catch(reason => {
+    }, reason => {
       this.searchCategories = null;
       end(true, reason.status);
     });
     this.objectApi.searchObjectTagsGet(null, value.split(/[ 　\t]/)).toPromise().then(data => {
       this.searchObjects = data.items;
       end(false);
-    }).catch(reason => {
+    }, reason => {
       this.searchObjects = null;
       end(true, reason.status);
     });
@@ -118,7 +135,7 @@ export class CategoryListPage {
         this.networkError = false;
         this.serverError = false;
         loader.dismiss();
-      }).catch(reason => {
+      }, reason => {
         this.networkError = reason.status === 0;
         this.serverError = !this.networkError;
         loader.dismiss();
@@ -131,15 +148,82 @@ export class CategoryListPage {
 
   push(category: CategoryResponse) {
     this.navCtrl.push(ObjectListPage, {
-      catid: category.id,
+      catId: category.id,
       category: category
     });
   }
 
   pushObject(object: ObjectTagResponse) {
     this.navCtrl.push(ObjectDetailsPage, {
-      catid: object.category.id,
-      objid: object.id
+      catId: object.category.id,
+      objId: object.id
     });
+  }
+
+  addCategory() {
+    let alert = this.alertCtrl.create({
+      title: 'カテゴリの追加',
+      inputs: [
+        {
+          name: 'name',
+          placeholder: 'カテゴリ名',
+          type: 'text',
+
+        },
+        {
+          name: 'description',
+          placeholder: '説明',
+          type: 'text'
+        }
+      ],
+      buttons: [
+        {
+          text: 'キャンセル',
+          role: 'cancel',
+          handler: data => {
+          }
+        },
+        {
+          text: '設定',
+          handler: data => {
+            if (!data["name"]) {
+              return false;
+            }
+            let req: CategoryRequest = {
+              name: data["name"],
+              description: data["description"]
+            };
+
+            let loader = this.loadingCtrl.create({
+              content: "追加中..."
+            });
+            loader.present();
+            this.categoryApi.categoriesPost(req).toPromise().then(data => {
+              return this.categoryApi.listCategoriesGet().toPromise();
+            }, reason => {
+              loader.dismiss();
+              let alert = this.alertCtrl.create({
+                title: 'エラー',
+                message: '追加失敗'
+              });
+              alert.present();
+              return null;
+            }).then(data => {
+              if (data) {
+                this.categories = data.items;
+                this.networkError = false;
+                this.serverError = false;
+              }
+              loader.dismiss();
+            }, reason => {
+              this.networkError = reason.status === 0;
+              this.serverError = !this.networkError;
+              loader.dismiss();
+            });
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 }

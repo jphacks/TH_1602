@@ -6,25 +6,45 @@
     <ion-title>
       物品登録
     </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only qrcode>
+        <ion-icon name='qr-scanner'></ion-icon>
+      </button>
+    </ion-buttons>
   </ion-navbar>
 </ion-header>
 
-<ion-content>
+<ion-content padding>
   <ion-list>
     <form (ngSubmit)='post()'>
-    <ion-item>
-      <ion-label color='primary' >物品名</ion-label>
-      <ion-input placeholder="Text Input" [(ngModel)]="register.name" name="name"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color='primary'>場所</ion-label>
-      <ion-input placeholder="Text Input" [(ngModel)]="register.place" name="place"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label color='primary'>説明</ion-label>
-      <ion-input placeholder="Text Input" [(ngModel)]="register.description" name="description"></ion-input>
-    </ion-item>
-    <button ion-button [disabled]="register.name.length == 0" type="submit" block>物品登録</button>
+      <ion-item>
+        <ion-label color='primary'>物品名</ion-label>
+        <ion-input placeholder="テキスト入力" [(ngModel)]="register.name" name="name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color='primary'>カテゴリ</ion-label>
+        <ion-input disabled [(ngModel)]="categoryName" name="category"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color='primary'>場所</ion-label>
+        <ion-input placeholder="テキスト入力" [(ngModel)]="register.place" name="place"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color='primary'>説明</ion-label>
+        <ion-input placeholder="テキスト入力" [(ngModel)]="register.description" name="description"></ion-input>
+      </ion-item>
+      <ion-item (click)="selectImage()">
+        <ion-label color='primary'>画像</ion-label>
+        <ion-input placeholder="ファイル選択" [(ngModel)]="imageName" name="image" disabled></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">予約のタイプ</ion-label>
+        <ion-select [(ngModel)]="register.bookingEnabled" name="booking">
+          <ion-option [value]="true" default>時間指定</ion-option>
+          <ion-option [value]="false">順番のみ</ion-option>
+        </ion-select>
+      </ion-item>
+      <button ion-button [disabled]="register.name.length == 0 && register.category != -1 && !error" type="submit" block>物品登録</button>
     </form>
   </ion-list>
 </ion-content>
