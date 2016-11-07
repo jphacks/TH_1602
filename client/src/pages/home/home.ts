@@ -14,7 +14,7 @@ import {
 import { MyApp } from '../../app/app.component';
 import { ObjectDetailsPage } from '../object/details/object-details';
 import { Preference } from "../../utils/preference";
-import { CategoryListPage } from "../../../.tmp/pages/object/category-list/category-list";
+import { CategoryListPage } from "../object/category-list/category-list";
 import { ImagePicker, getPlugin } from "ionic-native";
 import { AlertUtil } from "../../utils/alert-util";
 
@@ -118,26 +118,25 @@ export class HomePage {
     this.editing = !editting;
     if (editting) {
       if (this.image) {
-        this.myApi.myUpdateProfileImagePut(this.image).toPromise().then(done =>
-          this.myApi.myUpdateProfilePut({
+        this.myApi.myUpdateProfileImagePut(this.image).then(done => {
+          console.log(done);
+          this.image = null;
+          return this.myApi.myUpdateProfilePut({
             displayName: this.displayName
-          }).toPromise())
-          .then(result => {
-            this.userInfo = result;
-          })
-          .catch(reason => {
-            AlertUtil.showError(reason, this.alertCtrl);
-          });
+          }).toPromise();
+        }).then(result => {
+          this.userInfo = result;
+        }).catch(reason => {
+          AlertUtil.showError(reason, this.alertCtrl);
+        });
       } else {
         this.myApi.myUpdateProfilePut({
           displayName: this.displayName
-        }).toPromise().
-        then(result => {
+        }).toPromise().then(result => {
           this.userInfo = result;
-        })
-          .catch(reason => {
-            AlertUtil.showError(reason, this.alertCtrl);
-          });
+        }).catch(reason => {
+          AlertUtil.showError(reason, this.alertCtrl);
+        });
       }
     }
   }

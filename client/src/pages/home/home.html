@@ -26,7 +26,7 @@
   </ion-refresher>
 
   <div  *ngIf="!userInfo" class="center-spinner"><ion-spinner></ion-spinner></div>
-  <my-img *ngIf="userInfo" [src]="userInfo.profileImageUri" [placeholder]="'assets/dummy-account.png'" class="user-image" [edit]="editing" (editClick)="editImage()"></my-img>
+  <my-img *ngIf="userInfo" [src]="(editing && image) ? image : userInfo.profileImageUri" [placeholder]="'assets/dummy-account.png'" class="user-image" [edit]="editing" (editClick)="editImage()"></my-img>
   <p *ngIf="userInfo && !editing" class="center">{{userInfo.displayName}}</p>
   <ion-input *ngIf="userInfo && editing" type="text" placeholder="表示名" [(ngModel)]="displayName" name="dispname" class="center"></ion-input>
   <p *ngIf="userInfo" class="center">@{{userInfo.userName}}</p>
