@@ -15,6 +15,7 @@ namespace Tarusho.Server.Controllers.api
 {
     [Produces("application/json")]
     [Route("api/list")]
+    [Authorize]
     public class ListController : Controller
     {
 
