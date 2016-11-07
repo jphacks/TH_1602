@@ -32,6 +32,7 @@ import 'rxjs/Rx';
 /* tslint:disable:no-unused-variable member-ordering */
 
 'use strict';
+import { Transfer } from "ionic-native";
 
 @Injectable()
 export class MyApi {
@@ -68,39 +69,17 @@ export class MyApi {
 
     /**
      * ユーザー画像を更新します
-     * 
-     * @param item 設定したいImageのByte列
+     *
+     * @param itemUri 設定したいImageのUri
      */
-    public myUpdateProfileImagePut (item: any, extraHttpRequestParams?: any ) : Observable<{}> {
-        const path = this.basePath + '/my/update_profile_image';
-
-        let queryParameters = new URLSearchParams();
-        let headerParams = this.defaultHeaders;
-        let formParams = new URLSearchParams();
-
+    public myUpdateProfileImagePut (itemUri: string, extraHttpRequestParams?: any ) : Promise<{}> {
+            const path = this.basePath + '/my/update_profile_image';
         // verify required parameter 'item' is not null or undefined
-        if (item === null || item === undefined) {
+        if (itemUri === null || itemUri === undefined) {
             throw new Error('Required parameter item was null or undefined when calling myUpdateProfileImagePut.');
         }
-        headerParams.set('Content-Type', 'application/x-www-form-urlencoded');
 
-        formParams['item'] = item;
-
-        let requestOptions: RequestOptionsArgs = {
-            method: 'PUT',
-            headers: headerParams,
-            search: queryParameters
-        };
-        requestOptions.body = formParams.toString();
-
-        return this.http.request(path, requestOptions)
-            .map((response: Response) => {
-                if (response.status === 204) {
-                    return undefined;
-                } else {
-                    return response.json();
-                }
-            });
+        return new Transfer().upload(itemUri, path)
     }
 
     /**
@@ -122,6 +101,8 @@ export class MyApi {
             headers: headerParams,
             search: queryParameters
         };
+
+        headerParams.set('Content-Type', 'application/json');
         requestOptions.body = JSON.stringify(item);
 
         return this.http.request(path, requestOptions)
