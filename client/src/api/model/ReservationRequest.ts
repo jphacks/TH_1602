@@ -46,7 +46,7 @@ export interface ReservationRequest {
     /**
      * 予約するObjectTagのId
      */
-    object_tag_id?: string;
+    objectTagId?: string;
 
     /**
      * 優先度(列挙型にする予定)
@@ -56,12 +56,12 @@ export interface ReservationRequest {
     /**
      * 予約の開始日時
      */
-    start_at?: Date;
+    startAt?: Date;
 
     /**
      * 予約の終了日時
      */
-    end_at?: Date;
+    endAt?: Date;
 
     /**
      * 予約の終了が無期限であるかどうか
