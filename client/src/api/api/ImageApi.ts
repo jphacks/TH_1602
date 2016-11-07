@@ -24,7 +24,7 @@
 
 import {Http, Headers, RequestOptionsArgs, Response, URLSearchParams} from '@angular/http';
 import {Injectable, Optional} from '@angular/core';
-import {Transfer} from 'ionic-native'
+import {Transfer, FileUploadResult} from 'ionic-native'
 import {Observable} from 'rxjs/Observable';
 import * as models from '../model/models';
 import {ApiConfig} from "../config";
@@ -47,7 +47,7 @@ export class ImageApi {
      * @param id 設定したいObjectTagのId
      * @param itemUri 設定したいImageのUri
      */
-    public imagesObjectTagsIdPut (id: string, itemUri: string, extraHttpRequestParams?: any ) : Promise<{}> {
+    public imagesObjectTagsIdPut (id: string, itemUri: string, extraHttpRequestParams?: any ) : Promise<FileUploadResult> {
         const path = this.basePath + '/images/object_tags/{id}'
             .replace('{' + 'id' + '}', String(id));
 
@@ -68,7 +68,7 @@ export class ImageApi {
      * 
      * @param itemUri 設定したいImageのUri
      */
-    public myUpdateProfileImagePut (itemUri: string, extraHttpRequestParams?: any ) : Promise<{}> {
+    public myUpdateProfileImagePut (itemUri: string, extraHttpRequestParams?: any ) : Promise<FileUploadResult> {
         const path = this.basePath + '/my/update_profile_image';
         // verify required parameter 'item' is not null or undefined
         if (itemUri === null || itemUri === undefined) {

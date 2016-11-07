@@ -110,7 +110,7 @@ export class ObjectDetailsPage {
 
   checkIn() {
     let req: ReservationRequest = {}
-    req.object_tag_id = this.objId
+    req.objectTagId = this.objId
     let loader = this.loadingCtrl.create({
       content: "送信中..."
     });
@@ -150,7 +150,7 @@ export class ObjectDetailsPage {
           text: '設定',
           handler: data => {
             let req: ReservationRequest = {
-              object_tag_id: this.objId,
+              objectTagId: this.objId,
               users: [Preference.username]
             };
 
@@ -158,7 +158,8 @@ export class ObjectDetailsPage {
             let date = new Date();
             date.setHours(spr[0]);
             date.setMinutes(spr[1]);
-            req.end_at = date;
+            req.endAt = date;
+            req.startAt = new Date();
             let loader = this.loadingCtrl.create({
               content: "送信中..."
             });

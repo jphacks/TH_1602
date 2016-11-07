@@ -18,7 +18,7 @@ export class ObjectReservationPage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public alertCtrl: AlertController) {
     this.reservation.users = [navParams.get('user')];
-    this.reservation.object_tag_id = navParams.get('object_tag_id');
+    this.reservation.objectTagId = navParams.get('object_tag_id');
     this.timeInit();
     this.otherReservations = navParams.get('reservations');
     this.reservation.comment = '';
@@ -32,11 +32,11 @@ export class ObjectReservationPage {
 
   post() {
     let myRes = this.reservation;
-    myRes.start_at = new Date(this.start);
-    myRes.end_at = new Date(this.end);
+    myRes.startAt = new Date(this.start);
+    myRes.endAt = new Date(this.end);
     if(this.otherReservations != null){
       for(let anotherRes of this.otherReservations){
-        if(anotherRes.startAt < myRes.end_at && myRes.start_at < anotherRes.endAt){
+        if(anotherRes.startAt < myRes.endAt && myRes.startAt < anotherRes.endAt){
           this.showAlert('予定が被ってます', 'あなたが予約指定した期間はすでに別の人の予約が入っているので期間を変えてください');
           return;
         }  
