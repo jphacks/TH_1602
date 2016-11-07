@@ -73,12 +73,11 @@ namespace Tarusho.Server.Controllers.api
             if (user.Id != reservation.OwnerUserId)
                 return Forbid();
 
-            var objectTag = await _context.ObjectTags.FirstOrDefaultAsync(c => c.Id == item.ObjectTagId);
-            if (objectTag == null)
+            if (!_context.ObjectTags.Any(c => c.Id == item.ObjectTagId))
                 return BadRequest();
 
             // TODO: 予約可能かどうか、判定
-            reservation = item.ToDataModel(user, objectTag, reservation);
+            reservation = item.ToDataModel(user.Id, reservation);
             _context.Entry(reservation).State = EntityState.Modified;
 
             try
@@ -106,11 +105,9 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
-            await _context.ReservationUsers.Where(c => c.ReservationId == reservation.Id).LoadAsync();
-            await _context.Users.Where(c => c.Id == reservation.OwnerUserId).LoadAsync();
-            await _context.ObjectTags.Where(c => c.Id == reservation.ObjectTagId).LoadAsync();
-            
-            return Ok(reservation.ToApiModel());
+            var response = await _context.IncludeReservationContext().FirstOrDefaultAsync(c => c.Id == reservation.Id);
+
+            return Ok(response.ToApiModel());
         }
 
         // POST: api/Reservations
@@ -124,11 +121,10 @@ namespace Tarusho.Server.Controllers.api
 
             var user = await GetApplicationUser();
 
-            var objectTag = await _context.ObjectTags.FirstOrDefaultAsync(c => c.Id == item.ObjectTagId);
-            if (objectTag == null)
+            if (!_context.ObjectTags.Any(c => c.Id == item.ObjectTagId))
                 return BadRequest();
 
-            var reservation = item.ToDataModel(user, objectTag);
+            var reservation = item.ToDataModel(user.Id);
             // TODO: 予約可能かどうか、判定
             // TODO: 先約にリクエストを送る処理なども検討...？
 
@@ -153,12 +149,10 @@ namespace Tarusho.Server.Controllers.api
                     throw;
                 }
             }
-            
-            await _context.ReservationUsers.Where(c => c.ReservationId == reservation.Id).LoadAsync();
-            await _context.Users.Where(c => c.Id == reservation.OwnerUserId).LoadAsync();
-            await _context.ObjectTags.Where(c => c.Id == reservation.ObjectTagId).LoadAsync();
 
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation.ToApiModel());
+            var response = await _context.IncludeReservationContext().FirstOrDefaultAsync(c => c.Id == reservation.Id);
+
+            return CreatedAtAction("GetReservation", new { id = reservation.Id }, response.ToApiModel());
         }
 
         // DELETE: api/Reservations/5
@@ -198,6 +192,9 @@ namespace Tarusho.Server.Controllers.api
 
         private async Task RemoveReservationUser(List<string> userIds, string reservationId)
         {
+            if (userIds == null)
+                return;
+
             foreach (var userId in userIds)
             {
                 var item =
@@ -213,6 +210,9 @@ namespace Tarusho.Server.Controllers.api
 
         private async Task RegisterReservationUser(List<string> userNames, Reservation reservation)
         {
+            if (userNames == null)
+                return;
+
             foreach (var userName in userNames)
             {
                 var user = _context.Users.FirstOrDefault(c => c.UserName == userName);

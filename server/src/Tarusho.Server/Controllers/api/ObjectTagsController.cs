@@ -56,11 +56,10 @@ namespace Tarusho.Server.Controllers.api
             if (objectTag == null)
                 return NotFound();
 
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.Category);
-            if (category == null)
+            if (!_context.Categories.Any(c => c.Id == request.Category))
                 return BadRequest();
 
-            objectTag = request.ToDataModel(category, objectTag);
+            objectTag = request.ToDataModel(objectTag);
 
             _context.Entry(objectTag).State = EntityState.Modified;
 
@@ -80,7 +79,9 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
-            return Ok(objectTag.ToApiModel());
+            var response = await _context.IncludeObjectTagCategory().FirstOrDefaultAsync(c => c.Id == objectTag.Id);
+
+            return Ok(response.ToApiModel());
         }
 
         // POST: api/ObjectTags
@@ -90,8 +91,7 @@ namespace Tarusho.Server.Controllers.api
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == request.Category);
-            if (category == null)
+            if (!_context.Categories.Any(c => c.Id == request.Category))
                 return BadRequest();
 
             var objectTag = request.ToDataModel();
@@ -112,9 +112,9 @@ namespace Tarusho.Server.Controllers.api
                 }
             }
 
-            await _context.Categories.Where(c => c.Id == category.Id).LoadAsync();
+            var response = await _context.IncludeObjectTagCategory().FirstOrDefaultAsync(c => c.Id == objectTag.Id);
 
-            return CreatedAtAction("GetObjectTag", new { id = objectTag.Id }, objectTag.ToApiModel());
+            return CreatedAtAction("GetObjectTag", new { id = objectTag.Id }, response.ToApiModel());
         }
 
         // DELETE: api/ObjectTags/5

@@ -11,7 +11,7 @@ namespace Tarusho.Server.Extensions
     public static class ToDataModelExtension
     {
 
-        public static Reservation ToDataModel(this ReservationRequest request, ApplicationUser user, ObjectTag objectTag, Reservation item = null)
+        public static Reservation ToDataModel(this ReservationRequest request, string userId, Reservation item = null)
         {
             if (item == null)
             {
@@ -31,24 +31,13 @@ namespace Tarusho.Server.Extensions
             item.StartAt = request.StartAt;
             item.EndAt = request.EndAt;
             item.IsEndless = request.IsEndless;
-
-            if (objectTag != null)
-            {
-                item.ObjectTag = objectTag;
-                item.ObjectTagId = objectTag.Id;
-            }
-            else
-            {
-                item.ObjectTagId = request.ObjectTagId;
-            }
-
-            item.OwnerUser = user;
-            item.OwnerUserId = user.Id;
+            item.ObjectTagId = request.ObjectTagId;
+            item.OwnerUserId = userId;
             item.Priority = request.Priority;
             return item;
         }
 
-        public static ObjectTag ToDataModel(this ObjectTagRequest request, Category category = null, ObjectTag item = null)
+        public static ObjectTag ToDataModel(this ObjectTagRequest request, ObjectTag item = null)
         {
             if (item == null)
             {
@@ -62,15 +51,7 @@ namespace Tarusho.Server.Extensions
                 item.Id = request.Id;
             }
 
-            if (category != null)
-            {
-                item.Category = category;
-                item.CategoryId = category.Id;
-            }
-            else
-            {
-                item.CategoryId = request.Category;
-            }
+            item.CategoryId = request.Category;
             item.Description = request.Description;
             item.IsBookingEnabled = request.BookingEnabled;
             item.Name = request.Name;
